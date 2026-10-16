@@ -78,7 +78,8 @@ Ada juga elemen yang jalan sepanjang video:
 - **Caption** auto (3 perkataan sechunk, perkataan aktif kuning). Keyword (BANTAL, SELIMUT, BEG, V2…) sentiasa kuning.
 - **Progress bar** kuning nipis kat atas, untuk retention.
 - **Jump-cut zoom**: zoom 1.0× dan 1.1× berselang-seli pada setiap cut, supaya potongan tak nampak "lompat".
-- Audio: highpass, denoise ringan, compressor, loudnorm −15 LUFS.
+- Audio v2 (suara saja; SFX tak berubah): highpass 100Hz, denoise, EQ (−3dB @250Hz buang "bunyi berdengung", +4dB @3.2kHz kejelasan, +2.5dB @9kHz), de-esser, compressor, gain diukur ke −11.5 LUFS + limiter. Percakapan naik ~+3.4 dB (≈1.5×) berbanding v1 (−15 LUFS).
+  Render semula audio saja: `python3 edit.py master1080.mp4 transcript.json sfx/ final/ --final --audio-only`
 
 ## Nota / belum buat
 

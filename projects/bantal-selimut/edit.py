@@ -3,6 +3,7 @@
 
 Usage: python3 edit.py <proxy.mp4> <transcript.json> <sfx_dir> <out_dir> [--final]
   preview: 720x1280 proxy -> preview.mp4;  --final: 1080x1920 master -> final.mp4
+  --audio-only: re-mix voice + SFX onto the existing render -> *_voice.mp4
 
 All times in BLOCKS are source times of the original clip (same timeline as
 the proxy). The script builds:
@@ -19,6 +20,7 @@ W, H, FPS = 720, 1280, 30          # layout space for ASS / sticker coordinates
 FINAL = "--final" in sys.argv       # --final: 1080x1920 from a full-res master
 K = 1.5 if FINAL else 1.0
 RW, RH = int(W * K), int(H * K)     # render size
+VOICE_LUFS = -11.5                  # v1 was -15; SFX levels are absolute and stay unchanged
 
 # ---------------------------------------------------------------- EDL
 # v: list of (src_in, src_out, speed, zoom)
@@ -398,6 +400,12 @@ def render_base(sfx):
         lst.append(f"file '{os.path.abspath(path)}'")
     with open(os.path.join(cdir, "list.txt"), "w") as f:
         f.write("\n".join(lst) + "\n")
+    render_audio(sfx, ["-f", "concat", "-safe", "0", "-i", os.path.join(cdir, "list.txt")],
+                 os.path.join(OUT, "base.mp4"))
+
+
+def render_audio(sfx, video_input, out_path):
+    """Voice + SFX mix, muxed with input 0's video stream (stream copy)."""
     fc = []
     al = []
     for i, c in enumerate(ACLIPS):
@@ -408,10 +416,22 @@ def render_base(sfx):
             fc.append(f"[1:a]atrim={c['s']}:{c['e']},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=mono,"
                       f"afade=t=in:d=0.02,afade=t=out:st={d - 0.03:.3f}:d=0.03[a{i}]")
         al.append(f"[a{i}]")
-    fc.append("".join(al) + f"concat=n={len(al)}:v=0:a=1,highpass=f=90,afftdn=nf=-28,"
-              "acompressor=threshold=-20dB:ratio=3:attack=5:release=120,"
-              "loudnorm=I=-15:TP=-1.5:LRA=7,aformat=channel_layouts=stereo[voice]")
-    inputs = ["-f", "concat", "-safe", "0", "-i", os.path.join(cdir, "list.txt"), "-vn", "-i", PROXY]
+    fc.append("".join(al) + f"concat=n={len(al)}:v=0:a=1,"
+              # clarity: cut rumble + mud, lift presence/air, tame sibilance
+              "highpass=f=100,afftdn=nf=-25:tn=1,"
+              "equalizer=f=250:t=q:w=1.0:g=-3,equalizer=f=3200:t=q:w=1.2:g=4,"
+              "treble=g=2.5:f=9000,deesser=i=0.35,"
+              # even out quiet words before the gain stage
+              "acompressor=threshold=-26dB:ratio=4:attack=4:release=90:makeup=2")
+    # pass 1: measure the processed voice, pass 2: exact gain to VOICE_LUFS + peak limiter
+    probe = subprocess.run(["ffmpeg", "-nostats", "-vn", "-i", PROXY, "-filter_complex",
+                            ";".join(fc).replace("[1:a]", "[0:a]") + ",ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+    measured = float(probe.split("Summary:")[1].split("I:")[1].split("LUFS")[0])
+    gain = VOICE_LUFS - measured
+    print(f"  voice {measured:.1f} LUFS -> {VOICE_LUFS} (gain {gain:+.1f} dB)", flush=True)
+    fc[-1] += (f",volume={gain:.2f}dB,alimiter=limit=0.84:attack=3:release=60:level=false,"
+               "aformat=channel_layouts=stereo[voice]")
+    inputs = [*video_input, "-vn", "-i", PROXY]
     mix = ["[voice]"]
     for j, (name, t, vol) in enumerate(sfx):
         inputs += ["-i", os.path.join(SFX, name + ".wav")]
@@ -421,7 +441,7 @@ def render_base(sfx):
     fc.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:duration=first,alimiter=limit=0.95[aout]")
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc),
          "-map", "0:v", "-map", "[aout]", "-c:v", "copy",
-         "-c:a", "aac", "-b:a", "192k", "-t", f"{TOTAL:.3f}", os.path.join(OUT, "base.mp4")])
+         "-c:a", "aac", "-b:a", "192k", "-t", f"{TOTAL:.3f}", "-movflags", "+faststart", out_path])
 
 
 def render_preview(stickers, ass_path):
@@ -450,6 +470,10 @@ if __name__ == "__main__":
         json.dump(dict(total=TOTAL, blocks=[{k: b[k] for k in ("name", "t0", "dur", "v", "a")} for b in BLOCKS],
                        words=words, sfx=sfx, stickers=stickers), f, ensure_ascii=False, indent=1)
     print(f"timeline {TOTAL:.2f}s, {len(VCLIPS)} clips, {len(sfx)} sfx, {len(stickers)} stickers")
-    if "--no-render" not in sys.argv:
+    if "--audio-only" in sys.argv:
+        # re-mix audio onto an already rendered video (graphics untouched)
+        src = os.path.join(OUT, "final.mp4" if FINAL else "preview.mp4")
+        render_audio(sfx, ["-i", src], os.path.join(OUT, ("final" if FINAL else "preview") + "_voice.mp4"))
+    elif "--no-render" not in sys.argv:
         render_base(sfx)
         render_preview(stickers, ass_path)
