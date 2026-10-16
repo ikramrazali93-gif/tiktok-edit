@@ -51,6 +51,14 @@ def kaching():
     x[:len(a)]+=a; o=int(0.09*SR); x[o:o+len(b)]+=b[:len(x)-o]
     c=hp(rng.standard_normal(int(0.08*SR)),0.5)*np.exp(-np.arange(int(0.08*SR))/800)*0.5; x[:len(c)]+=c
     return x
+def spray():
+    d=0.7; tt=t(d); n=rng.standard_normal(len(tt))
+    env=np.minimum(1,tt/0.015)*np.exp(-np.maximum(0,tt-0.35)*9)
+    return hp(lp(n,0.6),0.25)*env
+def bloop():
+    tt=t(0.18); f=300+900*(tt/0.18)
+    return np.sin(2*np.pi*np.cumsum(f)/SR)*np.sin(np.pi*tt/0.18)
+save('spray',spray()); save('bloop',bloop())
 save('whoosh',whoosh()); save('swish',whoosh(0.3)); save('pop',pop()); save('ding',ding())
 save('sparkle',sparkle()); save('impact',impact()); save('riser',riser()); save('zip',zip_())
 save('click',click()); save('kaching',kaching())
