@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Preview edit for the 2-in-1 bantal/selimut/beg TikTok video.
 
-Usage: python3 edit.py <proxy.mp4> <transcript.json> <sfx_dir> <out_dir>
+Usage: python3 edit.py <proxy.mp4> <transcript.json> <sfx_dir> <out_dir> [--final]
+  preview: 720x1280 proxy -> preview.mp4;  --final: 1080x1920 master -> final.mp4
 
 All times in BLOCKS are source times of the original clip (same timeline as
 the proxy). The script builds:
@@ -14,7 +15,10 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 PROXY, TRANSCRIPT, SFX, OUT = sys.argv[1:5]
-W, H, FPS = 720, 1280, 30
+W, H, FPS = 720, 1280, 30          # layout space for ASS / sticker coordinates
+FINAL = "--final" in sys.argv       # --final: 1080x1920 from a full-res master
+K = 1.5 if FINAL else 1.0
+RW, RH = int(W * K), int(H * K)     # render size
 
 # ---------------------------------------------------------------- EDL
 # v: list of (src_in, src_out, speed, zoom)
@@ -349,7 +353,7 @@ def sticker_frames(stickers):
     n = int(round(TOTAL * FPS))
     for f in range(n):
         t = f / FPS
-        frame = Image.new("RGBA", (W, H))
+        frame = Image.new("RGBA", (RW, RH))
         for i, (em, t0, t1, x, y, size) in enumerate(stickers):
             if not (t0 <= t < t1):
                 continue
@@ -359,12 +363,12 @@ def sticker_frames(stickers):
                 sc *= max(0.0, (t1 - t) / 0.12)
             if sc <= 0.02:
                 continue
-            bob = 5 * np.sin(2 * np.pi * 1.6 * u + i)
+            bob = 5 * K * np.sin(2 * np.pi * 1.6 * u + i)
             img = cache[em]
-            s = max(1, int(size * sc))
+            s = max(1, int(size * sc * K))
             im = img.resize((s, int(s * img.height / img.width)), Image.LANCZOS)
             im = im.rotate(8 * np.sin(2 * np.pi * 0.9 * u + i), resample=Image.BICUBIC, expand=True)
-            frame.alpha_composite(im, (int(x - im.width / 2), int(y + bob - im.height / 2)))
+            frame.alpha_composite(im, (int(x * K - im.width / 2), int(y * K + bob - im.height / 2)))
         yield frame.tobytes()
 
 
@@ -375,47 +379,58 @@ def run(cmd, **kw):
 
 
 def render_base(sfx):
-    fc = []
-    vl = []
+    # video: one ffmpeg per clip (a single graph with many trims of one input
+    # buffers frames and runs out of memory at 1080p), then stream-copy concat
+    cdir = os.path.join(OUT, "clips")
+    os.makedirs(cdir, exist_ok=True)
+    lst = []
     for i, c in enumerate(VCLIPS):
         z = c["z"]
-        fc.append(f"[0:v]trim={c['s']}:{c['e']},setpts=(PTS-STARTPTS)/{c['sp']},"
-                  f"scale={int(W * z) // 2 * 2}:{int(H * z) // 2 * 2},crop={W}:{H}:(iw-{W})/2:(ih-{H})/2*0.6,"
-                  f"fps={FPS},setsar=1[v{i}]")
-        vl.append(f"[v{i}]")
-    fc.append("".join(vl) + f"concat=n={len(vl)}:v=1:a=0[vout]")
+        # frame count from rounded timeline positions so clips never drift from the audio
+        n = round((c["t"] + c["d"]) * FPS) - round(c["t"] * FPS)
+        path = os.path.join(cdir, f"{i:02d}.mp4")
+        run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c['s']}", "-to", f"{c['e']}", "-i", PROXY, "-an",
+             "-vf", f"setpts=(PTS-STARTPTS)/{c['sp']},"
+                    f"scale={int(RW * z) // 2 * 2}:{int(RH * z) // 2 * 2},crop={RW}:{RH}:(iw-{RW})/2:(ih-{RH})/2*0.6,"
+                    f"fps={FPS},setsar=1,tpad=stop_mode=clone:stop=3,trim=end_frame={n}",
+             "-c:v", "libx264", "-preset", "veryfast", "-crf", "12" if FINAL else "16", "-pix_fmt", "yuv420p",
+             path])
+        lst.append(f"file '{os.path.abspath(path)}'")
+    with open(os.path.join(cdir, "list.txt"), "w") as f:
+        f.write("\n".join(lst) + "\n")
+    fc = []
     al = []
     for i, c in enumerate(ACLIPS):
         if "silence" in c:
             fc.append(f"anullsrc=r=48000:cl=mono,atrim=0:{c['silence']:.3f}[a{i}]")
         else:
             d = c["e"] - c["s"]
-            fc.append(f"[0:a]atrim={c['s']}:{c['e']},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=mono,"
+            fc.append(f"[1:a]atrim={c['s']}:{c['e']},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=mono,"
                       f"afade=t=in:d=0.02,afade=t=out:st={d - 0.03:.3f}:d=0.03[a{i}]")
         al.append(f"[a{i}]")
     fc.append("".join(al) + f"concat=n={len(al)}:v=0:a=1,highpass=f=90,afftdn=nf=-28,"
               "acompressor=threshold=-20dB:ratio=3:attack=5:release=120,"
               "loudnorm=I=-15:TP=-1.5:LRA=7,aformat=channel_layouts=stereo[voice]")
-    inputs = ["-i", PROXY]
+    inputs = ["-f", "concat", "-safe", "0", "-i", os.path.join(cdir, "list.txt"), "-vn", "-i", PROXY]
     mix = ["[voice]"]
     for j, (name, t, vol) in enumerate(sfx):
         inputs += ["-i", os.path.join(SFX, name + ".wav")]
         ms = max(0, int(t * 1000))
-        fc.append(f"[{j + 1}:a]volume={vol},adelay={ms}|{ms}[s{j}]")
+        fc.append(f"[{j + 2}:a]volume={vol},adelay={ms}|{ms}[s{j}]")
         mix.append(f"[s{j}]")
     fc.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:duration=first,alimiter=limit=0.95[aout]")
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc),
-         "-map", "[vout]", "-map", "[aout]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",
+         "-map", "0:v", "-map", "[aout]", "-c:v", "copy",
          "-c:a", "aac", "-b:a", "192k", "-t", f"{TOTAL:.3f}", os.path.join(OUT, "base.mp4")])
 
 
 def render_preview(stickers, ass_path):
     cmd = ["ffmpeg", "-v", "error", "-y", "-i", os.path.join(OUT, "base.mp4"),
-           "-f", "rawvideo", "-pix_fmt", "rgba", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+           "-f", "rawvideo", "-pix_fmt", "rgba", "-s", f"{RW}x{RH}", "-r", str(FPS), "-i", "-",
            "-filter_complex", f"[0:v][1:v]overlay=0:0:format=auto,ass={ass_path}[v]",
-           "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "medium", "-crf", "21",
-           "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart",
-           os.path.join(OUT, "preview.mp4")]
+           "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "slow" if FINAL else "medium", "-crf", "18" if FINAL else "21",
+           "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-c:a", "copy", "-movflags", "+faststart",
+           os.path.join(OUT, "final.mp4" if FINAL else "preview.mp4")]
     print("+ preview", flush=True)
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for fr in sticker_frames(stickers):

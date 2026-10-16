@@ -85,7 +85,8 @@ Ada juga elemen yang jalan sepanjang video:
 1. **Muzik takde.** Cadangan: masukkan trending sound dalam TikTok/CapCut, volume ~10–15% bawah suara. Lagu tak boleh dimasukkan kat sini sebab isu lesen.
 2. **SFX dalam preview disintesis** (placeholder). Bila final, boleh tukar dengan SFX library CapCut kalau nak bunyi lebih "branded".
 3. **Footage selimut V2 (asing) takde.** Dia cakap "nanti saya masukkan dalam video", tapi klip tu tak ada dalam file ni. Kalau ada, boleh selit masa 57–62s (TL).
-4. Preview 720p/30fps SDR. Final akan render dari source asal 1080×1920, tonemap HDR→SDR supaya warna tak pucat bila upload.
+4. ~~Preview 720p~~ **Final dah render**: 1080×1920, 30fps, H.264 SDR (HDR HLG → bt709 tonemap hable), −15 LUFS, 73.6s.
+   Command: buat master 1080 SDR dari source (`zscale…tonemap=hable…fps=30`), lepas tu `python3 edit.py master1080.mp4 transcript.json sfx/ final/ --final`
 
 ## Fail
 
