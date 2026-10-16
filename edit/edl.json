@@ -1,0 +1,50 @@
+{
+  "_note": "Masa dalam saat (source). 'a' = julat audio, 'v' = senarai julat video (kalau tiada, guna 'a'). Jumlah tempoh 'v' mesti sama dengan 'a'.",
+  "blocks": [
+    {"id": "HOOK", "a": [8.38, 14.50],
+     "v": [[52.60, 55.38], [61.00, 62.18], [33.00, 35.16]],
+     "zoom": "push", "label": "Hook: 2 dalam 1 (bantal + selimut + beg) atas montage visual terbaik"},
+
+    {"id": "B1a", "a": [0.00, 1.70], "zoom": 1.0, "label": "Jom kita unboxing lagi"},
+    {"id": "B1b", "a": [2.10, 7.90], "zoom": 1.12, "label": "Ramai orang borong, sangat function"},
+
+    {"id": "B2a", "a": [14.50, 15.76], "zoom": 1.0, "label": "Ok hampa tengok na"},
+    {"id": "B2b", "a": [18.00, 20.95], "zoom": 1.12, "label": "Pakai tali + boleh galas macam ni"},
+
+    {"id": "B3", "a": [29.26, 30.62], "zoom": 1.0, "label": "Dua pilihan selimut"},
+    {"id": "B4", "a": [34.62, 41.22], "zoom": 1.12, "label": "Biasa vs V2 (contoh brown)"},
+    {"id": "B5", "a": [41.50, 45.15], "zoom": 1.0, "label": "Luaran sama, dalam berbeza"},
+
+    {"id": "B6a", "a": [49.81, 51.30], "zoom": 1.12, "label": "Buka zip keliling beg"},
+    {"id": "B6b", "a": [52.46, 53.61], "zoom": 1.0, "label": "Zip-zip ni buka"},
+    {"id": "B6c", "a": [56.48, 57.90], "zoom": 1.0, "label": "Ok ni selimut (buang 'nampak na')"},
+
+    {"id": "B7", "a": [60.55, 66.00], "zoom": 1.0, "label": "Saiz 160cm x 100cm, besar"},
+    {"id": "B8a", "a": [66.45, 74.68], "zoom": 1.12, "label": "Travel, bas, kereta api + berjahit cantum"},
+    {"id": "B8b", "a": [75.12, 82.45], "zoom": 1.0, "label": "Buka = selimut, tutup = bantal, cara lipat"},
+
+    {"id": "B9", "a": [88.85, 94.86], "zoom": 1.12, "label": "Selimut asing: brown/yellow/pink V2"},
+    {"id": "B10a", "a": [96.18, 97.10], "zoom": 1.0, "label": "Selimut asing macam ni"},
+    {"id": "B10b", "a": [97.48, 99.22], "zoom": 1.0, "label": "kita boleh guna dua"},
+    {"id": "B10c", "a": [99.60, 108.17], "zoom": 1.12, "label": "pieces serentak + pilih bercantum/terpisah"},
+
+    {"id": "CTA", "a": [109.15, 110.36], "zoom": 1.0, "label": "CTA beg kuning"}
+  ],
+  "cut_reasons": {
+    "1.70-2.10": "pause",
+    "7.90-8.38 + 8.38-14.50": "dipindah ke depan sebagai HOOK",
+    "15.76-18.00": "pause / pakai tali (dipendekkan)",
+    "20.95-29.26": "ULANGAN: 'sangat-sangat function' + 'dua dalam satu ada selimut' + pause",
+    "30.62-34.62": "'yang first punya ... selimut biasa punya' (berbelit, diganti terus contoh)",
+    "45.15-49.41": "'ni saya tunjuk hat besar dulu' + pause 2.3s",
+    "51.30-52.46 / 53.61-55.79": "pause semasa buka zip",
+    "57.90-60.55": "pause",
+    "49.41-49.80 / 95.10-95.98 / 108.78-109.20": "filler 'Ok,' / 'haa' di awal ayat",
+    "53.61-56.48": "pause + 'nampak na'",
+    "82.45-88.85": "AWKWARD (termasuk 'asing' tergantung)",
+    "74.68-75.12": "pause",
+    
+    "97.10-97.48 / 99.22-99.60": "pause tengah ayat",
+    "108.17-108.78": "pause"
+  }
+}
