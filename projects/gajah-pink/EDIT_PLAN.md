@@ -2,6 +2,7 @@
 
 Source: iPhone, 1080×1920 portrait, HEVC HDR (HLG), 30fps, **56.5s**
 Preview v1: **37.5s** (dipotong ~19s), 720×1280, 30fps, SDR
+Final: **37.5s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.6 LUFS, sudah render
 
 ## Gaya: comel / pastel (ikut video)
 
