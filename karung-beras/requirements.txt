@@ -1,0 +1,5 @@
+skia-python
+numpy
+pillow
+gTTS
+faster-whisper
