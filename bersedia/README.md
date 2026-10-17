@@ -5,7 +5,7 @@
 Konsep diambil daripada reel motivasi Jackkgriffith. Skrip ditulis semula dalam Bahasa Melayu
 dan bahagian iklan aplikasi dibuang. Semua animasi dilukis dengan kod.
 
-**Video siap:** [`output/bersedia.mp4`](output/bersedia.mp4) (1080×1920, 30fps, ~50 saat)
+**Video siap:** [`output/bersedia.mp4`](output/bersedia.mp4) (1080×1920, 30fps, ~56 saat)
 
 ## Gaya
 - Hitam putih sepenuhnya, latar hitam, garis neon putih yang "melukis sendiri"

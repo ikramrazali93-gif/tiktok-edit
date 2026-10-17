@@ -22,7 +22,7 @@ BUILD = ROOT / "build"
 CACHE = BUILD / "tts_lelaki"
 SR = suara.SR
 PENUTUR = "husein"
-CUBAAN = 4          # bilangan maksimum cubaan bagi setiap ayat
+CUBAAN = 10         # bilangan maksimum cubaan bagi setiap ayat
 LAJU = 0.9          # lebih perlahan = lebih tenang
 PIC = 0.95          # rendahkan nada ~1 semiton
 JEDA_AYAT = 0.38    # senyap antara ayat dalam satu baris
@@ -125,7 +125,7 @@ def main():
         for s in ayat(baris["teks"]):
             best = None
             for seed in range(1, CUBAAN + 1):
-                path = synth(s.replace("...", ","), seed)
+                path = synth(s.replace("...", ",").replace("…", ","), seed)
                 err, heard = score(whisper, path, s)
                 if best is None or err < best[0]:
                     best = (err, path, heard)

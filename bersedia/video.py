@@ -664,7 +664,7 @@ SIZE_KEY, SIZE_STD, MAXW = 132, 62, 960
 
 
 def clean(w):
-    return w.strip(".,!?").replace("...", "")
+    return w.strip(".,!?…").replace("...", "")
 
 
 def is_key(w):

@@ -165,6 +165,16 @@ def main():
 
     write_wav(BUILD / "muzik.wav", music)
     voice = read_wav(BUILD / "narasi.wav")
+    # ducking: rendahkan muzik ~6 dB ketika narator bercakap
+    hop = SR // 100
+    nv = min(len(voice), n)
+    rms = np.sqrt(np.convolve(voice[:nv] ** 2, np.ones(hop * 5) / (hop * 5), "same"))
+    talk = np.clip(rms / 0.04, 0, 1)
+    k = np.ones(SR // 4) / (SR // 4)
+    talk = np.convolve(talk, k, "same")  # lancarkan supaya tidak berdenyut
+    duck = np.ones(n, np.float32)
+    duck[:nv] = 1 - 0.5 * np.clip(talk, 0, 1)
+    music = music * duck
     mix = music + sfx
     mix[: len(voice)] += voice[:n]
     mix *= 0.95 / max(1.0, np.abs(mix).max())
