@@ -5,6 +5,7 @@ Output:
   build/masa.json   - masa mula/tamat setiap baris & setiap perkataan
 """
 import difflib
+import hashlib
 import json
 import re
 import subprocess
@@ -83,7 +84,7 @@ def main():
     t = MULA
     hasil = []
     for n, baris in enumerate(skrip):
-        mp3 = BUILD / f"baris{n:02d}.mp3"
+        mp3 = BUILD / f"baris{n:02d}_{hashlib.md5(baris['teks'].encode()).hexdigest()[:8]}.mp3"
         wav = BUILD / f"baris{n:02d}.wav"
         if not mp3.exists():
             gTTS(baris["teks"], lang="ms").save(str(mp3))
@@ -102,8 +103,9 @@ def main():
             "tamat": round(t + len(a) / SR, 3),
             "kata": [{"k": k, "mula": round(t + s, 3), "tamat": round(t + e, 3)} for k, (s, e) in zip(kata, masa)],
         })
-        potongan += [a, np.zeros(int(JEDA * SR), np.float32)]
-        t += len(a) / SR + JEDA
+        jeda = baris.get("jeda", JEDA)  # jeda khas selepas baris ini (pilihan)
+        potongan += [a, np.zeros(int(jeda * SR), np.float32)]
+        t += len(a) / SR + jeda
         print(f"{n:2d} {baris['babak']:8s} {len(a) / SR:5.2f}s")
 
     potongan.append(np.zeros(int(1.2 * SR), np.float32))

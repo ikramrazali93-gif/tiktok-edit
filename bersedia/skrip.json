@@ -1,0 +1,50 @@
+[
+ {
+  "babak": "hook",
+  "teks": "Kau takkan pernah rasa bersedia.",
+  "jeda": 0.6
+ },
+ {
+  "babak": "keputusan",
+  "teks": "Sebab bersedia bukan perasaan. Ia satu keputusan.",
+  "jeda": 0.5
+ },
+ {
+  "babak": "tunggu",
+  "teks": "Semua orang tunggu saat yang sempurna. Bila rasa takut dah senyap, dan hati tiba-tiba yakin."
+ },
+ {
+  "babak": "takdatang",
+  "teks": "Saat itu takkan datang.",
+  "jeda": 0.6
+ },
+ {
+  "babak": "bukan",
+  "teks": "Bukan untuk kerja baru. Bukan untuk perbualan yang susah. Bukan untuk perjalanan itu."
+ },
+ {
+  "babak": "gementar",
+  "teks": "Rasa gementar takkan hilang dan beri kau izin. Kau cuma buat keputusan, dan terus melangkah."
+ },
+ {
+  "babak": "menyusul",
+  "teks": "Rasa bersedia akan menyusul, di tengah jalan nanti."
+ },
+ {
+  "babak": "pilih",
+  "teks": "Sebab bersedia bukan sesuatu yang datang sendiri. Ia sesuatu yang kau pilih, walaupun semuanya suruh kau tunggu."
+ },
+ {
+  "babak": "berani",
+  "teks": "Orang yang nampak berani pun bukannya tak takut. Mereka cuma berhenti menunggu rasa itu dulu."
+ },
+ {
+  "babak": "esok",
+  "teks": "Kau takkan bangun esok pagi dalam keadaan bersedia.",
+  "jeda": 0.5
+ },
+ {
+  "babak": "pergi",
+  "teks": "Kau cuma perlu... pergi."
+ }
+]
