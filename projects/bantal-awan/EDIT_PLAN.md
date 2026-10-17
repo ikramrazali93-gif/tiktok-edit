@@ -3,7 +3,7 @@
 Source: iPhone, 1080×1920 portrait, HEVC HDR (HLG), 29.97fps, **53.0s**
 Preview v1: **33.1s** (dipotong ~20s), 720×1280, 30fps, SDR
 Final: **33.1s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.8 LUFS, sudah render
-Cover: `cover.jpg` · Caption & hashtag: `CAPTION.md`
+Cover: `cover.jpg` (1080×1536, 20% lebih pendek) · Caption & hashtag: `CAPTION.md`
 
 ## Safe zone TikTok (baru)
 
@@ -79,5 +79,5 @@ Suara guna rantaian v2 (EQ kejelasan + −11.5 LUFS).
 ```
 python3 edit.py proxy.mp4 transcript.json sfx/ out/                    # preview 720p
 python3 edit.py master1080.mp4 transcript.json sfx/ final/ --final     # final 1080x1920
-python3 cover.py frame_48.4.png cover.jpg                              # cover (frame dari master1080 @48.4s)
+python3 cover.py frame_48.4.png cover.jpg                              # cover 1080x1536 (frame dari master1080 @48.4s)
 ```

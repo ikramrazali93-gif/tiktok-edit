@@ -34,5 +34,5 @@ Restock! Bantal gebu ni tebal & lembut, buat duduk pun the best ☁️⭐ Tekan 
 
 ## Cover
 
-`cover.jpg` (1080×1920), frame 48.4s (kusyen depan kamera, bunga putih jelas).
+`cover.jpg` (**1080×1536**, 20% lebih pendek dari 1920 atas permintaan), frame 48.4s (kusyen depan kamera, bunga putih jelas).
 Masa post, pilih **Edit cover → Upload/From gallery** dan pilih `cover.jpg`.
