@@ -122,6 +122,8 @@ def main():
     hasil = []
     for n, baris in enumerate(skrip):
         bahagian = []
+        kata_masa = []  # (perkataan, mula, tamat) relatif kepada permulaan baris
+        off = 0.0
         for s in ayat(baris["teks"]):
             best = None
             for seed in range(1, CUBAAN + 1):
@@ -135,13 +137,16 @@ def main():
             out = CACHE / (best[1].stem + "_p.wav")
             polish(best[1], out)
             gap = 0.8 if s.endswith(("...", "…")) else JEDA_AYAT  # jeda dramatik selepas '...'
-            bahagian += [suara.baca_wav(out), np.zeros(int(gap * SR), np.float32)]
+            sa = suara.baca_wav(out)
+            # selaraskan setiap ayat berasingan supaya jeda antara ayat tidak mengelirukan masa perkataan
+            for k, (s0, e0) in zip(s.split(), suara.masa_perkataan(whisper, sa, s.split())):
+                kata_masa.append((k, off + s0, off + e0))
+            bahagian += [sa, np.zeros(int(gap * SR), np.float32)]
+            off += len(sa) / SR + gap
         a = np.concatenate(bahagian[:-1])
-        kata = baris["teks"].split()
-        masa = suara.masa_perkataan(whisper, a, kata)
         hasil.append({
             "babak": baris["babak"], "teks": baris["teks"], "mula": round(t, 3), "tamat": round(t + len(a) / SR, 3),
-            "kata": [{"k": k, "mula": round(t + s0, 3), "tamat": round(t + e0, 3)} for k, (s0, e0) in zip(kata, masa)],
+            "kata": [{"k": k, "mula": round(t + s0, 3), "tamat": round(t + e0, 3)} for k, s0, e0 in kata_masa],
         })
         jeda = baris.get("jeda", JEDA)
         potongan += [a, np.zeros(int(jeda * SR), np.float32)]

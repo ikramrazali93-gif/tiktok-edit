@@ -5,7 +5,7 @@
 Konsep diambil daripada reel motivasi Jackkgriffith. Skrip ditulis semula dalam Bahasa Melayu
 dan bahagian iklan aplikasi dibuang. Semua animasi dilukis dengan kod.
 
-**Video siap:** [`output/bersedia.mp4`](output/bersedia.mp4) (1080×1920, 30fps, ~56 saat)
+**Video siap:** [`output/bersedia.mp4`](output/bersedia.mp4) (1080×1920, 30fps, ~54 saat)
 
 ## Gaya
 - Hitam putih sepenuhnya, latar hitam, garis neon putih yang "melukis sendiri"
@@ -21,23 +21,21 @@ dan bahagian iklan aplikasi dibuang. Semua animasi dilukis dengan kod.
 | 1 | Kau takkan pernah rasa bersedia | Watak di tebing memandang matahari |
 | 2 | Bersedia bukan perasaan, ia satu keputusan | Hati dipangkah, kemudian bertukar jadi anak panah |
 | 3 | Semua orang tunggu saat yang sempurna | Orang duduk menunggu, jam berputar laju |
-| 4 | Saat itu takkan datang | Jam retak dan pecah berderai |
-| 5 | Bukan untuk kerja / perbualan / perjalanan | Ikon beg kerja, buih chat, kapal terbang |
+| 4 | Tapi... rasa itu takkan datang sendiri | Jam retak dan pecah berderai |
+| 5 | Tengah bekerja, berbual, atau berlari… | Ikon beg kerja, buih chat, orang berlari |
 | 6 | Rasa gementar takkan hilang… | Contengan gelisah di kepala, kemudian melangkah |
 | 7 | Rasa bersedia akan menyusul | Bebola cahaya mengejar dan menyatu dengan watak |
 | 8 | …walaupun semuanya suruh kau tunggu | Berjalan melawan "angin" perkataan TUNGGU, NANTI… |
 | 9 | Orang berani pun bukannya tak takut | Di puncak gunung, zoom ke jantung berdegup + ECG |
 | 10 | Kau takkan bangun esok pagi… bersedia | Bilik tidur, jam loceng berbunyi |
-| 11 | Kau cuma perlu… pergi | Pintu terbuka, watak berlari ke cahaya, bunga mekar |
+| 11 | Kau cuma perlu… buat keputusan | Pintu terbuka, watak berlari ke cahaya, bunga mekar |
 
 ## Suara
 Narator: suara lelaki matang dan tenang, gaya orang tua yang bijaksana. Dijana dengan model
 [mesolitica/Malaysian-TTS-0.6B-v1](https://huggingface.co/mesolitica/Malaysian-TTS-0.6B-v1)
 (penutur `husein`), kemudian diproses supaya lebih perlahan, nadanya lebih rendah, dan
 bunyinya lebih hangat. Setiap ayat dijana beberapa kali, dan cubaan yang paling tepat dipilih
-secara automatik dengan Whisper. Skrip dibuka dengan sapaan "Nak," seperti orang tua menasihati
-orang muda.
-
+secara automatik dengan Whisper. 
 `suara.py` (Google TTS, suara perempuan) masih ada sebagai pilihan yang lebih pantas.
 
 ## Cara jana semula
