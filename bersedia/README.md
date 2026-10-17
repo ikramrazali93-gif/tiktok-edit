@@ -30,10 +30,23 @@ dan bahagian iklan aplikasi dibuang. Semua animasi dilukis dengan kod.
 | 10 | Kau takkan bangun esok pagi… bersedia | Bilik tidur, jam loceng berbunyi |
 | 11 | Kau cuma perlu… pergi | Pintu terbuka, watak berlari ke cahaya, bunga mekar |
 
+## Suara
+Narator: suara lelaki matang dan tenang, gaya orang tua yang bijaksana. Dijana dengan model
+[mesolitica/Malaysian-TTS-0.6B-v1](https://huggingface.co/mesolitica/Malaysian-TTS-0.6B-v1)
+(penutur `husein`), kemudian diproses supaya lebih perlahan, nadanya lebih rendah, dan
+bunyinya lebih hangat. Setiap ayat dijana beberapa kali, dan cubaan yang paling tepat dipilih
+secara automatik dengan Whisper. Skrip dibuka dengan sapaan "Nak," seperti orang tua menasihati
+orang muda.
+
+`suara.py` (Google TTS, suara perempuan) masih ada sebagai pilihan yang lebih pantas.
+
 ## Cara jana semula
 Perlukan modul daripada `../karung-beras` (lukisan, suara, muzik).
 ```bash
-python3 suara.py   # narasi + masa perkataan -> build/
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install transformers soundfile librosa einops vector-quantize-pytorch matplotlib wandb tensorboard \
+    git+https://github.com/mesolitica/DistilCodec
+python3 suara_lelaki.py   # narasi lelaki + masa perkataan -> build/ (~15 minit di CPU)
 python3 muzik.py   # muzik + kesan bunyi + campuran -> build/audio.wav
 python3 video.py   # render -> output/bersedia.mp4
 ```
