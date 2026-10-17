@@ -2,6 +2,7 @@
 
 Source: iPhone, 1080×1920 portrait, HEVC HDR (HLG), 29.97fps, **47.4s**
 Preview v1: **29.2s** (dipotong ~18s), 720×1280, 30fps, SDR
+Final: **29.2s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.8 LUFS, sudah render
 Cover: `cover.jpg` · Caption & hashtag: `CAPTION.md`
 
 ## Gaya: kolam renang / budak (ikut produk)
