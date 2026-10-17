@@ -2,6 +2,7 @@
 
 Source: iPhone, 1080×1920 portrait, HEVC HDR (HLG), 29.97fps, **53.0s**
 Preview v1: **33.1s** (dipotong ~20s), 720×1280, 30fps, SDR
+Final: **33.1s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.8 LUFS, sudah render
 Cover: `cover.jpg` · Caption & hashtag: `CAPTION.md`
 
 ## Safe zone TikTok (baru)
