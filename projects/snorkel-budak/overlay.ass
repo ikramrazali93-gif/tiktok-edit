@@ -1,0 +1,58 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 720
+PlayResY: 1280
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Fredoka,58,&H00FFFFFF,&H000000FF,&H004F1E0B,&H644F1E0B,-1,0,0,0,100,100,0,0,1,5,3,2,40,110,310,1
+Style: Label,Fredoka,62,&H004F1E0B,&H000000FF,&H00FFFFFF,&H00000000,-1,0,0,0,100,100,0,0,3,16,0,5,40,40,0,1
+Style: Small,Fredoka,40,&H00FFFFFF,&H000000FF,&H004F1E0B,&H644F1E0B,-1,0,0,0,100,100,0,0,1,4,2,5,40,40,0,1
+Style: Shape,Inter,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 8,0:00:00.00,0:00:28.46,Shape,,0,0,0,,{\an7\pos(0,0)\c&H000AD6FF&\fscx0\t(0,28462,\fscx100)\p1}m 0 0 l 720 0 720 8 0 8{\p0}
+Dialogue: 5,0:00:00.05,0:00:01.20,Label,,0,0,0,,{\an5\pos(325,760)\frz-3\fs74\c&H00FFFFFF&\3c&H00D84E1D&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}GOGGLE {\c&H000AD6FF&}BUDAK{\c&H00FFFFFF&}
+Dialogue: 9,0:00:01.20,0:00:01.55,Shape,,0,0,0,,{\an7\pos(0,0)\c&H00FFFFFF&\1a&H30&\fad(0,310)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:01.23,0:00:02.90,Label,,0,0,0,,{\an5\pos(325,760)\frz3\fs80\c&H004F1E0B&\3c&H000AD6FF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}+ {\c&H00D84E1D&}SNORKEL{\c&H004F1E0B&}!
+Dialogue: 5,0:00:03.00,0:00:04.55,Label,,0,0,0,,{\an5\pos(325,760)\frz-2\fs62\c&H004F1E0B&\3c&H00FFFFFF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}{\c&H00D84E1D&}UNBOXING{\c&H004F1E0B&}
+Dialogue: 5,0:00:04.65,0:00:06.80,Label,,0,0,0,,{\an5\pos(325,760)\frz2\fs62\c&H00FFFFFF&\3c&H00D84E1D&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}WARNA {\c&H00FFE138&}BIRU{\c&H00FFFFFF&}
+Dialogue: 6,0:00:06.80,0:00:10.80,Small,,0,0,0,,{\an7\pos(40,130)\c&H000AD6FF&}>> x7
+Dialogue: 5,0:00:11.00,0:00:13.80,Label,,0,0,0,,{\an5\pos(325,760)\frz-3\fs62\c&H004F1E0B&\3c&H00FFFFFF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}SET {\c&H00D84E1D&}LENGKAP{\c&H004F1E0B&}
+Dialogue: 6,0:00:10.80,0:00:13.80,Small,,0,0,0,,{\an7\pos(40,130)\c&H000AD6FF&}>> x1.5
+Dialogue: 5,0:00:13.90,0:00:15.50,Label,,0,0,0,,{\an5\pos(325,760)\frz-3\fs74\c&H00FFFFFF&\3c&H00D84E1D&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}{\c&H000AD6FF&}GOGGLE{\c&H00FFFFFF&}
+Dialogue: 5,0:00:15.55,0:00:17.20,Label,,0,0,0,,{\an5\pos(325,760)\frz3\fs74\c&H004F1E0B&\3c&H000AD6FF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}{\c&H00D84E1D&}SNORKEL{\c&H004F1E0B&}
+Dialogue: 5,0:00:17.37,0:00:19.07,Label,,0,0,0,,{\an5\pos(325,760)\frz-2\fs62\c&H004F1E0B&\3c&H00FFFFFF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}TEMPAT {\c&H00D84E1D&}BERNAFAS{\c&H004F1E0B&}
+Dialogue: 5,0:00:19.19,0:00:19.95,Label,,0,0,0,,{\an5\pos(325,760)\frz2\fs62\c&H00FFFFFF&\3c&H00D84E1D&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}SEDUT DI {\c&H000AD6FF&}MULUT{\c&H00FFFFFF&}
+Dialogue: 9,0:00:20.55,0:00:20.80,Shape,,0,0,0,,{\an7\pos(0,0)\c&H00FFFFFF&\1a&H30&\fad(0,210)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:20.10,0:00:23.64,Label,,0,0,0,,{\an5\pos(325,760)\frz-3\fs76\c&H004F1E0B&\3c&H000AD6FF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}CUBA {\c&H00D84E1D&}PAKAI!{\c&H004F1E0B&}
+Dialogue: 6,0:00:19.95,0:00:23.64,Small,,0,0,0,,{\an7\pos(40,130)\c&H000AD6FF&}>> x1.3
+Dialogue: 5,0:00:23.66,0:00:25.46,Label,,0,0,0,,{\an5\pos(325,760)\frz2\fs62\c&H004F1E0B&\3c&H00FFFFFF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}PASANG {\c&H00D84E1D&}SNORKEL{\c&H004F1E0B&}
+Dialogue: 8,0:00:25.46,0:00:28.46,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004F1E0B&\1a&HFF&\t(0,250,\1a&H60&)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.51,0:00:28.46,Label,,0,0,0,,{\an5\pos(325,440)\frz-3\fs59\c&H004F1E0B&\3c&H00FFFFFF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}SET {\c&H00D84E1D&}SNORKEL{\c&H004F1E0B&} BUDAK
+Dialogue: 9,0:00:25.76,0:00:28.46,Label,,0,0,0,,{\an5\pos(325,550)\frz2\fs52\c&H00FFFFFF&\3c&H00D84E1D&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}GOGGLE + SNORKEL
+Dialogue: 9,0:00:26.06,0:00:28.46,Label,,0,0,0,,{\an5\pos(325,660)\frz-2\fs46\c&H004F1E0B&\3c&H00FFFFFF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}CUTI SEKOLAH {\c&H00D84E1D&}JOM MANDI!{\c&H004F1E0B&}
+Dialogue: 9,0:00:26.36,0:00:28.46,Label,,0,0,0,,{\an5\pos(325,780)\frz2\fs58\c&H004F1E0B&\3c&H000AD6FF&\fscx0\fscy0\t(0,140,\fscx112\fscy112)\t(140,240,\fscx100\fscy100)\fad(0,150)}TEKAN BEG KUNING
+Dialogue: 2,0:00:00.02,0:00:00.19,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}INI{\r} {\c&H00FFE138&}KANAK-KANAK{\r} PUNYA
+Dialogue: 2,0:00:00.19,0:00:00.59,Cap,,0,0,0,,INI {\c&H000AD6FF&\fscx112\fscy112}KANAK-KANAK{\r} PUNYA
+Dialogue: 2,0:00:00.59,0:00:00.75,Cap,,0,0,0,,INI {\c&H00FFE138&}KANAK-KANAK{\r} {\c&H000AD6FF&\fscx112\fscy112}PUNYA{\r}
+Dialogue: 2,0:00:00.75,0:00:01.32,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}GOGGLE{\r}
+Dialogue: 2,0:00:02.93,0:00:03.53,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}INI{\r} {\c&H00FFE138&}GOGGLE{\r}
+Dialogue: 2,0:00:03.53,0:00:04.52,Cap,,0,0,0,,INI {\c&H000AD6FF&\fscx112\fscy112}GOGGLE{\r}
+Dialogue: 2,0:00:17.22,0:00:17.37,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}INI{\r} TEMPAT {\c&H00FFE138&}BERNAFAS{\r}
+Dialogue: 2,0:00:17.37,0:00:17.87,Cap,,0,0,0,,INI {\c&H000AD6FF&\fscx112\fscy112}TEMPAT{\r} {\c&H00FFE138&}BERNAFAS{\r}
+Dialogue: 2,0:00:17.87,0:00:19.02,Cap,,0,0,0,,INI TEMPAT {\c&H000AD6FF&\fscx112\fscy112}BERNAFAS{\r}
+Dialogue: 2,0:00:19.19,0:00:19.32,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}SEDUT{\r} KAT {\c&H00FFE138&}MULUT{\r}
+Dialogue: 2,0:00:19.32,0:00:19.37,Cap,,0,0,0,,{\c&H00FFE138&}SEDUT{\r} {\c&H000AD6FF&\fscx112\fscy112}KAT{\r} {\c&H00FFE138&}MULUT{\r}
+Dialogue: 2,0:00:19.37,0:00:19.67,Cap,,0,0,0,,{\c&H00FFE138&}SEDUT{\r} KAT {\c&H000AD6FF&\fscx112\fscy112}MULUT{\r}
+Dialogue: 2,0:00:19.67,0:00:20.07,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}KAN?{\r}
+Dialogue: 2,0:00:23.66,0:00:24.06,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}OH{\r} {\c&H00FFE138&}SINI{\r}
+Dialogue: 2,0:00:24.06,0:00:24.42,Cap,,0,0,0,,OH {\c&H000AD6FF&\fscx112\fscy112}SINI{\r}
+Dialogue: 2,0:00:24.42,0:00:24.56,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}KITA{\r} DUDUK DEKAT
+Dialogue: 2,0:00:24.56,0:00:24.84,Cap,,0,0,0,,KITA {\c&H000AD6FF&\fscx112\fscy112}DUDUK{\r} DEKAT
+Dialogue: 2,0:00:24.84,0:00:24.90,Cap,,0,0,0,,KITA DUDUK {\c&H000AD6FF&\fscx112\fscy112}DEKAT{\r}
+Dialogue: 2,0:00:24.90,0:00:25.09,Cap,,0,0,0,,{\fscx85\fscy85\t(0,90,\fscx100\fscy100)}{\c&H000AD6FF&\fscx112\fscy112}SINI{\r} KAN
+Dialogue: 2,0:00:25.09,0:00:25.59,Cap,,0,0,0,,{\c&H00FFE138&}SINI{\r} {\c&H000AD6FF&\fscx112\fscy112}KAN{\r}
