@@ -134,7 +134,8 @@ def main():
             print(f"  {s!r} -> ralat {best[0]:.2f} ({best[2]})", flush=True)
             out = CACHE / (best[1].stem + "_p.wav")
             polish(best[1], out)
-            bahagian += [suara.baca_wav(out), np.zeros(int(JEDA_AYAT * SR), np.float32)]
+            gap = 0.8 if s.endswith(("...", "…")) else JEDA_AYAT  # jeda dramatik selepas '...'
+            bahagian += [suara.baca_wav(out), np.zeros(int(gap * SR), np.float32)]
         a = np.concatenate(bahagian[:-1])
         kata = baris["teks"].split()
         masa = suara.masa_perkataan(whisper, a, kata)

@@ -288,6 +288,20 @@ def icon_chat(c, p, lt):
         c.drawCircle(370 + i * 60, 675 - up, 13, pen(WHITE, 0, p, fill=True))
 
 
+def icon_run(c, p, lt):
+    """Orang berlari + garis laju."""
+    line(c, poly([(120, 1080), (960, 1080)]), p, 3, 0.6, glow=False)
+    streaks = skia.Path()
+    for i in range(6):
+        y = 640 + i * 70
+        x = 380 - ((lt * 900 + i * 90) % 300)
+        streaks.addPath(poly([(x - 160, y), (x, y)]))
+    c.drawPath(streaks, pen(WHITE, 3, 0.45 * p))
+    c.saveLayerAlpha(None, int(255 * p))
+    person(c, 560, 1080, 520, walk_pose(lt * 13, 1.5, 22), facing=1, col=WHITE, hat=False)
+    c.restore()
+
+
 def icon_trip(c, p, lt):
     trail = skia.Path()
     trail.moveTo(160, 1050)
@@ -312,7 +326,7 @@ def icon_trip(c, p, lt):
 
 def b_bukan(c, lt, dur, T):
     T0 = BY["bukan"]["mula"] - 0.15
-    starts = [word_t("bukan", "bukan", i) - T0 for i in range(3)] + [dur + 0.2]
+    starts = [word_t("bukan", p) - T0 for p in ("bekerja", "berbual", "berlari")] + [dur + 0.2]
     for i in range(3):
         t0, t1 = starts[i] - 0.1, starts[i + 1] - 0.1
         if not (t0 <= lt < t1 + 0.2):
@@ -323,7 +337,7 @@ def b_bukan(c, lt, dur, T):
         c.translate(-500 * out, 0)
         c.saveLayerAlpha(None, int(255 * (1 - out)))
         p = ease(prog(k, 0, 0.55))
-        [lambda: icon_case(c, p), lambda: icon_chat(c, p, k), lambda: icon_trip(c, p, k)][i]()
+        [lambda: icon_case(c, p), lambda: icon_chat(c, p, k), lambda: icon_run(c, p, k)][i]()
         c.restore()
         c.restore()
 
@@ -340,7 +354,7 @@ def scribble(c, cx, cy, r, T, a=1.0, n=5):
 
 def b_gementar(c, lt, dur, T):
     T0 = BY["gementar"]["mula"] - 0.15
-    t_kep = word_t("gementar", "keputusan") - T0
+    t_kep = word_t("gementar", "perubahan") - T0
     t_go = word_t("gementar", "terus") - T0
     calm = ease(prog(lt, t_kep, t_kep + 0.6))
     walk = prog(lt, t_go, dur)
@@ -508,7 +522,7 @@ def b_esok(c, lt, dur, T):
 
 def b_pergi(c, lt, dur, T):
     T0 = BY["pergi"]["mula"] - 0.15
-    t_go = word_t("pergi", "pergi") - T0
+    t_go = word_t("pergi", "keputusan") - T0
     flash_t = t_go + 0.55
     if lt > flash_t + 0.15:
         end_scene(c, lt - flash_t - 0.15, T)
@@ -627,7 +641,7 @@ STARTS = [0.0] + [b["mula"] - 0.15 for b in BARIS[1:]]
 ENDS = STARTS[1:] + [JUMLAH]
 XFADE = 0.38
 SHAKES = [word_t("hook", "bersedia"), word_t("keputusan", "keputusan"), word_t("takdatang", "datang"),
-          word_t("pergi", "pergi")]
+          word_t("pergi", "keputusan")]
 
 
 def draw_scene(c, k, t):
@@ -657,7 +671,7 @@ def wave_clip(u, T, vertical):
 # ------------------------------------------------------------------ tipografi kinetik
 TF_BLACK = skia.Typeface.MakeFromFile(FONT_DIR + "Montserrat-Black.ttf")
 TF_BOLD = skia.Typeface.MakeFromFile(FONT_DIR + "Montserrat-SemiBold.ttf")
-KEY = {"bersedia", "keputusan", "perasaan", "sempurna", "takut", "yakin", "datang", "kerja", "perbualan", "perjalanan",
+KEY = {"bekerja", "berbual", "berlari", "perubahan", "bersedia", "keputusan", "perasaan", "sempurna", "takut", "yakin", "datang", "kerja", "perbualan", "perjalanan",
        "gementar", "izin", "melangkah", "menyusul", "sendiri", "pilih", "tunggu", "berani", "berhenti", "esok", "pergi",
        "senyap", "takkan", "susah"}
 SIZE_KEY, SIZE_STD, MAXW = 132, 62, 960
@@ -675,7 +689,7 @@ def word_style(w, n_key, babak=""):
     key = is_key(w)
     text = clean(w).upper() if key else clean(w).lower()
     size = SIZE_KEY if key else SIZE_STD
-    if babak == "pergi" and clean(w).lower() == "pergi":
+    if babak == "pergi" and clean(w).lower() == "keputusan":
         size = 230
     font = skia.Font(TF_BLACK if key else TF_BOLD, size)
     wd = font.measureText(text)

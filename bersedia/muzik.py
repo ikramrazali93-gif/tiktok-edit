@@ -93,7 +93,7 @@ def main():
     word = lambda b, p: next(w["mula"] for w in by[b]["kata"] if w["k"].lower().startswith(p))
     dur = masa["jumlah"] + KAD_AKHIR
     n = int(dur * SR)
-    t_pergi = word("pergi", "pergi")
+    t_pergi = word("pergi", "keputusan")
     sec_b = by["gementar"]["mula"]
     sec_c = by["pilih"]["mula"] - 0.15
     sec_d = by["esok"]["mula"] - 0.15

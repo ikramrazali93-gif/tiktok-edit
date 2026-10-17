@@ -1,7 +1,7 @@
 [
  {
   "babak": "hook",
-  "teks": "Nak, kau takkan pernah rasa bersedia.",
+  "teks": "Kau takkan pernah rasa bersedia.",
   "jeda": 0.6
  },
  {
@@ -11,20 +11,20 @@
  },
  {
   "babak": "tunggu",
-  "teks": "Semua orang tunggu saat yang sempurna. Bila rasa takut dah senyap, dan hati tiba-tiba yakin."
+  "teks": "Semua orang tunggu saat yang sempurna. Bila rasa takut dah hilang, tiba-tiba hati rasa yakin."
  },
  {
   "babak": "takdatang",
-  "teks": "Saat itu takkan datang.",
+  "teks": "Tapi... Rasa itu takkan datang sendiri.",
   "jeda": 0.6
  },
  {
   "babak": "bukan",
-  "teks": "Bukan untuk kerja baru. Bukan untuk perbualan yang susah. Bukan untuk perjalanan itu."
+  "teks": "Tengah bekerja, berbual, atau berlari takkan timbulkan rasa itu."
  },
  {
   "babak": "gementar",
-  "teks": "Rasa gementar takkan hilang dan beri kau izin. Kau cuma buat keputusan, dan terus melangkah."
+  "teks": "Takut takkan hilang dan beri kita izin. Kau cuma perlu buat perubahan, dan terus melangkah."
  },
  {
   "babak": "menyusul",
@@ -36,7 +36,7 @@
  },
  {
   "babak": "berani",
-  "teks": "Orang yang nampak berani pun bukannya tak takut. Mereka cuma berhenti menunggu rasa itu dulu."
+  "teks": "Orang yang nampak berani pun bukannya tak takut. Mereka cuma berhenti menunggu bersedia."
  },
  {
   "babak": "esok",
@@ -45,6 +45,6 @@
  },
  {
   "babak": "pergi",
-  "teks": "Kau cuma perlu… pergi."
+  "teks": "Kau cuma perlu… buat keputusan."
  }
 ]
