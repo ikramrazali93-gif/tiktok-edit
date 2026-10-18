@@ -177,10 +177,13 @@ def melody(buf, bars, t0, transpose, gain):
 # ------------------------------------------------------------------ susunan
 
 def slot_beats(dur, allowed):
+    """Pulangkan (bilangan rentak, faktor laju). Baris yang terlebih <=10% dimampatkan supaya muat."""
     for b in allowed:
         if dur <= b * BEAT * 0.97:
-            return b
-    return allowed[-1]
+            return b, 1.0
+        if dur <= b * BEAT * 0.97 * 1.1:
+            return b, dur / (b * BEAT * 0.97)
+    return allowed[-1], 1.0
 
 
 def plan(vokal):
@@ -199,11 +202,13 @@ def plan(vokal):
             beats_used = 0
             allowed = [2, 4, 8] if src == "prakorus" else [4, 8]
             for v in by[src]:
-                sb = slot_beats(v["tempoh"], allowed)
+                sb, laju = slot_beats(v["tempoh"], allowed)
                 lines.append(dict(v, mula=round(t + beats_used * BEAT + (0.08 if src != "prakorus" else 0.03), 3),
-                                  bahagian=name))
+                                  bahagian=name, laju=round(laju, 4)))
                 beats_used += sb
             bars = math.ceil(beats_used / 4)
+            if src.startswith("rangkap") or src == "jambatan":
+                bars += bars % 2  # frasa muzik genap (ruang bernafas)
         sections.append(dict(nama=name, mula=t, bar=bars))
         t += bars * BAR
     return sections, lines, t
@@ -327,8 +332,12 @@ def main():
     # suara
     voice = np.zeros(n, np.float32)
     for ln in lines:
-        a = read_wav(BUILD / "vokal" / ln["fail"])
-        add(voice, a, ln["mula"])
+        src = BUILD / "vokal" / ln["fail"]
+        if ln["laju"] > 1.0:  # mampatkan masa tanpa ubah nada
+            fast = BUILD / "vokal" / f"{src.stem}_x{ln['laju']:.3f}.wav"
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-af", f"atempo={ln['laju']:.4f}", str(fast)], check=True)
+            src = fast
+        add(voice, read_wav(src), ln["mula"])
     voice = voice / (np.abs(voice).max() + 1e-6) * 0.9
     voice_fx = voice + 0.25 * reverb(delay(voice, BEAT / 2, 0.25, 2), 1.6, 1.0)[:n]
 
