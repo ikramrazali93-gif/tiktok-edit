@@ -1,39 +1,76 @@
 {
  "tajuk": "Terus Melangkah",
  "bahagian": [
-  {"nama": "intro", "baris": []},
-  {"nama": "rangkap1", "baris": [
+  {
+   "nama": "intro",
+   "baris": []
+  },
+  {
+   "nama": "rangkap1",
+   "baris": [
     "Lama aku menunggu di hujung jalan.",
     "Menanti hati rasa tenang.",
     "Kata mereka, tunggu saat yang tepat.",
-    "Tapi saat itu tak pernah datang."]},
-  {"nama": "prakorus", "baris": [
+    "Tapi saat itu tak pernah datang."
+   ]
+  },
+  {
+   "nama": "prakorus",
+   "baris": [
     "Takut takkan pergi.",
     "Takkan beri izin.",
     "Bersedia bukan perasaan.",
-    "Ia satu pilihan."]},
-  {"nama": "korus", "baris": [
+    "Ia satu pilihan."
+   ]
+  },
+  {
+   "nama": "korus",
+   "baris": [
     "Terus melangkah, walau hati gementar.",
     "Terus melangkah, walau jalan berliku.",
-    "Bersedia kan menyusul di pertengahan.",
-    "Hari ini ku pilih, langkah pertamaku."]},
-  {"nama": "rangkap2", "baris": [
+    {
+     "teks": "Bersedia kan menyusul di pertengahan.",
+     "sebutan": "Bersedia, kan menyusul di pertengahan."
+    },
+    "Hari ini ku pilih, langkah pertamaku."
+   ]
+  },
+  {
+   "nama": "rangkap2",
+   "baris": [
     "Yang berani pun pernah rasa takut.",
     "Bezanya, mereka tak lagi menunggu.",
     "Pagi esok takkan pernah sempurna.",
-    "Tapi langkah kecil tetap menuju."]},
-  {"nama": "jambatan", "baris": [
+    "Tapi langkah kecil tetap menuju."
+   ]
+  },
+  {
+   "nama": "jambatan",
+   "baris": [
     "Jangan tunggu esok.",
     "Jangan tunggu nanti.",
     "Bersedia itu bukan perasaan,",
-    "ia satu keputusan."]},
-  {"nama": "korus_akhir", "baris": [
+    "ia satu keputusan."
+   ]
+  },
+  {
+   "nama": "korus_akhir",
+   "baris": [
     "Terus melangkah, walau hati gementar.",
     "Terus melangkah, walau jalan berliku.",
-    "Bersedia kan menyusul di pertengahan.",
-    "Hari ini ku pilih, langkah pertamaku."]},
-  {"nama": "penutup", "baris": [
+    {
+     "teks": "Bersedia kan menyusul di pertengahan.",
+     "sebutan": "Bersedia, kan menyusul di pertengahan."
+    },
+    "Hari ini ku pilih, langkah pertamaku."
+   ]
+  },
+  {
+   "nama": "penutup",
+   "baris": [
     "Terus melangkah.",
-    "Langkah pertama, hari ini."]}
+    "Langkah pertama, hari ini."
+   ]
+  }
  ]
 }

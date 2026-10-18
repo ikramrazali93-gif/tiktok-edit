@@ -28,14 +28,17 @@ def main():
     hasil, done = [], {}
     n = 0
     for bah in lirik["bahagian"]:
-        for teks in bah["baris"]:
+        for item in bah["baris"]:
+            # baris boleh jadi teks biasa, atau {"teks": paparan, "sebutan": teks untuk suara}
+            teks = item["teks"] if isinstance(item, dict) else item
+            sebut = item.get("sebutan", teks) if isinstance(item, dict) else item
             laju = LAJU_JAMBATAN if bah["nama"] == "jambatan" else LAJU_BIASA
-            key = (teks, laju)
+            key = (sebut, laju)
             if key not in done:
                 best = None
                 for seed in range(1, sl.CUBAAN + 1):
-                    path = sl.synth(teks, seed)
-                    err, heard = sl.score(whisper, path, teks)
+                    path = sl.synth(sebut, seed)
+                    err, heard = sl.score(whisper, path, sebut)
                     if best is None or err < best[0]:
                         best = (err, path, heard)
                     if err == 0:
