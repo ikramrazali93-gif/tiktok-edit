@@ -247,7 +247,7 @@ def main():
                 arp = [tri[0] + 12, tri[1] + 12, tri[2] + 12, tri[1] + 24]
                 steps = 4 if k == "jambatan" else 8
                 for i in range(steps):
-                    add(keys, 0.11 * pluck(hz(arp[i % 4] + tr)), t0 + i * BAR / steps)
+                    add(keys, 0.08 * pluck(hz(arp[i % 4] + tr)), t0 + i * BAR / steps)
             if k in ("korus", "hook", "prakorus"):
                 for beat in (0, 2.5) if k != "prakorus" else (0, 1, 2, 3):
                     for m in tri:
@@ -329,18 +329,18 @@ def main():
     for ln in lines:
         a = read_wav(BUILD / "vokal" / ln["fail"])
         add(voice, a, ln["mula"])
-    voice = voice / (np.abs(voice).max() + 1e-6) * 0.8
+    voice = voice / (np.abs(voice).max() + 1e-6) * 0.9
     voice_fx = voice + 0.25 * reverb(delay(voice, BEAT / 2, 0.25, 2), 1.6, 1.0)[:n]
 
     # ducking muzik bila suara aktif
     hop = SR // 100
     rms = np.sqrt(np.convolve(voice ** 2, np.ones(hop * 5) / (hop * 5), "same"))
     talk = np.convolve(np.clip(rms / 0.04, 0, 1), np.ones(SR // 5) / (SR // 5), "same")
-    music *= 1 - 0.38 * np.clip(talk, 0, 1)
+    music *= 1 - 0.55 * np.clip(talk, 0, 1)
 
     t = np.arange(n) / SR
     music *= np.clip(t / 0.5, 0, 1) * np.clip((total - t) / 2.5, 0, 1)
-    music *= 0.5 / (np.abs(music).max() + 1e-6)
+    music *= 0.36 / (np.abs(music).max() + 1e-6)
     mix = music + voice_fx
     mix = np.tanh(mix * 1.2) / np.tanh(1.2)  # pengehad lembut
 
