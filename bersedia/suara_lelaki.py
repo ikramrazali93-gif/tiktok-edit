@@ -90,7 +90,8 @@ def score(whisper, path, text):
     got = norm_words(" ".join(s.text for s in segs))
     want = norm_words(text)
     sm = difflib.SequenceMatcher(a=want, b=got, autojunk=False)
-    return 1 - sum(b.size for b in sm.get_matching_blocks()) / max(1, len(want)), " ".join(got)
+    # perkataan tertinggal ATAU berlebihan (cth. ulangan di hujung) kedua-duanya dikira ralat
+    return 1 - sum(b.size for b in sm.get_matching_blocks()) / max(1, len(want), len(got)), " ".join(got)
 
 
 def polish(src, dst):

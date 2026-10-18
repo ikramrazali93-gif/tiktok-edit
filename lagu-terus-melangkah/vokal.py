@@ -13,8 +13,9 @@ import suara_lelaki as sl  # noqa: E402
 BUILD = ROOT / "build"
 OUT = BUILD / "vokal"
 sl.CACHE = BUILD / "tts_lelaki"   # cache TTS sendiri
-LAJU_BIASA = 1.0                   # deklamasi berirama: tak terlalu perlahan
-LAJU_JAMBATAN = 0.86               # jambatan dibaca perlahan
+sl.CUBAAN = 16
+LAJU_BIASA = 0.86                  # deklamasi berirama yang tenang
+LAJU_JAMBATAN = 0.76               # jambatan dibaca lebih perlahan
 
 
 def main():
