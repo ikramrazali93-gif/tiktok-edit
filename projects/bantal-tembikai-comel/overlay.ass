@@ -1,0 +1,523 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 720
+PlayResY: 1280
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Fredoka,56,&H00FFFFFF,&H000000FF,&H00345E1C,&H70345E1C,-1,0,0,0,100,100,0,0,1,5,2,2,40,110,310,1
+Style: Label,Fredoka,60,&H00FFFFFF,&H000000FF,&H00345E1C,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,5,0,0,0,1
+Style: Shape,Inter,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+Style: ShapeC,Inter,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,5,0,0,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 8,0:00:00.00,0:00:41.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H00345E1C&\1a&H40&\p1}m 0 0 l 720 0 720 12 0 12{\p0}
+Dialogue: 8,0:00:00.00,0:00:41.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H008A5CFF&\clip(0,0,0,12)\t(0,41160,\clip(0,0,720,12))\p1}m 0 0 l 720 0 720 9 0 9{\p0}
+Dialogue: 8,0:00:00.00,0:00:41.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007EDEA6&\clip(0,0,0,12)\t(0,41160,\clip(0,0,720,12))\p1}m 0 9 l 720 9 720 12 0 12{\p0}
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\NTENGOK?
+Dialogue: 5,0:00:00.02,0:00:01.22,Label,,0,0,0,,{\an5\pos(315,235)\fs70\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ANAK HAMPA\N{\c&H008A5CFF&}TENGOK{\c&H00FFFFFF&}?
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs70\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\NTAK LEPAS!
+Dialogue: 5,0:00:01.22,0:00:02.40,Label,,0,0,0,,{\an5\pos(315,235)\fs70\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MEMANG\N{\c&H008A5CFF&}TAK LEPAS{\c&H004AD5FF&}!
+Dialogue: 4,0:00:01.22,0:00:02.62,ShapeC,,0,0,0,,{\move(85,265,67,170,0,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz12\t(0,1400,\frz-10)\fscx0\fscy0\t(0,150,\fscx100\fscy100)\t(150,250,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:01.22,0:00:02.62,ShapeC,,0,0,0,,{\move(540,285,558,190,70,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz-12\t(70,1400,\frz10)\fscx0\fscy0\t(70,220,\fscx120\fscy120)\t(220,320,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:01.22,0:00:02.62,ShapeC,,0,0,0,,{\move(145,185,127,90,140,1400)\c&H004AD5FF&\3c&HFFFFFF&\bord2\frz12\t(140,1400,\frz-10)\fscx0\fscy0\t(140,290,\fscx100\fscy100)\t(290,390,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:01.22,0:00:02.62,ShapeC,,0,0,0,,{\move(560,195,578,100,210,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz-12\t(210,1400,\frz10)\fscx0\fscy0\t(210,360,\fscx120\fscy120)\t(360,460,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:01.22,0:00:02.62,ShapeC,,0,0,0,,{\move(235,305,217,210,280,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz12\t(280,1400,\frz-10)\fscx0\fscy0\t(280,430,\fscx100\fscy100)\t(430,530,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 9,0:00:02.24,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 -960 972 -838 1491 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.26,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 -491 1838 28 1960 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.28,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 1960 640 1838 1252 1491 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.31,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 1771 972 2118 360 2240)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.33,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 2240 -252 2118 -771 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.35,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 1771 -1118 1252 -1240 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.37,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l -1240 640 -1118 28 -771 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:02.39,0:00:02.60,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 -491 -252 -838 360 -960)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN TAIN!
+Dialogue: 5,0:00:02.48,0:00:04.28,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TAIN TAIN {\c&H008A5CFF&}TAIN{\c&H00FFFFFF&}!
+Dialogue: 4,0:00:02.48,0:00:03.88,ShapeC,,0,0,0,,{\move(85,265,67,170,0,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz12\t(0,1400,\frz-10)\fscx0\fscy0\t(0,150,\fscx100\fscy100)\t(150,250,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:02.48,0:00:03.88,ShapeC,,0,0,0,,{\move(540,285,558,190,70,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz-12\t(70,1400,\frz10)\fscx0\fscy0\t(70,220,\fscx120\fscy120)\t(220,320,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:02.48,0:00:03.88,ShapeC,,0,0,0,,{\move(145,185,127,90,140,1400)\c&H004AD5FF&\3c&HFFFFFF&\bord2\frz12\t(140,1400,\frz-10)\fscx0\fscy0\t(140,290,\fscx100\fscy100)\t(290,390,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:02.48,0:00:03.88,ShapeC,,0,0,0,,{\move(560,195,578,100,210,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz-12\t(210,1400,\frz10)\fscx0\fscy0\t(210,360,\fscx120\fscy120)\t(360,460,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:02.48,0:00:03.88,ShapeC,,0,0,0,,{\move(235,305,217,210,280,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz12\t(280,1400,\frz-10)\fscx0\fscy0\t(280,430,\fscx100\fscy100)\t(430,530,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA TANGAN\N& KAKI!
+Dialogue: 5,0:00:04.48,0:00:06.82,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA {\c&H008A5CFF&}TANGAN{\c&H00FFFFFF&}\N& {\c&H008A5CFF&}KAKI{\c&H00FFFFFF&}!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs74\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 5,0:00:07.04,0:00:07.88,Label,,0,0,0,,{\an5\pos(315,235)\fs74\c&H008A5CFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}COMELNYA!
+Dialogue: 9,0:00:07.72,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 -960 972 -838 1491 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.74,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 -491 1838 28 1960 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.76,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 1960 640 1838 1252 1491 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.79,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 1771 972 2118 360 2240)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.81,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 2240 -252 2118 -771 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.83,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 1771 -1118 1252 -1240 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.85,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l -1240 640 -1118 28 -771 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:07.87,0:00:08.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 -491 -252 -838 360 -960)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs58\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN ANAK-ANAK\NSAJA MINAT
+Dialogue: 5,0:00:08.00,0:00:11.66,Label,,0,0,0,,{\an5\pos(315,235)\fs58\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BUKAN {\c&H008A5CFF&}ANAK-ANAK{\c&H00FFFFFF&}\NSAJA MINAT
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}MAMA-MAMA\NPUN SUKA!
+Dialogue: 5,0:00:11.98,0:00:13.60,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}{\c&H008A5CFF&}MAMA-MAMA{\c&H004AD5FF&}\NPUN SUKA!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & COMEL!
+Dialogue: 5,0:00:14.06,0:00:15.96,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU & {\c&H008A5CFF&}COMEL{\c&H00FFFFFF&}!
+Dialogue: 4,0:00:14.06,0:00:15.46,ShapeC,,0,0,0,,{\move(85,265,67,170,0,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz12\t(0,1400,\frz-10)\fscx0\fscy0\t(0,150,\fscx100\fscy100)\t(150,250,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:14.06,0:00:15.46,ShapeC,,0,0,0,,{\move(540,285,558,190,70,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz-12\t(70,1400,\frz10)\fscx0\fscy0\t(70,220,\fscx120\fscy120)\t(220,320,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:14.06,0:00:15.46,ShapeC,,0,0,0,,{\move(145,185,127,90,140,1400)\c&H004AD5FF&\3c&HFFFFFF&\bord2\frz12\t(140,1400,\frz-10)\fscx0\fscy0\t(140,290,\fscx100\fscy100)\t(290,390,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:14.06,0:00:15.46,ShapeC,,0,0,0,,{\move(560,195,578,100,210,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz-12\t(210,1400,\frz10)\fscx0\fscy0\t(210,360,\fscx120\fscy120)\t(360,460,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:14.06,0:00:15.46,ShapeC,,0,0,0,,{\move(235,305,217,210,280,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz12\t(280,1400,\frz-10)\fscx0\fscy0\t(280,430,\fscx100\fscy100)\t(430,530,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 9,0:00:15.80,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 -960 972 -838 1491 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.82,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 -491 1838 28 1960 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.84,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 1960 640 1838 1252 1491 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.87,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 1771 972 2118 360 2240)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.89,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 2240 -252 2118 -771 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.91,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 1771 -1118 1252 -1240 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.93,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l -1240 640 -1118 28 -771 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:15.95,0:00:16.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 -491 -252 -838 360 -960)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs72\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA 3 SIZE!
+Dialogue: 5,0:00:16.04,0:00:16.66,Label,,0,0,0,,{\an5\pos(315,235)\fs72\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}ADA {\c&H008A5CFF&}3 SIZE{\c&H004AD5FF&}!
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N55CM
+Dialogue: 5,0:00:16.84,0:00:19.20,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING BESAR\N{\c&H008A5CFF&}55CM{\c&H00FFFFFF&}
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N45CM
+Dialogue: 5,0:00:19.58,0:00:22.12,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SEDERHANA\N{\c&H008A5CFF&}45CM{\c&H00FFFFFF&}
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING KECIL\N& COMEL
+Dialogue: 5,0:00:22.84,0:00:24.88,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}PALING {\c&H008A5CFF&}KECIL{\c&H00FFFFFF&}\N& COMEL
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}35CM!
+Dialogue: 5,0:00:24.94,0:00:25.90,Label,,0,0,0,,{\an5\pos(315,235)\fs84\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}{\c&H008A5CFF&}35CM{\c&H00FFFFFF&}!
+Dialogue: 9,0:00:25.72,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 -960 972 -838 1491 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.74,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 -491 1838 28 1960 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.76,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 1960 640 1838 1252 1491 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.79,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 1771 972 2118 360 2240)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.81,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 2240 -252 2118 -771 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.83,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 1771 -1118 1252 -1240 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.85,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l -1240 640 -1118 28 -771 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:25.87,0:00:26.08,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 -491 -252 -838 360 -960)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\NMATERIAL
+Dialogue: 5,0:00:25.96,0:00:27.92,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}JOM TENGOK\N{\c&H008A5CFF&}MATERIAL{\c&H00FFFFFF&}
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\NFLUFFY
+Dialogue: 5,0:00:27.94,0:00:29.28,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULU-BULU\N{\c&H008A5CFF&}FLUFFY{\c&H004AD5FF&}
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs84\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 5,0:00:29.54,0:00:30.08,Label,,0,0,0,,{\an5\pos(315,235)\fs84\c&H008A5CFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}GEBU!
+Dialogue: 4,0:00:29.54,0:00:30.94,ShapeC,,0,0,0,,{\move(85,265,67,170,0,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz12\t(0,1400,\frz-10)\fscx0\fscy0\t(0,150,\fscx100\fscy100)\t(150,250,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:29.54,0:00:30.94,ShapeC,,0,0,0,,{\move(540,285,558,190,70,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz-12\t(70,1400,\frz10)\fscx0\fscy0\t(70,220,\fscx120\fscy120)\t(220,320,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:29.54,0:00:30.94,ShapeC,,0,0,0,,{\move(145,185,127,90,140,1400)\c&H004AD5FF&\3c&HFFFFFF&\bord2\frz12\t(140,1400,\frz-10)\fscx0\fscy0\t(140,290,\fscx100\fscy100)\t(290,390,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:29.54,0:00:30.94,ShapeC,,0,0,0,,{\move(560,195,578,100,210,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz-12\t(210,1400,\frz10)\fscx0\fscy0\t(210,360,\fscx120\fscy120)\t(360,460,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:29.54,0:00:30.94,ShapeC,,0,0,0,,{\move(235,305,217,210,280,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz12\t(280,1400,\frz-10)\fscx0\fscy0\t(280,430,\fscx100\fscy100)\t(430,530,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BELAKANG
+Dialogue: 5,0:00:30.12,0:00:31.52,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}{\c&H008A5CFF&}BELAKANG{\c&H00FFFFFF&}
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}DEPAN MACAM NI
+Dialogue: 5,0:00:31.58,0:00:33.78,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}{\c&H008A5CFF&}DEPAN{\c&H00FFFFFF&} MACAM NI
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • MONTEL\N• GEBU!
+Dialogue: 5,0:00:33.86,0:00:36.44,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}BULAT • {\c&H008A5CFF&}MONTEL{\c&H004AD5FF&}\N• GEBU!
+Dialogue: 4,0:00:33.86,0:00:35.26,ShapeC,,0,0,0,,{\move(85,265,67,170,0,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz12\t(0,1400,\frz-10)\fscx0\fscy0\t(0,150,\fscx100\fscy100)\t(150,250,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:33.86,0:00:35.26,ShapeC,,0,0,0,,{\move(540,285,558,190,70,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz-12\t(70,1400,\frz10)\fscx0\fscy0\t(70,220,\fscx120\fscy120)\t(220,320,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:33.86,0:00:35.26,ShapeC,,0,0,0,,{\move(145,185,127,90,140,1400)\c&H004AD5FF&\3c&HFFFFFF&\bord2\frz12\t(140,1400,\frz-10)\fscx0\fscy0\t(140,290,\fscx100\fscy100)\t(290,390,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:33.86,0:00:35.26,ShapeC,,0,0,0,,{\move(560,195,578,100,210,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz-12\t(210,1400,\frz10)\fscx0\fscy0\t(210,360,\fscx120\fscy120)\t(360,460,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 4,0:00:33.86,0:00:35.26,ShapeC,,0,0,0,,{\move(235,305,217,210,280,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz12\t(280,1400,\frz-10)\fscx0\fscy0\t(280,430,\fscx100\fscy100)\t(430,530,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 9,0:00:36.26,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 -960 972 -838 1491 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.28,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 -491 1838 28 1960 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.30,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 1960 640 1838 1252 1491 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.33,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 1771 972 2118 360 2240)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.35,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 2240 -252 2118 -771 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.37,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 1771 -1118 1252 -1240 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.39,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l -1240 640 -1118 28 -771 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:36.41,0:00:36.62,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 -491 -252 -838 360 -960)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(323.0,245.4)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(322.0,244.1)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(321.0,242.8)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(320.0,241.5)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(319.0,240.2)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(318.0,238.9)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(317.0,237.6)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(316.0,236.3)\fs64\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\NBEG KUNING
+Dialogue: 5,0:00:36.50,0:00:37.88,Label,,0,0,0,,{\an5\pos(315,235)\fs64\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TENGOK\N{\c&H008A5CFF&}BEG KUNING{\c&H004AD5FF&}
+Dialogue: 6,0:00:37.90,0:00:41.16,Shape,,0,0,0,,{\an7\pos(0,0)\c&H00345E1C&\1a&HFF&\t(0,250,\1a&H70&)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(323.0,240.4)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(322.0,239.1)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(321.0,237.8)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(320.0,236.5)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(319.0,235.2)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(318.0,233.9)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(317.0,232.6)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(316.0,231.3)\fs60\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI COMEL
+Dialogue: 9,0:00:37.95,0:00:41.16,Label,,0,0,0,,{\an5\pos(315,230)\fs60\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEMBIKAI {\c&H008A5CFF&}COMEL{\c&H00FFFFFF&}
+Dialogue: 8,0:00:38.10,0:00:41.16,ShapeC,,0,0,0,,{\pos(333,530)\c&H00345E1C&\1a&H30&\fscx0\fscy0\t(0,180,\fscx106\fscy106)\t(180,260,\fscx100\fscy100)\p1}m 40 0 l 540 0 b 562 0 580 18 580 40 l 580 260 b 580 282 562 300 540 300 l 40 300 b 18 300 0 282 0 260 l 0 40 b 0 18 18 0 40 0{\p0}
+Dialogue: 8,0:00:38.10,0:00:41.16,ShapeC,,0,0,0,,{\pos(325,520)\c&H00E5F6FF&\3c&H00345E1C&\bord6\fscx0\fscy0\t(0,180,\fscx106\fscy106)\t(180,260,\fscx100\fscy100)\p1}m 40 0 l 540 0 b 562 0 580 18 580 40 l 580 260 b 580 282 562 300 540 300 l 40 300 b 18 300 0 282 0 260 l 0 40 b 0 18 18 0 40 0{\p0}
+Dialogue: 9,0:00:38.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(325,408)\fs32\c&H00345E1C&\fad(150,0)}PILIH SIZE KORANG:
+Dialogue: 9,0:00:38.35,0:00:41.16,ShapeC,,0,0,0,,{\pos(145,540)\c&H004DA33F&\3c&H00345E1C&\bord3\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 49 0 b 76 0 98 22 98 49 b 98 76 76 98 49 98 b 22 98 0 76 0 49 b 0 22 22 0 49 0{\p0}
+Dialogue: 10,0:00:38.35,0:00:41.16,ShapeC,,0,0,0,,{\pos(145,540)\c&H007EDEA6&\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 43 0 b 67 0 86 19 86 43 b 86 67 67 86 43 86 b 19 86 0 67 0 43 b 0 19 19 0 43 0{\p0}
+Dialogue: 11,0:00:38.35,0:00:41.16,ShapeC,,0,0,0,,{\pos(145,540)\c&H007A55F2&\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 40 0 b 62 0 80 18 80 40 b 80 62 62 80 40 80 b 18 80 0 62 0 40 b 0 18 18 0 40 0{\p0}
+Dialogue: 12,0:00:38.45,0:00:41.16,ShapeC,,0,0,0,,{\pos(131,532)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.45,0:00:41.16,ShapeC,,0,0,0,,{\pos(157,528)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.45,0:00:41.16,ShapeC,,0,0,0,,{\pos(145,550)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.45,0:00:41.16,ShapeC,,0,0,0,,{\pos(135,552)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.45,0:00:41.16,ShapeC,,0,0,0,,{\pos(159,546)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.35,0:00:41.16,Label,,0,0,0,,{\an5\pos(145,632)\fs34\c&H007A55F2&\3c&H00345E1C&\bord0\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)}35CM
+Dialogue: 9,0:00:38.55,0:00:41.16,ShapeC,,0,0,0,,{\pos(315,532)\c&H004DA33F&\3c&H00345E1C&\bord3\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 63 0 b 98 0 126 28 126 63 b 126 98 98 126 63 126 b 28 126 0 98 0 63 b 0 28 28 0 63 0{\p0}
+Dialogue: 10,0:00:38.55,0:00:41.16,ShapeC,,0,0,0,,{\pos(315,532)\c&H007EDEA6&\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 57 0 b 88 0 114 26 114 57 b 114 88 88 114 57 114 b 26 114 0 88 0 57 b 0 26 26 0 57 0{\p0}
+Dialogue: 11,0:00:38.55,0:00:41.16,ShapeC,,0,0,0,,{\pos(315,532)\c&H007A55F2&\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 54 0 b 84 0 108 24 108 54 b 108 84 84 108 54 108 b 24 108 0 84 0 54 b 0 24 24 0 54 0{\p0}
+Dialogue: 12,0:00:38.65,0:00:41.16,ShapeC,,0,0,0,,{\pos(296,521)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.65,0:00:41.16,ShapeC,,0,0,0,,{\pos(331,515)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.65,0:00:41.16,ShapeC,,0,0,0,,{\pos(315,545)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.65,0:00:41.16,ShapeC,,0,0,0,,{\pos(302,548)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.65,0:00:41.16,ShapeC,,0,0,0,,{\pos(334,540)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.55,0:00:41.16,Label,,0,0,0,,{\an5\pos(315,632)\fs34\c&H007A55F2&\3c&H00345E1C&\bord0\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)}45CM
+Dialogue: 9,0:00:38.75,0:00:41.16,ShapeC,,0,0,0,,{\pos(500,523)\c&H004DA33F&\3c&H00345E1C&\bord3\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 77 0 b 120 0 154 34 154 77 b 154 120 120 154 77 154 b 34 154 0 120 0 77 b 0 34 34 0 77 0{\p0}
+Dialogue: 10,0:00:38.75,0:00:41.16,ShapeC,,0,0,0,,{\pos(500,523)\c&H007EDEA6&\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 71 0 b 110 0 142 32 142 71 b 142 110 110 142 71 142 b 32 142 0 110 0 71 b 0 32 32 0 71 0{\p0}
+Dialogue: 11,0:00:38.75,0:00:41.16,ShapeC,,0,0,0,,{\pos(500,523)\c&H007A55F2&\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)\p1}m 68 0 b 106 0 136 30 136 68 b 136 106 106 136 68 136 b 30 136 0 106 0 68 b 0 30 30 0 68 0{\p0}
+Dialogue: 12,0:00:38.85,0:00:41.16,ShapeC,,0,0,0,,{\pos(476,510)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.85,0:00:41.16,ShapeC,,0,0,0,,{\pos(520,503)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.85,0:00:41.16,ShapeC,,0,0,0,,{\pos(500,540)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.85,0:00:41.16,ShapeC,,0,0,0,,{\pos(483,544)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.85,0:00:41.16,ShapeC,,0,0,0,,{\pos(524,533)\c&H002B2B2B&\fscy150\fad(120,0)\p1}m 3 0 b 5 0 6 1 6 3 b 6 5 5 6 3 6 b 1 6 0 5 0 3 b 0 1 1 0 3 0{\p0}
+Dialogue: 12,0:00:38.75,0:00:41.16,Label,,0,0,0,,{\an5\pos(500,632)\fs34\c&H007A55F2&\3c&H00345E1C&\bord0\fscx0\fscy0\t(0,150,\fscx118\fscy118)\t(150,260,\fscx100\fscy100)}55CM
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(323.0,755.4)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(322.0,754.1)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(321.0,752.8)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(320.0,751.5)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(319.0,750.2)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(318.0,748.9)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(317.0,747.6)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(316.0,746.3)\fs46\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, 3 SIZE!
+Dialogue: 9,0:00:38.90,0:00:41.16,Label,,0,0,0,,{\an5\pos(315,745)\fs46\c&H004AD5FF&\3c&H00345E1C&\bord5\q2\frz-3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}SATU FAMILY, {\c&H008A5CFF&}3 SIZE{\c&H004AD5FF&}!
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(323.0,850.4)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(322.0,849.1)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(321.0,847.8)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(320.0,846.5)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(319.0,845.2)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(318.0,843.9)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(317.0,842.6)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(316.0,841.3)\fs48\c&H00345E1C&\3c&H00345E1C&\bord6\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN BEG KUNING
+Dialogue: 9,0:00:39.20,0:00:41.16,Label,,0,0,0,,{\an5\pos(315,840)\fs48\c&H00FFFFFF&\3c&H00345E1C&\bord5\q2\frz3\fscx0\fscy0\t(0,110,\fscx120\fscy84)\t(110,200,\fscx92\fscy112)\t(200,290,\fscx104\fscy96)\t(290,360,\fscx100\fscy100)\fad(0,120)}TEKAN {\c&H008A5CFF&}BEG KUNING{\c&H00FFFFFF&}
+Dialogue: 8,0:00:38.00,0:00:39.40,ShapeC,,0,0,0,,{\move(85,270,67,175,0,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz12\t(0,1400,\frz-10)\fscx0\fscy0\t(0,150,\fscx100\fscy100)\t(150,250,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 8,0:00:38.00,0:00:39.40,ShapeC,,0,0,0,,{\move(540,290,558,195,70,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz-12\t(70,1400,\frz10)\fscx0\fscy0\t(70,220,\fscx120\fscy120)\t(220,320,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 8,0:00:38.00,0:00:39.40,ShapeC,,0,0,0,,{\move(145,190,127,95,140,1400)\c&H004AD5FF&\3c&HFFFFFF&\bord2\frz12\t(140,1400,\frz-10)\fscx0\fscy0\t(140,290,\fscx100\fscy100)\t(290,390,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 8,0:00:38.00,0:00:39.40,ShapeC,,0,0,0,,{\move(560,200,578,105,210,1400)\c&H008A5CFF&\3c&HFFFFFF&\bord2\frz-12\t(210,1400,\frz10)\fscx0\fscy0\t(210,360,\fscx120\fscy120)\t(360,460,\fscx100\fscy100)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 8,0:00:38.00,0:00:39.40,ShapeC,,0,0,0,,{\move(235,310,217,215,280,1400)\c&H004DA33F&\3c&HFFFFFF&\bord2\frz12\t(280,1400,\frz-10)\fscx0\fscy0\t(280,430,\fscx100\fscy100)\t(430,530,\fscx80\fscy80)\fad(0,400)\p1}m 9 29 b 14 29 18 33 18 38 b 18 43 14 47 9 47 b 4 47 0 43 0 38 b 0 33 4 29 9 29 m 14 35 l 18 35 18 0 14 0 m 18 0 b 28 4 34 12 28 25 b 28 17 24 11 18 9{\p0}
+Dialogue: 13,0:00:37.70,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 -960 972 -838 1491 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.72,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 -491 1838 28 1960 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.74,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 1960 640 1838 1252 1491 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.77,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l 1491 1771 972 2118 360 2240)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.79,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l 360 2240 -252 2118 -771 1771)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.81,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 1771 -1118 1252 -1240 640)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.83,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H007A55F2&\1a&H10&\clip(m 360 640 l -1240 640 -1118 28 -771 -491)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 13,0:00:37.85,0:00:38.06,Shape,,0,0,0,,{\an7\pos(0,0)\c&H004DA33F&\1a&H10&\clip(m 360 640 l -771 -491 -252 -838 360 -960)\fad(0,140)\p1}m 0 0 l 720 0 720 1280 0 1280{\p0}
+Dialogue: 3,0:00:00.04,0:00:00.22,Cap,,0,0,0,,{\an5\pos(166,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KALAU
+Dialogue: 2,0:00:00.22,0:00:00.44,Cap,,0,0,0,,{\an5\pos(166,936)\fs56\c&H00FFFFFF&}KALAU
+Dialogue: 3,0:00:00.22,0:00:00.44,Cap,,0,0,0,,{\an5\pos(321,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ANAK
+Dialogue: 2,0:00:00.44,0:00:00.68,Cap,,0,0,0,,{\an5\pos(166,936)\fs56\c&H00FFFFFF&}KALAU
+Dialogue: 2,0:00:00.44,0:00:00.68,Cap,,0,0,0,,{\an5\pos(321,936)\fs56\c&H0080E6FF&}ANAK
+Dialogue: 3,0:00:00.44,0:00:00.68,Cap,,0,0,0,,{\an5\pos(480,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}HAMPA
+Dialogue: 3,0:00:00.68,0:00:00.92,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TENGOK
+Dialogue: 3,0:00:00.92,0:00:01.20,Cap,,0,0,0,,{\an5\pos(176,939)\fs52\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MEMANG
+Dialogue: 2,0:00:01.20,0:00:01.38,Cap,,0,0,0,,{\an5\pos(176,939)\fs52\c&H00FFFFFF&}MEMANG
+Dialogue: 3,0:00:01.20,0:00:01.38,Cap,,0,0,0,,{\an5\pos(319,939)\fs52\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DIA
+Dialogue: 2,0:00:01.38,0:00:01.70,Cap,,0,0,0,,{\an5\pos(176,939)\fs52\c&H00FFFFFF&}MEMANG
+Dialogue: 2,0:00:01.38,0:00:01.70,Cap,,0,0,0,,{\an5\pos(319,939)\fs52\c&H00FFFFFF&}DIA
+Dialogue: 3,0:00:01.38,0:00:01.70,Cap,,0,0,0,,{\an5\pos(468,939)\fs52\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}LANGKAH
+Dialogue: 3,0:00:01.70,0:00:01.90,Cap,,0,0,0,,{\an5\pos(188,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TAK
+Dialogue: 2,0:00:01.90,0:00:02.18,Cap,,0,0,0,,{\an5\pos(188,936)\fs56\c&H00FFFFFF&}TAK
+Dialogue: 3,0:00:01.90,0:00:02.18,Cap,,0,0,0,,{\an5\pos(316,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}LEPAS
+Dialogue: 2,0:00:02.18,0:00:02.42,Cap,,0,0,0,,{\an5\pos(188,936)\fs56\c&H00FFFFFF&}TAK
+Dialogue: 2,0:00:02.18,0:00:02.42,Cap,,0,0,0,,{\an5\pos(316,936)\fs56\c&H0080E6FF&}LEPAS
+Dialogue: 3,0:00:02.18,0:00:02.42,Cap,,0,0,0,,{\an5\pos(452,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}LAH!
+Dialogue: 3,0:00:02.42,0:00:03.02,Cap,,0,0,0,,{\an5\pos(210,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TAIN
+Dialogue: 2,0:00:03.02,0:00:03.28,Cap,,0,0,0,,{\an5\pos(210,936)\fs56\c&H00FFFFFF&}TAIN
+Dialogue: 3,0:00:03.02,0:00:03.28,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TAIN
+Dialogue: 2,0:00:03.28,0:00:03.64,Cap,,0,0,0,,{\an5\pos(210,936)\fs56\c&H00FFFFFF&}TAIN
+Dialogue: 2,0:00:03.28,0:00:03.64,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H00FFFFFF&}TAIN
+Dialogue: 3,0:00:03.28,0:00:03.64,Cap,,0,0,0,,{\an5\pos(440,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TAIN
+Dialogue: 3,0:00:03.64,0:00:04.45,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TAIN
+Dialogue: 3,0:00:04.48,0:00:04.86,Cap,,0,0,0,,{\an5\pos(180,939)\fs52\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TEMBIKAI
+Dialogue: 2,0:00:04.86,0:00:05.12,Cap,,0,0,0,,{\an5\pos(180,939)\fs52\c&H0080E6FF&}TEMBIKAI
+Dialogue: 3,0:00:04.86,0:00:05.12,Cap,,0,0,0,,{\an5\pos(335,939)\fs52\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ADA
+Dialogue: 2,0:00:05.12,0:00:05.46,Cap,,0,0,0,,{\an5\pos(180,939)\fs52\c&H0080E6FF&}TEMBIKAI
+Dialogue: 2,0:00:05.12,0:00:05.46,Cap,,0,0,0,,{\an5\pos(335,939)\fs52\c&H00FFFFFF&}ADA
+Dialogue: 3,0:00:05.12,0:00:05.46,Cap,,0,0,0,,{\an5\pos(480,939)\fs52\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TANGAN
+Dialogue: 3,0:00:05.46,0:00:05.74,Cap,,0,0,0,,{\an5\pos(267,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ADA
+Dialogue: 2,0:00:05.74,0:00:06.93,Cap,,0,0,0,,{\an5\pos(267,936)\fs56\c&H00FFFFFF&}ADA
+Dialogue: 3,0:00:05.74,0:00:06.93,Cap,,0,0,0,,{\an5\pos(381,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KAKI
+Dialogue: 3,0:00:07.04,0:00:07.30,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ALLAH
+Dialogue: 3,0:00:07.30,0:00:07.98,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}COMELNYA!
+Dialogue: 3,0:00:07.98,0:00:08.46,Cap,,0,0,0,,{\an5\pos(225,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TAPI
+Dialogue: 2,0:00:08.46,0:00:08.70,Cap,,0,0,0,,{\an5\pos(225,936)\fs56\c&H00FFFFFF&}TAPI
+Dialogue: 3,0:00:08.46,0:00:08.70,Cap,,0,0,0,,{\an5\pos(350,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}YANG
+Dialogue: 2,0:00:08.70,0:00:08.80,Cap,,0,0,0,,{\an5\pos(225,936)\fs56\c&H00FFFFFF&}TAPI
+Dialogue: 2,0:00:08.70,0:00:08.80,Cap,,0,0,0,,{\an5\pos(350,936)\fs56\c&H00FFFFFF&}YANG
+Dialogue: 3,0:00:08.70,0:00:08.80,Cap,,0,0,0,,{\an5\pos(450,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}NI
+Dialogue: 3,0:00:08.80,0:00:09.08,Cap,,0,0,0,,{\an5\pos(133,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KAN
+Dialogue: 2,0:00:09.08,0:00:09.66,Cap,,0,0,0,,{\an5\pos(133,936)\fs56\c&H00FFFFFF&}KAN
+Dialogue: 3,0:00:09.08,0:00:09.66,Cap,,0,0,0,,{\an5\pos(295,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MEMANG
+Dialogue: 2,0:00:09.66,0:00:09.92,Cap,,0,0,0,,{\an5\pos(133,936)\fs56\c&H00FFFFFF&}KAN
+Dialogue: 2,0:00:09.66,0:00:09.92,Cap,,0,0,0,,{\an5\pos(295,936)\fs56\c&H00FFFFFF&}MEMANG
+Dialogue: 3,0:00:09.66,0:00:09.92,Cap,,0,0,0,,{\an5\pos(487,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KALAU
+Dialogue: 3,0:00:09.92,0:00:10.06,Cap,,0,0,0,,{\an5\pos(209,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}NAK
+Dialogue: 2,0:00:10.06,0:00:10.30,Cap,,0,0,0,,{\an5\pos(209,936)\fs56\c&H00FFFFFF&}NAK
+Dialogue: 3,0:00:10.06,0:00:10.30,Cap,,0,0,0,,{\an5\pos(326,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KATA
+Dialogue: 2,0:00:10.30,0:00:10.46,Cap,,0,0,0,,{\an5\pos(209,936)\fs56\c&H00FFFFFF&}NAK
+Dialogue: 2,0:00:10.30,0:00:10.46,Cap,,0,0,0,,{\an5\pos(326,936)\fs56\c&H00FFFFFF&}KATA
+Dialogue: 3,0:00:10.30,0:00:10.46,Cap,,0,0,0,,{\an5\pos(441,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}PUN
+Dialogue: 3,0:00:10.46,0:00:10.66,Cap,,0,0,0,,{\an5\pos(147,941)\fs48\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BUKAN
+Dialogue: 2,0:00:10.66,0:00:11.12,Cap,,0,0,0,,{\an5\pos(147,941)\fs48\c&H00FFFFFF&}BUKAN
+Dialogue: 3,0:00:10.66,0:00:11.12,Cap,,0,0,0,,{\an5\pos(341,941)\fs48\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ANAK-ANAK
+Dialogue: 2,0:00:11.12,0:00:11.26,Cap,,0,0,0,,{\an5\pos(147,941)\fs48\c&H00FFFFFF&}BUKAN
+Dialogue: 2,0:00:11.12,0:00:11.26,Cap,,0,0,0,,{\an5\pos(341,941)\fs48\c&H00FFFFFF&}ANAK-ANAK
+Dialogue: 3,0:00:11.12,0:00:11.26,Cap,,0,0,0,,{\an5\pos(518,941)\fs48\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SAJA
+Dialogue: 3,0:00:11.26,0:00:11.81,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MINAT
+Dialogue: 3,0:00:11.98,0:00:12.59,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MAMA-MAMA
+Dialogue: 3,0:00:12.60,0:00:13.02,Cap,,0,0,0,,{\an5\pos(208,938)\fs54\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MAMI-MAMI
+Dialogue: 2,0:00:13.02,0:00:13.18,Cap,,0,0,0,,{\an5\pos(208,938)\fs54\c&H0080E6FF&}MAMI-MAMI
+Dialogue: 3,0:00:13.02,0:00:13.18,Cap,,0,0,0,,{\an5\pos(391,938)\fs54\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}PUN
+Dialogue: 2,0:00:13.18,0:00:13.60,Cap,,0,0,0,,{\an5\pos(208,938)\fs54\c&H0080E6FF&}MAMI-MAMI
+Dialogue: 2,0:00:13.18,0:00:13.60,Cap,,0,0,0,,{\an5\pos(391,938)\fs54\c&H00FFFFFF&}PUN
+Dialogue: 3,0:00:13.18,0:00:13.60,Cap,,0,0,0,,{\an5\pos(508,938)\fs54\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SUKA
+Dialogue: 3,0:00:13.60,0:00:14.06,Cap,,0,0,0,,{\an5\pos(163,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DIA
+Dialogue: 2,0:00:14.06,0:00:14.34,Cap,,0,0,0,,{\an5\pos(163,936)\fs56\c&H00FFFFFF&}DIA
+Dialogue: 3,0:00:14.06,0:00:14.34,Cap,,0,0,0,,{\an5\pos(278,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}GEBU
+Dialogue: 2,0:00:14.34,0:00:14.56,Cap,,0,0,0,,{\an5\pos(163,936)\fs56\c&H00FFFFFF&}DIA
+Dialogue: 2,0:00:14.34,0:00:14.56,Cap,,0,0,0,,{\an5\pos(278,936)\fs56\c&H0080E6FF&}GEBU
+Dialogue: 3,0:00:14.34,0:00:14.56,Cap,,0,0,0,,{\an5\pos(440,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MACAM
+Dialogue: 3,0:00:14.56,0:00:14.68,Cap,,0,0,0,,{\an5\pos(122,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}NI
+Dialogue: 2,0:00:14.68,0:00:15.62,Cap,,0,0,0,,{\an5\pos(122,936)\fs56\c&H00FFFFFF&}NI
+Dialogue: 3,0:00:14.68,0:00:15.62,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}COMEL-COMEL
+Dialogue: 2,0:00:15.62,0:00:15.80,Cap,,0,0,0,,{\an5\pos(122,936)\fs56\c&H00FFFFFF&}NI
+Dialogue: 2,0:00:15.62,0:00:15.80,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H0080E6FF&}COMEL-COMEL
+Dialogue: 3,0:00:15.62,0:00:15.80,Cap,,0,0,0,,{\an5\pos(528,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}NI
+Dialogue: 3,0:00:15.80,0:00:16.04,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KAN
+Dialogue: 3,0:00:16.04,0:00:16.22,Cap,,0,0,0,,{\an5\pos(174,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ADA
+Dialogue: 2,0:00:16.22,0:00:16.44,Cap,,0,0,0,,{\an5\pos(174,936)\fs56\c&H00FFFFFF&}ADA
+Dialogue: 3,0:00:16.22,0:00:16.44,Cap,,0,0,0,,{\an5\pos(326,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BANYAK
+Dialogue: 2,0:00:16.44,0:00:16.66,Cap,,0,0,0,,{\an5\pos(174,936)\fs56\c&H00FFFFFF&}ADA
+Dialogue: 2,0:00:16.44,0:00:16.66,Cap,,0,0,0,,{\an5\pos(326,936)\fs56\c&H00FFFFFF&}BANYAK
+Dialogue: 3,0:00:16.44,0:00:16.66,Cap,,0,0,0,,{\an5\pos(477,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SIZE
+Dialogue: 3,0:00:16.66,0:00:16.84,Cap,,0,0,0,,{\an5\pos(182,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}UNTUK
+Dialogue: 2,0:00:16.84,0:00:17.00,Cap,,0,0,0,,{\an5\pos(182,936)\fs56\c&H00FFFFFF&}UNTUK
+Dialogue: 3,0:00:16.84,0:00:17.00,Cap,,0,0,0,,{\an5\pos(321,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SIZE
+Dialogue: 2,0:00:17.00,0:00:17.20,Cap,,0,0,0,,{\an5\pos(182,936)\fs56\c&H00FFFFFF&}UNTUK
+Dialogue: 2,0:00:17.00,0:00:17.20,Cap,,0,0,0,,{\an5\pos(321,936)\fs56\c&H0080E6FF&}SIZE
+Dialogue: 3,0:00:17.00,0:00:17.20,Cap,,0,0,0,,{\an5\pos(465,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}PALING
+Dialogue: 3,0:00:17.20,0:00:17.40,Cap,,0,0,0,,{\an5\pos(224,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BESAR
+Dialogue: 2,0:00:17.40,0:00:17.60,Cap,,0,0,0,,{\an5\pos(224,936)\fs56\c&H0080E6FF&}BESAR
+Dialogue: 3,0:00:17.40,0:00:17.60,Cap,,0,0,0,,{\an5\pos(349,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DIA
+Dialogue: 2,0:00:17.60,0:00:17.92,Cap,,0,0,0,,{\an5\pos(224,936)\fs56\c&H0080E6FF&}BESAR
+Dialogue: 2,0:00:17.60,0:00:17.92,Cap,,0,0,0,,{\an5\pos(349,936)\fs56\c&H00FFFFFF&}DIA
+Dialogue: 3,0:00:17.60,0:00:17.92,Cap,,0,0,0,,{\an5\pos(450,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SIZE
+Dialogue: 3,0:00:17.92,0:00:19.28,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}55CM
+Dialogue: 3,0:00:19.28,0:00:19.40,Cap,,0,0,0,,{\an5\pos(229,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}LEPAS
+Dialogue: 2,0:00:19.40,0:00:19.50,Cap,,0,0,0,,{\an5\pos(229,936)\fs56\c&H0080E6FF&}LEPAS
+Dialogue: 3,0:00:19.40,0:00:19.50,Cap,,0,0,0,,{\an5\pos(346,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TU
+Dialogue: 2,0:00:19.50,0:00:19.60,Cap,,0,0,0,,{\an5\pos(229,936)\fs56\c&H0080E6FF&}LEPAS
+Dialogue: 2,0:00:19.50,0:00:19.60,Cap,,0,0,0,,{\an5\pos(346,936)\fs56\c&H00FFFFFF&}TU
+Dialogue: 3,0:00:19.50,0:00:19.60,Cap,,0,0,0,,{\an5\pos(442,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KITA
+Dialogue: 3,0:00:19.60,0:00:19.88,Cap,,0,0,0,,{\an5\pos(183,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SIZE
+Dialogue: 2,0:00:19.88,0:00:20.52,Cap,,0,0,0,,{\an5\pos(183,936)\fs56\c&H0080E6FF&}SIZE
+Dialogue: 3,0:00:19.88,0:00:20.52,Cap,,0,0,0,,{\an5\pos(380,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SEDERHANA
+Dialogue: 3,0:00:20.52,0:00:20.92,Cap,,0,0,0,,{\an5\pos(258,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SIZE
+Dialogue: 2,0:00:20.92,0:00:22.27,Cap,,0,0,0,,{\an5\pos(258,936)\fs56\c&H0080E6FF&}SIZE
+Dialogue: 3,0:00:20.92,0:00:22.27,Cap,,0,0,0,,{\an5\pos(380,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}45CM
+Dialogue: 3,0:00:22.32,0:00:22.38,Cap,,0,0,0,,{\an5\pos(213,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DAN
+Dialogue: 2,0:00:22.38,0:00:22.54,Cap,,0,0,0,,{\an5\pos(213,936)\fs56\c&H00FFFFFF&}DAN
+Dialogue: 3,0:00:22.38,0:00:22.54,Cap,,0,0,0,,{\an5\pos(324,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KITA
+Dialogue: 2,0:00:22.54,0:00:22.70,Cap,,0,0,0,,{\an5\pos(213,936)\fs56\c&H00FFFFFF&}DAN
+Dialogue: 2,0:00:22.54,0:00:22.70,Cap,,0,0,0,,{\an5\pos(324,936)\fs56\c&H00FFFFFF&}KITA
+Dialogue: 3,0:00:22.54,0:00:22.70,Cap,,0,0,0,,{\an5\pos(436,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ADA
+Dialogue: 3,0:00:22.70,0:00:22.84,Cap,,0,0,0,,{\an5\pos(168,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}JUGA
+Dialogue: 2,0:00:22.84,0:00:23.10,Cap,,0,0,0,,{\an5\pos(168,936)\fs56\c&H00FFFFFF&}JUGA
+Dialogue: 3,0:00:22.84,0:00:23.10,Cap,,0,0,0,,{\an5\pos(306,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}YANG
+Dialogue: 2,0:00:23.10,0:00:23.50,Cap,,0,0,0,,{\an5\pos(168,936)\fs56\c&H00FFFFFF&}JUGA
+Dialogue: 2,0:00:23.10,0:00:23.50,Cap,,0,0,0,,{\an5\pos(306,936)\fs56\c&H00FFFFFF&}YANG
+Dialogue: 3,0:00:23.10,0:00:23.50,Cap,,0,0,0,,{\an5\pos(464,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}PALING
+Dialogue: 3,0:00:23.50,0:00:23.88,Cap,,0,0,0,,{\an5\pos(168,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}COMEL
+Dialogue: 2,0:00:23.88,0:00:24.18,Cap,,0,0,0,,{\an5\pos(168,936)\fs56\c&H0080E6FF&}COMEL
+Dialogue: 3,0:00:23.88,0:00:24.18,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KECIL
+Dialogue: 2,0:00:24.18,0:00:24.52,Cap,,0,0,0,,{\an5\pos(168,936)\fs56\c&H0080E6FF&}COMEL
+Dialogue: 2,0:00:24.18,0:00:24.52,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H0080E6FF&}KECIL
+Dialogue: 3,0:00:24.18,0:00:24.52,Cap,,0,0,0,,{\an5\pos(482,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}COMEL
+Dialogue: 3,0:00:24.52,0:00:24.94,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}NI
+Dialogue: 3,0:00:24.94,0:00:25.92,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}35CM!
+Dialogue: 3,0:00:25.92,0:00:26.42,Cap,,0,0,0,,{\an5\pos(179,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KITA
+Dialogue: 2,0:00:26.42,0:00:27.06,Cap,,0,0,0,,{\an5\pos(179,936)\fs56\c&H00FFFFFF&}KITA
+Dialogue: 3,0:00:26.42,0:00:27.06,Cap,,0,0,0,,{\an5\pos(335,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TENGOK
+Dialogue: 2,0:00:27.06,0:00:27.20,Cap,,0,0,0,,{\an5\pos(179,936)\fs56\c&H00FFFFFF&}KITA
+Dialogue: 2,0:00:27.06,0:00:27.20,Cap,,0,0,0,,{\an5\pos(335,936)\fs56\c&H0080E6FF&}TENGOK
+Dialogue: 3,0:00:27.06,0:00:27.20,Cap,,0,0,0,,{\an5\pos(481,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DIA
+Dialogue: 3,0:00:27.20,0:00:27.36,Cap,,0,0,0,,{\an5\pos(163,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}PUNYA
+Dialogue: 2,0:00:27.36,0:00:27.72,Cap,,0,0,0,,{\an5\pos(163,936)\fs56\c&H00FFFFFF&}PUNYA
+Dialogue: 3,0:00:27.36,0:00:27.72,Cap,,0,0,0,,{\an5\pos(361,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MATERIAL
+Dialogue: 2,0:00:27.72,0:00:27.94,Cap,,0,0,0,,{\an5\pos(163,936)\fs56\c&H00FFFFFF&}PUNYA
+Dialogue: 2,0:00:27.72,0:00:27.94,Cap,,0,0,0,,{\an5\pos(361,936)\fs56\c&H0080E6FF&}MATERIAL
+Dialogue: 3,0:00:27.72,0:00:27.94,Cap,,0,0,0,,{\an5\pos(523,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DIA
+Dialogue: 3,0:00:27.94,0:00:28.34,Cap,,0,0,0,,{\an5\pos(136,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}JENIS
+Dialogue: 2,0:00:28.34,0:00:28.86,Cap,,0,0,0,,{\an5\pos(136,942)\fs46\c&H00FFFFFF&}JENIS
+Dialogue: 3,0:00:28.34,0:00:28.86,Cap,,0,0,0,,{\an5\pos(304,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BULU-BULU
+Dialogue: 2,0:00:28.86,0:00:29.43,Cap,,0,0,0,,{\an5\pos(136,942)\fs46\c&H00FFFFFF&}JENIS
+Dialogue: 2,0:00:28.86,0:00:29.43,Cap,,0,0,0,,{\an5\pos(304,942)\fs46\c&H0080E6FF&}BULU-BULU
+Dialogue: 3,0:00:28.86,0:00:29.43,Cap,,0,0,0,,{\an5\pos(493,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}FLUFFY
+Dialogue: 3,0:00:29.54,0:00:30.12,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}GEBU
+Dialogue: 3,0:00:30.12,0:00:30.56,Cap,,0,0,0,,{\an5\pos(118,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ITU
+Dialogue: 2,0:00:30.56,0:00:30.98,Cap,,0,0,0,,{\an5\pos(118,942)\fs46\c&H00FFFFFF&}ITU
+Dialogue: 3,0:00:30.56,0:00:30.98,Cap,,0,0,0,,{\an5\pos(257,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BAHAGIAN
+Dialogue: 2,0:00:30.98,0:00:31.58,Cap,,0,0,0,,{\an5\pos(118,942)\fs46\c&H00FFFFFF&}ITU
+Dialogue: 2,0:00:30.98,0:00:31.58,Cap,,0,0,0,,{\an5\pos(257,942)\fs46\c&H00FFFFFF&}BAHAGIAN
+Dialogue: 3,0:00:30.98,0:00:31.58,Cap,,0,0,0,,{\an5\pos(464,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BELAKANG
+Dialogue: 3,0:00:31.58,0:00:32.18,Cap,,0,0,0,,{\an5\pos(181,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BAHAGIAN
+Dialogue: 2,0:00:32.18,0:00:32.78,Cap,,0,0,0,,{\an5\pos(181,942)\fs46\c&H00FFFFFF&}BAHAGIAN
+Dialogue: 3,0:00:32.18,0:00:32.78,Cap,,0,0,0,,{\an5\pos(350,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DEPAN
+Dialogue: 2,0:00:32.78,0:00:33.18,Cap,,0,0,0,,{\an5\pos(181,942)\fs46\c&H00FFFFFF&}BAHAGIAN
+Dialogue: 2,0:00:32.78,0:00:33.18,Cap,,0,0,0,,{\an5\pos(350,942)\fs46\c&H0080E6FF&}DEPAN
+Dialogue: 3,0:00:32.78,0:00:33.18,Cap,,0,0,0,,{\an5\pos(494,942)\fs46\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MACAM
+Dialogue: 3,0:00:33.18,0:00:33.86,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}NI
+Dialogue: 3,0:00:33.86,0:00:34.30,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BULAT
+Dialogue: 3,0:00:34.30,0:00:35.21,Cap,,0,0,0,,{\an5\pos(325,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}MONTEL
+Dialogue: 3,0:00:35.40,0:00:35.84,Cap,,0,0,0,,{\an5\pos(271,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}GEBU
+Dialogue: 2,0:00:35.84,0:00:36.50,Cap,,0,0,0,,{\an5\pos(271,936)\fs56\c&H0080E6FF&}GEBU
+Dialogue: 3,0:00:35.84,0:00:36.50,Cap,,0,0,0,,{\an5\pos(395,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KAN
+Dialogue: 3,0:00:36.50,0:00:36.66,Cap,,0,0,0,,{\an5\pos(166,940)\fs50\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KORANG
+Dialogue: 2,0:00:36.66,0:00:36.82,Cap,,0,0,0,,{\an5\pos(166,940)\fs50\c&H00FFFFFF&}KORANG
+Dialogue: 3,0:00:36.66,0:00:36.82,Cap,,0,0,0,,{\an5\pos(344,940)\fs50\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}TENGOK
+Dialogue: 2,0:00:36.82,0:00:37.06,Cap,,0,0,0,,{\an5\pos(166,940)\fs50\c&H00FFFFFF&}KORANG
+Dialogue: 2,0:00:36.82,0:00:37.06,Cap,,0,0,0,,{\an5\pos(344,940)\fs50\c&H0080E6FF&}TENGOK
+Dialogue: 3,0:00:36.82,0:00:37.06,Cap,,0,0,0,,{\an5\pos(504,940)\fs50\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}DEKAT
+Dialogue: 3,0:00:37.06,0:00:37.24,Cap,,0,0,0,,{\an5\pos(164,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}BEG
+Dialogue: 2,0:00:37.24,0:00:37.38,Cap,,0,0,0,,{\an5\pos(164,936)\fs56\c&H0080E6FF&}BEG
+Dialogue: 3,0:00:37.24,0:00:37.38,Cap,,0,0,0,,{\an5\pos(309,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}KUNING
+Dialogue: 2,0:00:37.38,0:00:37.92,Cap,,0,0,0,,{\an5\pos(164,936)\fs56\c&H0080E6FF&}BEG
+Dialogue: 2,0:00:37.38,0:00:37.92,Cap,,0,0,0,,{\an5\pos(309,936)\fs56\c&H0080E6FF&}KUNING
+Dialogue: 3,0:00:37.38,0:00:37.92,Cap,,0,0,0,,{\an5\pos(470,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}OKAY
+Dialogue: 3,0:00:37.92,0:00:38.08,Cap,,0,0,0,,{\an5\pos(241,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}ADA
+Dialogue: 2,0:00:38.08,0:00:38.34,Cap,,0,0,0,,{\an5\pos(241,936)\fs56\c&H00FFFFFF&}ADA
+Dialogue: 3,0:00:38.08,0:00:38.34,Cap,,0,0,0,,{\an5\pos(320,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}3
+Dialogue: 2,0:00:38.34,0:00:39.33,Cap,,0,0,0,,{\an5\pos(241,936)\fs56\c&H00FFFFFF&}ADA
+Dialogue: 2,0:00:38.34,0:00:39.33,Cap,,0,0,0,,{\an5\pos(320,936)\fs56\c&H0080E6FF&}3
+Dialogue: 3,0:00:38.34,0:00:39.33,Cap,,0,0,0,,{\an5\pos(404,936)\fs56\c&H008A5CFF&\fscx115\fscy115\t(0,110,\fscx100\fscy100)}SIZE!
