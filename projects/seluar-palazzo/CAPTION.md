@@ -14,7 +14,7 @@ Siapa suka pakai palazzo? Yang ni paling sesuai untuk awak! 👖✨
 Ada macam-macam warna, korang nak warna apa? Komen bawah 👇
 👉 Tekan beg kuning 🛒
 
-#seluarpalazzo #palazzo #palazzopants #seluarperempuan #seluarmurah #ootdmuslimah #hijabstyle #ootdhijab #seluarviral #tiktokshopmalaysia #racuntiktok #fyp
+#seluarpalazzo #palazzo #palazzopants #seluarperempuan #seluarwanita #ootdmuslimah #hijabstyle #ootdhijab #seluarviral #tiktokshopmalaysia #racuntiktok #fyp
 ```
 
 ## Caption pendek (alternatif)
@@ -29,7 +29,7 @@ Seluar palazzo anti kedut & ironless 👖 Free size, selesa, nampak kemas. Tekan
 
 | Kumpulan | Hashtag | Tujuan |
 |---|---|---|
-| Produk (carian) | `#seluarpalazzo` `#palazzo` `#palazzopants` `#seluarperempuan` `#seluarmurah` | orang cari seluar palazzo |
+| Produk (carian) | `#seluarpalazzo` `#palazzo` `#palazzopants` `#seluarperempuan` `#seluarwanita` | orang cari seluar palazzo |
 | Niche | `#ootdmuslimah` `#hijabstyle` `#ootdhijab` `#seluarviral` | penonton fesyen muslimah |
 | Jualan | `#tiktokshopmalaysia` `#racuntiktok` | pembeli TikTok Shop |
 | Reach | `#fyp` | umum |
