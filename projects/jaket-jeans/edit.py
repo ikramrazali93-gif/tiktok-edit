@@ -55,8 +55,7 @@ BLOCKS = [
     dict(name="cerah", a="same", v=[(16.45, 21.80, 1, 1.0), (21.80, 26.25, 1, 1.08)]),
     # "Macam saya pakai, sebijik."  (the repeated "cuma ni colour denim, ni colour acid blue" is cut)
     dict(name="sebijik", a="same", v=[(27.85, 29.00, 1, 1.0)]),
-    # "Yang lain, harga atas daripada, mahal sikit. Ni jimat RM10."
-    dict(name="jimat", a="same", v=[(38.69, 43.00, 1, 1.0)]),
+    # (v2) "Yang lain, harga atas daripada, mahal sikit. Ni jimat RM10." dropped: no specific prices
     # "Tengok dekat beg kuning tau."  (moved to the end as the CTA)
     dict(name="cta", a="same", v=[(32.33, 33.29, 1, 1.0)]),
     # jacket close to the camera, gentle slow-mo - end card
@@ -98,7 +97,7 @@ OVERRIDE = {
               ("tau.", 33.14, 33.26)),
 }
 DROP = []
-HILITE = {"DENIM", "ACID", "BLUE", "MURAH", "RM10", "TIKTOK", "SHOP", "JIMAT", "CERAH", "SEBIJIK", "KUNING"}
+HILITE = {"DENIM", "ACID", "BLUE", "TIKTOK", "SHOP", "CERAH", "SEBIJIK", "KUNING"}
 
 
 def build_timeline():
@@ -305,8 +304,8 @@ def graphics():
     lab(37.09, 38.67, "KEDAI & *TIKTOK SHOP*", col=WHITE, box=DENIM, hi=MUST, rot=2, size=66, sound="pop", vol=0.5)
     stk("🛍️", 37.12, 38.67, SL, SY - 100, 90)
     ev.append(flash(tl(33.68), d=0.25))
-    lab(33.68, 35.03, "NI *PALING MURAH*!", col=INDIGO, box=MUST, hi=WHITE, rot=-3, size=76, sound="kaching", vol=0.45)
-    stk("💸", 33.72, 35.03, SR, SY - 100, 105)
+    lab(33.68, 35.03, "NI *PILIHAN SAYA*!", col=INDIGO, box=MUST, hi=WHITE, rot=-3, size=76, sound="ding", vol=0.45)
+    stk("👍", 33.72, 35.03, SR, SY - 100, 105)
 
     # ---- intro
     lab(0.84, 1.90, "JAKET *JEANS*", col=INDIGO, box=WHITE, hi=DENIM, rot=-2, size=74, sound="whoosh", vol=0.35)
@@ -341,13 +340,6 @@ def graphics():
     stk("✌️", 25.48, 26.20, SR, SY - 100, 100)
     lab(27.88, 28.96, "*SEBIJIK* MACAM NI!", col=WHITE, box=DENIM, hi=MUST, rot=2, size=70, sound="bloop", vol=0.45)
     stk("👯", 27.92, 28.96, SR, SY - 100, 100)
-
-    # ---- price
-    lab(38.80, 41.54, "YANG LAIN *MAHAL SIKIT*", col=INDIGO, box=WHITE, hi=TANG, rot=-2, size=66, sound="pop", vol=0.5)
-    stk("💰", 38.84, 41.54, SR, SY - 100, 95)
-    ev.append(flash(tl(41.86), d=0.25))
-    lab(41.86, 43.00, "NI *JIMAT RM10*!", col=INDIGO, box=MUST, hi=TANG, rot=3, size=78, sound="kaching", vol=0.5)
-    stk("🤑", 41.90, 43.00, SR, SY - 100, 105)
 
     # ---- CTA
     lab(32.42, 33.29, "TENGOK *BEG KUNING*", col=INDIGO, box=MUST, hi=DENIM, rot=-2, size=68, sound="pop", vol=0.5)

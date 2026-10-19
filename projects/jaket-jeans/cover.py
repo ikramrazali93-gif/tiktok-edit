@@ -132,7 +132,7 @@ def main():
     # the two colours, either side of her face - above the jacket
     paste_center(base, shadow(pill("DENIM", 42, DENIM, WHITE, "💙", rot=-4)), 190, 470)
     paste_center(base, shadow(pill("ACID BLUE", 42, ACIDB, INDIGO, "🩵", rot=4)), 870, 470)
-    paste_center(base, burst([("PALING", 48), ("MURAH!", 52)], TANG, WHITE, 10, 240), 900, 1300)
+    paste_center(base, burst([("WAJIB", 50), ("ADA!", 56)], TANG, WHITE, 10, 240), 900, 1300)
     base.convert("RGB").save(OUT, quality=95)
 
 

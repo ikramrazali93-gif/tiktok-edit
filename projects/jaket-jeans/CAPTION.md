@@ -3,22 +3,21 @@
 ## Caption utama (copy-paste)
 
 ```
-Dah survey kedai & TikTok Shop, yang ni antara paling murah! 🧥💙
+Dah survey kedai & TikTok Shop, yang ni pilihan saya! 🧥💙
 
 💙 2 kaler: Denim & Acid Blue (cerah sikit)
 👯 Sebijik macam yang saya pakai
-💸 Yang lain mahal sikit, ni jimat RM10!
 
 Korang pilih kaler mana? Komen bawah 👇
 👉 Tekan beg kuning 🛒
 
-#jaketjeans #jaketdenim #denimjacket #acidblue #jaketmurah #ootd #ootdhijab #fesyenmuslimah #racuntiktok #tiktokshopmalaysia #fyp
+#jaketjeans #jaketdenim #denimjacket #acidblue #jaketwanita #ootd #ootdhijab #fesyenmuslimah #racuntiktok #tiktokshopmalaysia #fyp
 ```
 
 ## Caption pendek (alternatif)
 
 ```
-Jaket jeans 2 kaler, Denim & Acid Blue 🧥 Jimat RM10! Tekan beg kuning 🛒
+Jaket jeans 2 kaler, Denim & Acid Blue 🧥 Tekan beg kuning 🛒
 
 #jaketjeans #denimjacket #tiktokshopmalaysia #fyp
 ```
@@ -27,7 +26,7 @@ Jaket jeans 2 kaler, Denim & Acid Blue 🧥 Jimat RM10! Tekan beg kuning 🛒
 
 | Kumpulan | Hashtag | Tujuan |
 |---|---|---|
-| Produk (carian) | `#jaketjeans` `#jaketdenim` `#denimjacket` `#acidblue` `#jaketmurah` | orang cari jaket jeans / denim |
+| Produk (carian) | `#jaketjeans` `#jaketdenim` `#denimjacket` `#acidblue` `#jaketwanita` | orang cari jaket jeans / denim |
 | Niche | `#ootd` `#ootdhijab` `#fesyenmuslimah` | penonton fesyen |
 | Jualan | `#racuntiktok` `#tiktokshopmalaysia` | pembeli TikTok Shop |
 | Reach | `#fyp` | umum |
