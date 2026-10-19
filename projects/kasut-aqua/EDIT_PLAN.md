@@ -7,6 +7,7 @@ Source: **2 video produk sama jenis, digabung jadi satu** (iPhone, 1080×1920 po
 `master1080.mp4` / `proxy.mp4` = A + B disambung (A 0–121.21s, B selepas tu). Masa transcript dianjak ikut cross-correlation audio: A +0.02s, B +121.254s (`A()` / `B()` dalam `edit.py`). Kekuatan suara bahagian B (−11.6 LUFS) dan A (−11.5 LUFS) dah sekata.
 
 Preview v1: **25.8s** (daripada 158.4s gabungan), 720×1280, 30fps, SDR, −12.0 LUFS
+Final: **25.8s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −12.0 LUFS, sudah render
 Cover: `cover.jpg` (1080×1536) · Caption & hashtag: `CAPTION.md`
 Safe zone TikTok: kanan 110px, bawah 290px, atas 110px (720×1280).
 

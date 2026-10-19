@@ -7,6 +7,7 @@ Source: **2 video produk sama, digabung jadi satu** (iPhone, 1080×1920 portrait
 `master1080.mp4` / `proxy.mp4` = A + B disambung (A 0–49.367s, B 49.367–123.0s). Masa transcript B dianjak +49.367s, jadi `edit.py` guna satu timeline. Kekuatan suara A dan B dah sekata (−11.3 / −11.4 / −11.5 LUFS ikut bahagian).
 
 Preview v1: **44.5s** (daripada 123.0s gabungan), 720×1280, 30fps, SDR, −11.5 LUFS
+Final: **44.7s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.5 LUFS, sudah render
 Cover: `cover.jpg` (1080×1536) · Caption & hashtag: `CAPTION.md`
 Safe zone TikTok: kanan 110px, bawah 290px, atas 110px (720×1280).
 
