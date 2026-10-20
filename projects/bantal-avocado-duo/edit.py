@@ -214,7 +214,7 @@ def captions(words):
             end = min(end, chunks[i + 1][0]["s"])
         toks = [x["w"].upper().strip(",.") for x in ch]
         fs = CAP_FS
-        sp = _font(fs).getlength(" ") * ASS_PER_PIL
+        sp = _font(fs).getlength(" ") * ASS_PER_PIL * 2   # words joined by " \h": room for the bounce
         widths = [_font(fs).getlength(t) * ASS_PER_PIL for t in toks]
         total = sum(widths) + sp * (len(toks) - 1)
         if total > SAFE_W - 70:                  # shrink long chunks: one line, with room for the bounce
@@ -236,10 +236,10 @@ def captions(words):
                     parts.append(r"{\c%s}%s{\c%s}" % (KEY, t, WHITE))   # not {\r}: it would reset \fs
                 else:
                     parts.append(t)
-            ev.append(f"Dialogue: 2,{ts(ws)},{ts(we)},Cap,,0,0,0,,{{\\fs{fs}}}" + " ".join(parts))
+            ev.append(f"Dialogue: 2,{ts(ws)},{ts(we)},Cap,,0,0,0,,{{\\fs{fs}}}" + r" \h".join(parts))
             ev.append(f"Dialogue: 3,{ts(ws)},{ts(we)},Cap,,0,0,0,,"
                       rf"{{\an2\pos({lefts[j] + widths[j] / 2:.0f},{base_y + 4})\fs{fs}\c{LIME}\bord5\frz-3"
-                      rf"\fscx92\fscy92\t(0,90,\fscx126\fscy126)\t(90,190,\fscx114\fscy114)}}{toks[j]}")
+                      rf"\fscx92\fscy92\t(0,90,\fscx118\fscy118)\t(90,190,\fscx108\fscy108)}}{toks[j]}")
     return ev
 
 _FIT_FONTS = {}
