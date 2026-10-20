@@ -8,6 +8,7 @@ Source: **3 klip produk sama, digabung jadi satu** (iPhone, 1080×1920 portrait,
 `master1080.mp4` / `proxy.mp4` = A + B + C disambung (A 0–37.000s, B 37.000–40.838s, C 40.838–45.743s). B dan C jadi B-roll atas suara A.
 
 Preview v1: **25.4s** (daripada 45.7s gabungan), 720×1280, 30fps, SDR, −11.4 LUFS
+Final: **25.4s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.4 LUFS, sudah render
 Cover: `cover.jpg` (1080×1536) · Caption & hashtag: `CAPTION.md`
 Safe zone TikTok: kanan 110px, bawah 290px, atas 110px (720×1280).
 
