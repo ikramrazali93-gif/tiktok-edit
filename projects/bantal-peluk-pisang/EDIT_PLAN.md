@@ -2,6 +2,7 @@
 
 Source: IMG_2931, iPhone, 1080×1920 portrait, HEVC HDR (HLG), 29.97fps, **49.8s** (luar, atas rumput, dia berdiri pegang 3 pisang)
 Preview v1: **38.5s** (dipotong ~11s), 720×1280, 30fps, SDR, −11.3 LUFS
+Final: **38.5s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.3 LUFS, sudah render
 Cover: `cover.jpg` (1080×1536) · Caption & hashtag: `CAPTION.md`
 Safe zone TikTok: kanan 110px, bawah 290px, atas 110px (720×1280).
 
