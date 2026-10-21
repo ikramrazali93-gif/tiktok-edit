@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk durian: graphics layer as a HyperFrames composition.
+     The cut video (base.mp4) and all timings come from edit.py via data.js; this file only draws and animates. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* labels: cream durian-flesh pill with a husk-green spiky rim (svg drawn per label) */
+  .lab { position: absolute; display: flex; justify-content: center; opacity: 0; }
+  .lab .wrap { position: relative; }
+  .lab svg.rim { position: absolute; overflow: visible; }
+  .lab .pill { position: relative; display: flex; align-items: center; gap: 20px; padding: 22px 46px 24px;
+               border-radius: 70px; white-space: nowrap; color: #3B2A10; font-size: 88px; line-height: 1;
+               letter-spacing: 1px; }
+  .lab.big .pill { font-size: 132px; padding: 18px 58px 22px; }
+  .lab .pill b { color: #5F8A1C; font-weight: 700; }
+  .lab.big .pill b { color: #E3367A; }
+  .lab .emo { display: inline-block; font-size: 1.05em; }
+  .lab .w { display: inline-block; }
+  .lab.wrapline .pill { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                        row-gap: 4px; }
+
+  /* captions: white with deep-green outline; the active word rides a yellow durian-flesh pill */
+  .cap { position: absolute; display: flex; gap: 26px; align-items: center; opacity: 0;
+         font-size: 80px; line-height: 1; letter-spacing: 1px; }
+  .cap .hl { position: absolute; left: 0; top: -14px; height: calc(100% + 28px); border-radius: 26px;
+             background: #FFD93B; border: 7px solid #2F4A12; box-shadow: 0 9px 0 #2F4A12; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a, .cap .word .d { display: block; white-space: nowrap; }
+  .cap .word .a { color: #FFFFFF; -webkit-text-stroke: 16px #2F4A12; paint-order: stroke fill; }
+  .cap .word.key .a { color: #FFE36E; }
+  .cap .word .d { position: absolute; left: 0; top: 0; color: #2F4A12; opacity: 0; }
+
+  /* husk wipe between sections */
+  .wipe { position: absolute; top: 0; left: 0; width: 760px; height: 1920px; }
+
+  /* progress bar + speed tag */
+  #prog { position: absolute; height: 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.45); }
+  #prog .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 6px;
+                background: #FFD93B; transform-origin: 0 50%; }
+  #prog .knob { position: absolute; top: -9px; left: -15px; width: 30px; height: 30px; border-radius: 50%;
+                background: #6E9A2A; border: 5px solid #FFF4C2; }
+  .tag { position: absolute; font-size: 44px; color: #FFF4C2; background: #2F4A12; padding: 8px 22px 10px;
+         border-radius: 30px; opacity: 0; }
+
+  /* sparkles (4-point stars) */
+  .spk { position: absolute; width: 46px; height: 46px; opacity: 0;
+         clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }
+
+  /* end card */
+  .endpill { position: absolute; display: flex; justify-content: center; opacity: 0; }
+  .endpill .in { display: flex; align-items: center; gap: 14px; padding: 16px 38px 18px; border-radius: 50px;
+                 font-size: 54px; line-height: 1; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="41.743" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="41.743" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+  const NS = "http://www.w3.org/2000/svg";
+
+  // spiky husk rim around a w x h pill: rounded rect + triangle thorns along the top and bottom edges
+  function rim(w, h, fill, stroke) {
+    const pad = 22, r = h / 2, svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "rim");
+    svg.setAttribute("width", w + pad * 2);
+    svg.setAttribute("height", h + pad * 2);
+    svg.style.left = -pad + "px";
+    svg.style.top = -pad + "px";
+    let thorns = "";
+    const n = Math.max(4, Math.round((w - 2 * r) / 46));
+    for (let i = 0; i <= n; i++) {
+      const x = pad + r + (w - 2 * r) * i / n;
+      thorns += `M${x - 14},${pad + 6} L${x},${pad - 16} L${x + 14},${pad + 6} Z `;
+      thorns += `M${x - 14},${pad + h - 6} L${x},${pad + h + 16} L${x + 14},${pad + h - 6} Z `;
+    }
+    for (const side of [-1, 1]) {                       // thorns round the rounded ends
+      for (const a of [-50, -10, 30]) {
+        const ang = (side < 0 ? 180 - a : a) * Math.PI / 180;
+        const cx = side < 0 ? pad + r : pad + w - r, cy = pad + r;
+        const tx = cx + Math.cos(ang) * (r + 16), ty = cy + Math.sin(ang) * (r + 16);
+        const bx = Math.cos(ang + Math.PI / 2) * 14, by = Math.sin(ang + Math.PI / 2) * 14;
+        const mx = cx + Math.cos(ang) * (r - 6), my = cy + Math.sin(ang) * (r - 6);
+        thorns += `M${mx - bx},${my - by} L${tx},${ty} L${mx + bx},${my + by} Z `;
+      }
+    }
+    svg.innerHTML =
+      `<path d="${thorns}" fill="${stroke}"/>` +
+      `<rect x="${pad}" y="${pad + 10}" width="${w}" height="${h}" rx="${r}" fill="#2F4A12"/>` +
+      `<rect x="${pad}" y="${pad}" width="${w}" height="${h}" rx="${r}" fill="${fill}" stroke="${stroke}" stroke-width="8"/>`;
+    return svg;
+  }
+
+  function sparkles(x, y, t, colors) {
+    for (let i = 0; i < 6; i++) {
+      const s = el("div", "spk");
+      s.style.left = x - 23 + "px";
+      s.style.top = y - 23 + "px";
+      s.style.background = colors[i % colors.length];
+      const a = (i / 6) * Math.PI * 2 + rnd() * 0.6, d = 170 + rnd() * 120;
+      tl.fromTo(s, { opacity: 0, scale: 0.2, x: 0, y: 0, rotation: 0 },
+        { opacity: 1, scale: 1 + rnd() * 0.5, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.6, rotation: 90,
+          duration: 0.45, ease: "power2.out" }, t);
+      tl.to(s, { opacity: 0, scale: 0.3, duration: 0.25 }, t + 0.4);
+    }
+  }
+
+  // ------------------------------------------------------------ labels
+  let flip = 1;
+  function label(L) {
+    const lab = el("div", "lab" + (L.big ? " big" : "") + (L.place === "topleft" ? " wrapline" : ""));
+    const wrap = el("div", "wrap", lab);
+    const pill = el("div", "pill", wrap);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", pill, w));
+    const emo = el("span", "emo", pill, L.emoji);
+    // fit: one line in the top band (or two lines beside her head for "topleft")
+    const maxw = L.place === "topleft" ? 360 : MAXW;
+    let fs = L.big ? 132 : 88;
+    if (L.place === "topleft") { pill.style.maxWidth = maxw + "px"; fs = L.big ? 112 : 66; }
+    pill.style.fontSize = fs + "px";
+    while (pill.offsetWidth > maxw && fs > 34) { fs -= 2; pill.style.fontSize = fs + "px"; }
+    const w = pill.offsetWidth, h = pill.offsetHeight;
+    wrap.insertBefore(rim(w, h, L.big ? "#FFD93B" : "#FFF4C2", "#6E9A2A"), pill);
+    const y = Math.max(S.t + 34, E.lab_y - h / 2);       // tall (wrapped) labels hang from the top band
+    lab.style.top = y + "px";
+    if (L.place === "topleft") { lab.style.left = (S.l + 10) + "px"; }
+    else { lab.style.left = (CX - w / 2) + "px"; }
+    const rot = -2.5 * flip; flip = -flip;
+    tl.set(lab, { opacity: 1 }, L.t0);
+    tl.fromTo(wrap, { scale: 0.25, rotation: rot * 5 },
+      { scale: 1, rotation: rot, duration: 0.7, ease: "elastic.out(1, 0.55)" }, L.t0);
+    tl.fromTo(ws, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, stagger: 0.05, ease: "back.out(2)" },
+      L.t0 + 0.05);
+    tl.fromTo(emo, { scale: 0, rotation: -45 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(3)" },
+      L.t0 + 0.12);
+    const wob = Math.max(0, Math.floor((L.t1 - L.t0 - 0.7) / 0.5));
+    if (wob > 0) tl.to(emo, { rotation: 12, duration: 0.25, yoyo: true, repeat: wob * 2 - 1, ease: "sine.inOut" },
+      L.t0 + 0.6);
+    if (L.big) sparkles(L.place === "topleft" ? S.l + 10 + w / 2 : CX, y + h / 2, L.t0 + 0.08,
+      ["#FFD93B", "#FFFFFF", "#FF8FAB"]);
+    tl.to(wrap, { scale: 0.6, duration: 0.12, ease: "power2.in" }, L.t1 - 0.12);
+    tl.to(lab, { opacity: 0, duration: 0.12 }, L.t1 - 0.12);
+  }
+
+  // ------------------------------------------------------------ captions (moving highlight pill)
+  function caption(C) {
+    const cap = el("div", "cap");
+    const hl = el("div", "hl", cap);
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "d", s, w.w);
+      return s;
+    });
+    let fs = 80;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    cap.style.left = (CX - cw / 2) + "px";
+    cap.style.top = (C.y - ch / 2) + "px";
+    tl.fromTo(cap, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.16, ease: "back.out(2)" }, C.t0);
+    const pad = 16;
+    C.words.forEach((w, i) => {
+      const s = spans[i], x = s.offsetLeft - pad, wd = s.offsetWidth + pad * 2;
+      if (i === 0) tl.set(hl, { x: x, width: wd }, C.t0);
+      else tl.to(hl, { x: x, width: wd, duration: 0.14, ease: "power2.out" }, w.s);
+      tl.fromTo(s, { scale: 1 }, { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1, ease: "power1.out" }, w.s);
+      const d = s.querySelector(".d"), a = s.querySelector(".a");
+      tl.set(d, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.set(d, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+    });
+    tl.fromTo(hl, { opacity: 1, scaleY: 0.4 }, { scaleY: 1, duration: 0.18, ease: "back.out(2.5)" }, C.t0);
+    tl.to(cap, { opacity: 0, y: -10, duration: 0.1 }, C.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ husk wipe
+  function wipe(W) {
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "wipe");
+    svg.setAttribute("viewBox", "0 0 760 1920");
+    let d = "M80,0 ", e = "";
+    for (let y = 0; y <= 1920; y += 80) { d += `L${y % 160 ? 20 : 80},${y} `; }
+    for (let y = 1920; y >= 0; y -= 80) { e += `L${y % 160 ? 740 : 680},${y} `; }
+    svg.innerHTML = `<path d="${d}${e}Z" fill="#6E9A2A"/>` +
+      `<rect x="250" y="0" width="260" height="1920" fill="#FFF4C2"/>` +
+      `<rect x="300" y="0" width="160" height="1920" fill="#FFD93B"/>`;
+    fx.appendChild(svg);
+    tl.fromTo(svg, { x: -800 }, { x: 1120, duration: 0.5, ease: "power2.inOut" }, W.t - 0.25);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 30) + "px";
+    tl.fromTo(g, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.15 }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: title top, pills bottom
+  function endcard(N) {
+    const L = { t0: N.t0, t1: N.t1 + 0.2, html: "BANTAL PELUK <b>DURIAN</b>", emoji: "💛", place: "top", big: false };
+    label(L);
+    const pills = [
+      { y: 1300, html: "📏 95 • 75 • 52 • 30 CM", bg: "#FFF4C2", fg: "#3B2A10", bd: "#6E9A2A" },
+      { y: 1420, html: "🛒 TEKAN BEG KUNING", bg: "#FFD93B", fg: "#2F4A12", bd: "#2F4A12" },
+    ];
+    pills.forEach((p, i) => {
+      const box = el("div", "endpill");
+      const inn = el("div", "in", box, p.html);
+      inn.style.background = p.bg;
+      inn.style.color = p.fg;
+      inn.style.border = `6px solid ${p.bd}`;
+      inn.style.boxShadow = `0 8px 0 ${p.bd}`;
+      box.style.left = (CX - inn.offsetWidth / 2) + "px";
+      box.style.top = (p.y - inn.offsetHeight / 2) + "px";
+      tl.fromTo(box, { opacity: 0, y: 60, scale: 0.7 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2.2)" }, N.t0 + 0.25 + i * 0.15);
+    });
+    sparkles(CX, 1360, N.t0 + 0.5, ["#FFD93B", "#FFFFFF", "#6E9A2A"]);
+  }
+
+  function progress() {
+    const p = el("div", "", fx);
+    p.id = "prog";
+    p.style.left = S.l + "px";
+    p.style.top = (S.t + 4) + "px";
+    p.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", p), k = el("div", "knob", p);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);
+    E.labels.forEach(label);
+    E.tags.forEach(tag);
+    E.wipes.forEach(wipe);
+    endcard(E.end);
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

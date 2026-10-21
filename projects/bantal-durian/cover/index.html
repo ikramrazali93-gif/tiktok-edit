@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for the bantal peluk durian video, drawn with the same durian-husk style as the video labels.
+     Render: npx hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #6E9A2A; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #photo { position: absolute; left: 34px; top: 34px; width: 1012px; height: 1468px; border-radius: 56px;
+           object-fit: cover; object-position: 50% 0%; }
+  #edge { position: absolute; inset: 0; }
+  .pill { position: absolute; display: flex; align-items: center; gap: 18px; white-space: nowrap; line-height: 1;
+          border-radius: 80px; }
+  .pill b { font-weight: 700; }
+  #title { left: 50%; top: 92px; font-size: 104px; padding: 22px 54px 26px; background: #FFF4C2; color: #3B2A10;
+           border: 9px solid #6E9A2A; box-shadow: 0 12px 0 #2F4A12; }
+  #title b { color: #5F8A1C; }
+  #sub { left: 50%; top: 262px; font-size: 52px; padding: 14px 34px 16px; background: #FFD93B; color: #2F4A12;
+         border: 7px solid #2F4A12; box-shadow: 0 8px 0 #2F4A12; }
+  #sizes { left: 50%; top: 1318px; font-size: 56px; padding: 16px 40px 18px; background: #FFF4C2; color: #3B2A10;
+           border: 8px solid #6E9A2A; box-shadow: 0 10px 0 #2F4A12; }
+  #sizes b { color: #E3367A; }
+  #burst { position: absolute; left: 790px; top: 335px; width: 250px; height: 250px; }
+  #burst span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                text-align: center; font-size: 46px; line-height: 1.02; color: #FFFFFF; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="edge" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="pill">BANTAL PELUK <b>DURIAN</b></div>
+  <div id="sub" class="pill">💛 TEMAN TIDUR GEBU 😴</div>
+  <div id="burst"><svg viewBox="0 0 250 250" width="250" height="250"></svg><span>4<br>SAIZ!</span></div>
+  <div id="sizes" class="pill">📏 <b>95</b> • <b>75</b> • <b>52</b> • <b>30</b> CM</div>
+</div>
+<script>
+  // husk thorns along the photo frame, a spiky badge, centred pills (static cover: one paused, empty-ish timeline)
+  const edge = document.getElementById("edge");
+  let d = "";
+  const thorn = (x, y, nx, ny) => {
+    const tx = x + nx * 30, ty = y + ny * 30, bx = -ny * 16, by = nx * 16;
+    d += `M${x - bx},${y - by} L${tx},${ty} L${x + bx},${y + by} Z `;
+  };
+  for (let x = 90; x <= 990; x += 60) { thorn(x, 40, 0, -1); thorn(x, 1496, 0, 1); }
+  for (let y = 90; y <= 1446; y += 60) { thorn(40, y, -1, 0); thorn(1040, y, 1, 0); }
+  edge.innerHTML = `<path d="${d}" fill="#2F4A12"/>` +
+    `<rect x="34" y="34" width="1012" height="1468" rx="56" fill="none" stroke="#6E9A2A" stroke-width="14"/>` +
+    `<rect x="46" y="46" width="988" height="1444" rx="48" fill="none" stroke="#FFF4C2" stroke-width="6"/>`;
+  const bs = document.querySelector("#burst svg");
+  let p = "";
+  for (let i = 0; i < 28; i++) {
+    const a = i / 28 * Math.PI * 2, r = i % 2 ? 98 : 124;
+    p += (i ? "L" : "M") + (125 + Math.cos(a) * r).toFixed(1) + "," + (125 + Math.sin(a) * r).toFixed(1) + " ";
+  }
+  bs.innerHTML = `<path d="${p}Z" fill="#E3367A" stroke="#FFF4C2" stroke-width="8" transform="rotate(-8 125 125)"/>`;
+  document.fonts.load('700 104px "Fredoka"').then(() => {
+    for (const id of ["title", "sub", "sizes"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 960) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+    }
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -2 }, 0).set("#sub", { rotation: 1.5 }, 0).set("#burst", { rotation: 10 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
