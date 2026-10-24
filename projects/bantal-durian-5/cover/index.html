@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk durian #5, "Retro sticker 90an" look: rainbow-stripe background with a
+     checkerboard floor, the photo as a tilted die-cut sticker, stacked-shadow title and two badge stickers placed
+     on the pillows' bodies (never over her face).
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  :root { --ink: #1B1B1B; --pink: #FF4FA3; --teal: #19C3B5; --purple: #7B4DFF; --yellow: #FFD23F; --cream: #FFF8E7; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: var(--cream); }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: -200px;
+        background: repeating-linear-gradient(-28deg, var(--pink) 0 70px, var(--yellow) 70px 140px,
+                    var(--teal) 140px 210px, var(--purple) 210px 280px); }
+  #floor { position: absolute; left: 0; right: 0; bottom: 0; height: 250px; border-top: 10px solid var(--ink);
+           background: conic-gradient(var(--ink) 25%, #FFF 0 50%, var(--ink) 0 75%, #FFF 0) 0 0 / 90px 90px; }
+  /* photo sticker: white cut line, ink border, hard shadow */
+  #pic { position: absolute; left: 118px; top: 300px; width: 850px; height: 1110px; padding: 18px;
+         background: #FFF; border-radius: 56px; border: 9px solid var(--ink); box-shadow: 22px 22px 0 var(--ink); }
+  #pic .ph { width: 100%; height: 100%; border-radius: 40px; overflow: hidden; border: 7px solid var(--ink);
+             background: url("frame.jpg") 50% 8% / 112% auto no-repeat; }
+  #title { position: absolute; left: 50%; top: 46px; text-align: center; line-height: 0.95; white-space: nowrap;
+           font-size: 104px; color: #FFF; -webkit-text-stroke: 16px var(--ink); paint-order: stroke fill;
+           text-shadow: 7px 7px 0 var(--pink), 14px 14px 0 var(--teal), 21px 21px 0 var(--ink); }
+  #title b { color: var(--yellow); font-weight: 700; }
+  .stk { position: absolute; display: flex; align-items: center; gap: 14px; white-space: nowrap; line-height: 1;
+         padding: 18px 34px 22px; border-radius: 26px; border: 7px solid var(--ink); color: #FFF;
+         box-shadow: 0 0 0 10px #FFF, 14px 14px 0 10px var(--ink); font-size: 58px;
+         -webkit-text-stroke: 11px var(--ink); paint-order: stroke fill; }
+  .stk b { color: var(--yellow); }
+  #s1 { left: 74px; top: 1010px; background: var(--purple); }
+  #s2 { left: 470px; top: 1215px; background: var(--pink); }
+  #badge { position: absolute; left: 812px; top: 860px; width: 230px; height: 230px; border-radius: 50%;
+           border: 8px solid var(--ink); box-shadow: 14px 14px 0 var(--ink);
+           background: repeating-conic-gradient(var(--pink) 0 30deg, var(--yellow) 30deg 60deg,
+                       var(--teal) 60deg 90deg, var(--purple) 90deg 120deg); }
+  #badge .in { position: absolute; inset: 28px; border-radius: 50%; background: var(--cream); border: 7px solid var(--ink);
+               display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 0.88; }
+  #badge .n { font-size: 88px; color: #FFF; -webkit-text-stroke: 11px var(--ink); paint-order: stroke fill;
+              text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 var(--ink); }
+  #badge .u { font-size: 36px; color: var(--ink); margin-top: 4px; }
+  .doo { position: absolute; overflow: visible; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <div id="bg"></div>
+  <div id="floor"></div>
+  <div id="pic"><div class="ph"></div></div>
+  <div id="title">TEMAN TIDUR<br/><b>PALING SETIA!</b></div>
+  <div id="s1" class="stk">😴 TAK <b>BERDENGKUR</b></div>
+  <div id="s2" class="stk">☁️ <b>GEBU-GEBAS!</b></div>
+  <div id="badge"><div class="in"><span class="n">4</span><span class="u">SAIZ</span></div></div>
+</div>
+<script>
+  // memphis doodles in the background corners (static cover: one paused, empty-ish timeline)
+  const doodles = [
+    [40, 360, `<path d="M6,30 C16,6 26,54 36,30 S56,6 66,30" fill="none" stroke="#FFF" stroke-width="12" stroke-linecap="round"/>`],
+    [980, 330, `<circle cx="34" cy="34" r="24" fill="none" stroke="#FFF" stroke-width="13"/>`],
+    [30, 760, `<path d="M34,6 L62,56 L6,56 Z" fill="#FFD23F" stroke="#1B1B1B" stroke-width="7" stroke-linejoin="round"/>`],
+    [990, 640, `<path d="M34,8 V60 M8,34 H60" stroke="#FFF" stroke-width="14" stroke-linecap="round"/>`],
+  ];
+  for (const [x, y, d] of doodles) {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("class", "doo"); s.setAttribute("viewBox", "0 0 68 68");
+    s.style.cssText = `left:${x - 40}px;top:${y - 40}px;width:80px;height:80px`;
+    s.innerHTML = d;
+    document.getElementById("root").appendChild(s);
+  }
+  document.fonts.load('700 104px "Fredoka"').then(() => {
+    const t = document.getElementById("title");
+    while (t.offsetWidth > 1000) t.style.fontSize = (parseFloat(getComputedStyle(t).fontSize) - 2) + "px";
+    t.style.marginLeft = -t.offsetWidth / 2 + "px";
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#pic", { rotation: -2.5 }, 0).set("#title", { rotation: -2 }, 0).set("#s1", { rotation: -5 }, 0)
+      .set("#s2", { rotation: 4 }, 0).set("#badge", { rotation: 10 }, 0).to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>

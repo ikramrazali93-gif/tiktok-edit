@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk durian #5, "Retro sticker 90an" look: chunky die-cut stickers with hard offset shadows,
+     checkerboard bits, rainbow stripes, memphis doodles and bouncy easing. The cut video (base.mp4), timings and
+     her head boxes come from edit.py via data.js; this file draws, animates and places every graphic where it
+     keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* 90s palette */
+  :root { --ink: #1B1B1B; --pink: #FF4FA3; --teal: #19C3B5; --purple: #7B4DFF; --yellow: #FFD23F; --cream: #FFF8E7; }
+
+  /* die-cut sticker label: white cut line, coloured fill, black ink border, hard offset shadow,
+     a checkerboard tab on one corner and the emoji in its own round sticker */
+  .stk { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 60%; }
+  .stk .cut { position: relative; padding: 10px; border-radius: 34px; background: #FFFFFF;
+              box-shadow: 14px 14px 0 var(--ink); }
+  .stk .body { position: relative; display: flex; align-items: center; gap: 16px; white-space: nowrap;
+               padding: 20px 40px 24px; border-radius: 26px; border: 7px solid var(--ink);
+               font-size: 84px; line-height: 1; letter-spacing: 1px; color: #FFFFFF; }
+  .stk .t { -webkit-text-stroke: 13px var(--ink); paint-order: stroke fill; display: inline-block; }
+  .stk.pink .body { background: var(--pink); }   .stk.pink b { color: var(--yellow); }
+  .stk.teal .body { background: var(--teal); }   .stk.teal b { color: var(--yellow); }
+  .stk.purple .body { background: var(--purple); } .stk.purple b { color: var(--yellow); }
+  .stk.yellow .body { background: var(--yellow); } .stk.yellow b { color: var(--pink); }
+  .stk b { font-weight: 700; }
+  .stk .checker { position: absolute; top: -26px; width: 96px; height: 40px; border: 5px solid var(--ink);
+                  border-radius: 8px; transform: rotate(-8deg);
+                  background: conic-gradient(var(--ink) 25%, #FFF 0 50%, var(--ink) 0 75%, #FFF 0) 0 0 / 20px 20px; }
+  .stk .emo { position: absolute; top: -40px; width: 104px; height: 104px; border-radius: 50%; background: #FFF;
+              border: 6px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); display: flex; align-items: center;
+              justify-content: center; font-size: 62px; line-height: 1; }
+  .stk.wrapline .body { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                        row-gap: 6px; }
+
+  /* number badge (4 SAIZ, 95CM ...): round sticker with a rainbow-stripe ring */
+  .num { position: absolute; left: 0; top: 0; opacity: 0; }
+  .num .ring { position: relative; width: 300px; height: 300px; border-radius: 50%; border: 8px solid var(--ink);
+               box-shadow: 14px 14px 0 var(--ink);
+               background: repeating-conic-gradient(var(--pink) 0 30deg, var(--yellow) 30deg 60deg,
+                           var(--teal) 60deg 90deg, var(--purple) 90deg 120deg); }
+  .num .inner { position: absolute; inset: 34px; border-radius: 50%; background: var(--cream);
+                border: 7px solid var(--ink); display: flex; flex-direction: column; align-items: center;
+                justify-content: center; line-height: 0.88; color: var(--ink); }
+  .num .n { font-size: 112px; color: #FFF; -webkit-text-stroke: 12px var(--ink); paint-order: stroke fill;
+            text-shadow: 5px 5px 0 var(--pink), 10px 10px 0 var(--ink); }
+  .num .u { font-size: 46px; margin-top: 6px; }
+  .num .emo { position: absolute; right: -20px; top: -18px; font-size: 74px; }
+
+  /* captions: white chunky letters, ink outline + hard drop; the active word turns yellow with a stacked
+     pink/teal/purple 3D shadow (classic 90s title type) and bounces */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 34px; align-items: center; opacity: 0;
+         font-size: 78px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; transform-origin: 50% 80%; }
+  .cap .word .a { display: block; white-space: nowrap; color: #FFFFFF;
+                  -webkit-text-stroke: 14px var(--ink); paint-order: stroke fill; text-shadow: 6px 6px 0 var(--ink); }
+  .cap .word.key .a { color: #FFB3DA; }
+  .cap .word .y { position: absolute; left: 0; top: 0; white-space: nowrap; color: var(--yellow); opacity: 0;
+                  -webkit-text-stroke: 14px var(--ink); paint-order: stroke fill;
+                  text-shadow: 4px 4px 0 var(--pink), 8px 8px 0 var(--teal), 12px 12px 0 var(--purple); }
+
+  /* checkerboard wipe */
+  .wipe { position: absolute; inset: 0; pointer-events: none; }
+  .wipe .sq { position: absolute; width: 136px; height: 136px; transform: scale(0); }
+
+  /* progress: rainbow stripes */
+  #bar { position: absolute; height: 18px; border-radius: 9px; overflow: hidden; border: 4px solid var(--ink);
+         background: rgba(255, 255, 255, 0.55); }
+  #bar .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 0 50%;
+               background: linear-gradient(180deg, var(--pink) 0 25%, var(--yellow) 25% 50%, var(--teal) 50% 75%,
+                           var(--purple) 75%); }
+  #barknob { position: absolute; font-size: 48px; line-height: 1; }
+  .tag { position: absolute; font-size: 42px; color: #FFF; padding: 8px 22px 10px; border-radius: 14px;
+         background: var(--purple); border: 5px solid var(--ink); opacity: 0; box-shadow: 6px 6px 0 var(--ink);
+         -webkit-text-stroke: 8px var(--ink); paint-order: stroke fill; }
+
+  /* end card: a sticker sheet (cream card, dashed cut line) holding four stickers */
+  .sheet { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+           align-items: center; gap: 22px; padding: 34px 36px 40px; border-radius: 40px; background: var(--cream);
+           border: 7px solid var(--ink); box-shadow: 16px 16px 0 var(--ink); }
+  .sheet::before { content: ""; position: absolute; inset: 12px; border: 4px dashed rgba(27, 27, 27, 0.35);
+                   border-radius: 30px; }
+  .sheet .chk { position: absolute; left: -7px; right: -7px; top: -7px; height: 34px; border: 7px solid var(--ink);
+                border-radius: 40px 40px 0 0;
+                background: conic-gradient(var(--ink) 25%, #FFF 0 50%, var(--ink) 0 75%, #FFF 0) 0 0 / 34px 34px; }
+  .sheet .row { position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 32px 16px;
+                border-radius: 20px; font-size: 50px; line-height: 1; white-space: nowrap; color: #FFF;
+                border: 6px solid var(--ink); box-shadow: 8px 8px 0 var(--ink);
+                -webkit-text-stroke: 9px var(--ink); paint-order: stroke fill; }
+  .sheet .row b { color: var(--yellow); }
+  .sheet .row.pink { background: var(--pink); } .sheet .row.teal { background: var(--teal); }
+  .sheet .row.purple { background: var(--purple); }
+  .sheet .row.yellow { background: var(--yellow); color: var(--ink); -webkit-text-stroke: 0; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="42.190" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="42.190" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 11;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the pillows' smileys when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);   // captions never overlap in time
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 70 && f[0] < x + w + 70 && f[1] > y - 70 && f[1] < y + h + 70) c += 2600;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // ------------------------------------------------------------ memphis doodles (squiggle, zigzag, triangle,
+  // ring, plus) that pop out around the big stickers
+  const COLS = ["#FF4FA3", "#19C3B5", "#7B4DFF", "#FFD23F"];
+  const DOODLES = [
+    c => `<path d="M6,30 C16,6 26,54 36,30 S56,6 66,30" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round"/>`,
+    c => `<path d="M4,40 L18,16 L32,40 L46,16 L60,40" fill="none" stroke="${c}" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>`,
+    c => `<path d="M34,6 L62,56 L6,56 Z" fill="${c}" stroke="#1B1B1B" stroke-width="6" stroke-linejoin="round"/>`,
+    c => `<circle cx="34" cy="34" r="22" fill="none" stroke="${c}" stroke-width="11"/>`,
+    c => `<path d="M34,8 V60 M8,34 H60" stroke="${c}" stroke-width="12" stroke-linecap="round"/>`,
+  ];
+  function doodleBurst(x, y, t, n) {
+    for (let i = 0; i < (n || 7); i++) {
+      const s = document.createElementNS(NS, "svg");
+      s.setAttribute("viewBox", "0 0 68 68");
+      s.style.cssText = `position:absolute;left:${x - 34}px;top:${y - 34}px;width:68px;height:68px;opacity:0;overflow:visible`;
+      s.innerHTML = DOODLES[i % DOODLES.length](COLS[(i + 1) % COLS.length]);
+      fx.appendChild(s);
+      const a = (i / (n || 7)) * Math.PI * 2 + rnd() * 0.6, d = 170 + rnd() * 120;
+      tl.fromTo(s, { opacity: 0, scale: 0.2, x: 0, y: 0, rotation: rnd() * 90 - 45 },
+        { opacity: 1, scale: 0.8 + rnd() * 0.5, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.8,
+          rotation: rnd() * 180 - 90, duration: 0.55, ease: "back.out(2.2)" }, t);
+      tl.to(s, { opacity: 0, scale: 0.4, duration: 0.25, ease: "power1.in" }, t + 0.75);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  const ROTS = [-3, 2.5, -2, 3];
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      return s;
+    });
+    // biggest size that has a spot clear of her head; smaller captions fit under her chin in the close-ups
+    let pick = null;
+    for (const f0 of [76, 66, 58]) {
+      let fs = f0;
+      cap.style.fontSize = fs + "px";
+      while (cap.offsetWidth > MAXW - 20 && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+      const cw = cap.offsetWidth + 14, ch = cap.offsetHeight + 14;   // + the stacked 3D shadow
+      const q = place(cw, ch + 8, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                    wy: 1.4, wx: 0.8, isCaption: true });
+      const cand = { fs, cw, ch, p: q };
+      if (q.clear) { pick = cand; break; }
+      if (!pick || q.c < pick.p.c) pick = cand;
+    }
+    cap.style.fontSize = pick.fs + "px";
+    const { cw, ch, p } = pick;
+    cap.style.left = p.x + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 10, p.x + cw + 10, p.y + ch + 20] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, y: p.y + 24, scale: 0.9 }, { opacity: 1, y: p.y, scale: 1, duration: 0.18,
+                                                               ease: "back.out(2.5)" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], y = s.querySelector(".y"), a = s.querySelector(".a");
+      tl.set(y, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(s, { scale: 1, rotation: 0, y: 0 },
+        { scale: 1.07, rotation: ROTS[i % ROTS.length] * 0.6, y: -6, duration: 0.12, ease: "back.out(3)" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.to(s, { scale: 1, rotation: 0, y: 0, duration: 0.1, ease: "power1.out" }, Math.max(w.s + 0.12, off - 0.1));
+      tl.set(y, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.1 }, C.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ labels: die-cut stickers / number badges
+  let flip = 1;
+  function sticker(L) {
+    if (L.kind === "num") return numBadge(L);
+    const box = el("div", "stk " + (L.color || "pink"));
+    const cut = el("div", "cut", box);
+    const body = el("div", "body", cut);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "t", body, w));
+    const chk = el("div", "checker", cut);
+    const emo = el("div", "emo", cut, L.emoji);
+    const B = L.big;
+    // biggest readable layout first: one line, then two lines at decreasing widths; the first one with a spot clear
+    // of her head (and of the captions on screen) wins, else the cheapest of them
+    const configs = [
+      { wrap: false, fs: B ? 100 : 82, min: B ? 78 : 64 },
+      { wrap: true, maxw: 660, fs: B ? 90 : 76 },
+      { wrap: true, maxw: 540, fs: B ? 78 : 68 },
+      { wrap: true, maxw: 440, fs: B ? 66 : 58 },
+    ];
+    let pick = null;
+    const pad = 40;                                     // emoji/checker overhang + offset shadow
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      body.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      body.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (cut.offsetWidth > MAXW - pad && fs > c.min) { fs -= 2; body.style.fontSize = fs + "px"; }
+        if (cut.offsetWidth > MAXW - pad) continue;
+      } else {
+        while ((body.offsetWidth > c.maxw || body.offsetHeight > 300) && fs > 44) {
+          fs -= 2; body.style.fontSize = fs + "px";
+        }
+      }
+      const w = cut.offsetWidth + 34, h = cut.offsetHeight + 54;
+      const p = place(w, h, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                              wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    body.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    body.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x, y: p.y, w, h, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    chk.style[flip > 0 ? "left" : "right"] = "26px";
+    emo.style[flip > 0 ? "right" : "left"] = "-30px";
+    box.style.left = (p.x + 4) + "px";
+    box.style.top = (p.y + 40) + "px";
+    const rot = 2.6 * flip; flip = -flip;
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scale: 0, rotation: -rot * 8 },
+      { scale: 1, rotation: rot, duration: 0.62, ease: "elastic.out(1.1, 0.42)" }, L.t0);
+    tl.fromTo(cut, { scaleX: 1.22, scaleY: 0.78 }, { scaleX: 1, scaleY: 1, duration: 0.42, ease: "elastic.out(1, 0.35)" },
+      L.t0 + 0.06);
+    tl.fromTo(ws, { opacity: 0, y: 22, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.24, stagger: 0.05,
+                                                       ease: "back.out(2.6)" }, L.t0 + 0.08);
+    tl.fromTo(emo, { scale: 0, rotation: -60 }, { scale: 1, rotation: 0, duration: 0.42, ease: "back.out(3.2)" },
+      L.t0 + 0.16);
+    tl.to(emo, { rotation: 12, duration: 0.35, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.35) - 2),
+                 ease: "sine.inOut" }, L.t0 + 0.6);
+    if (L.big) doodleBurst(p.x + w / 2, p.y + 40 + h / 2, L.t0 + 0.08, 8);
+    tl.to(box, { scale: 0.2, rotation: rot * 6, opacity: 0, duration: 0.16, ease: "power2.in" }, L.t1 - 0.16);
+  }
+
+  function numBadge(L) {
+    const box = el("div", "num");
+    const ring = el("div", "ring", box);
+    const inner = el("div", "inner", ring, `<span class="n">${L.html}</span><span class="u">${L.unit || "CM"}</span>`);
+    const emo = el("span", "emo", box, L.emoji);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                 // shrink the badge before letting it touch anything
+      const q = place(330 * zz, 330 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y + 60, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    p = { x: p.x / z, y: p.y / z, c: p.c, clear: p.clear };   // zoom scales the left/top offsets too
+    L.placed = { x: p.x * z, y: p.y * z, w: 330 * z, h: 330 * z, clear: p.clear, zoom: z };
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(ring, { scale: 0.1, rotation: -270 }, { scale: 1, rotation: -8, duration: 0.6, ease: "back.out(1.9)" },
+      L.t0);
+    tl.to(ring, { rotation: 8, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, L.t0 + 0.6);
+    tl.fromTo(inner, { scale: 0.3 }, { scale: 1, duration: 0.35, ease: "back.out(3)" }, L.t0 + 0.2);
+    tl.fromTo(emo, { scale: 0, y: 24 }, { scale: 1, y: 0, duration: 0.35, ease: "back.out(3)" }, L.t0 + 0.32);
+    doodleBurst((p.x + 165) * z, (p.y + 165) * z, L.t0 + 0.12, 6);
+    tl.to(box, { scale: 0.3, opacity: 0, duration: 0.15, ease: "power2.in", transformOrigin: "50% 50%" },
+      L.t1 - 0.15);
+  }
+
+  // ------------------------------------------------------------ checkerboard wipe between sections
+  function wipe(W) {
+    const g = el("div", "wipe");
+    const N = 136, cols = Math.ceil(1080 / N), rows = Math.ceil(1920 / N), sqs = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const q = el("div", "sq", g);
+        q.style.left = c * N + "px";
+        q.style.top = r * N + "px";
+        q.style.background = (r + c) % 2 ? "#1B1B1B" : COLS[(r * 3 + c) % COLS.length];
+        sqs.push({ q, d: (r + c) / (rows + cols) });
+      }
+    }
+    sqs.forEach(({ q, d }) => {
+      tl.fromTo(q, { scale: 0, rotation: 45 }, { scale: 1.02, rotation: 0, duration: 0.2, ease: "power2.out" },
+        W.t - 0.34 + d * 0.22);
+      tl.to(q, { scale: 0, rotation: -45, duration: 0.2, ease: "power2.in" }, W.t + 0.02 + d * 0.22);
+    });
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 40) + "px";
+    tl.fromTo(g, { opacity: 0, rotation: -12 }, { opacity: 1, rotation: -3, duration: 0.2, ease: "back.out(3)" },
+      T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: sticker sheet, face-aware
+  function endcard(N) {
+    const b = el("div", "sheet");
+    el("div", "chk", b);
+    const rows = [
+      { cls: "pink", html: N.title, big: true },
+      { cls: "teal", html: N.sub },
+      { cls: "yellow", html: N.sizes },
+      { cls: "purple", html: N.cta },
+    ];
+    const els = rows.map(r => {
+      const d = el("div", "row " + r.cls, b, r.html);
+      if (r.big) { d.style.fontSize = "60px"; d.style.padding = "16px 34px 20px"; }
+      return d;
+    });
+    const fs = Math.min(1, MAXW / b.offsetWidth);       // offsetWidth is the unzoomed size
+    b.style.zoom = fs;
+    const w = b.offsetWidth * fs + 20, h = b.offsetHeight * fs + 20;
+    const p = place(w, h, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1180,
+                            wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    b.style.left = p.x / fs + "px";
+    b.style.top = p.y / fs + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { scale: 0, rotation: -14 }, { scale: 1, rotation: -2, duration: 0.6, ease: "elastic.out(1, 0.5)" },
+      N.t0);
+    els.forEach((d, i) => {
+      tl.fromTo(d, { scale: 0, rotation: i % 2 ? 14 : -14 },
+        { scale: 1, rotation: i % 2 ? 2 : -2, duration: 0.5, ease: "back.out(2.6)" }, N.t0 + 0.2 + i * 0.15);
+    });
+    doodleBurst(p.x + w / 2, p.y + 30, N.t0 + 0.2, 8);
+  }
+
+  function bar() {
+    const v = el("div", "", fx);
+    v.id = "bar";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 4) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const k = el("div", "", fx, "😎");
+    k.id = "barknob";
+    k.style.left = (S.l - 24) + "px";
+    k.style.top = (S.t - 12) + "px";
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0, rotation: 0 }, { x: S.r - S.l, rotation: 720, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    bar();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(sticker);
+    E.tags.forEach(tag);
+    E.wipes.forEach(wipe);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>
