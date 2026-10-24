@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk durian #2, "Kebun Durian" (durian orchard) look: wooden signboards, log-slice size badges,
+     leaves, hand-inked outlines. The cut video (base.mp4), timings and her head boxes come from edit.py via
+     data.js; this file draws, animates and places every graphic where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* wooden signboard label: plank with grain, inked border, two nails, a leaf sprig on one corner */
+  .sign { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 0%; }
+  .sign .plank { position: relative; display: flex; align-items: center; gap: 18px; white-space: nowrap;
+                 padding: 22px 48px 26px; color: #FFF4D6; font-size: 84px; line-height: 1; letter-spacing: 1px;
+                 border: 7px solid #3A2614; border-radius: 26px 14px 24px 16px;
+                 background:
+                   repeating-linear-gradient(176deg, rgba(58, 38, 20, 0.0) 0 22px, rgba(58, 38, 20, 0.16) 22px 25px),
+                   linear-gradient(180deg, #C58A4E 0%, #A86B34 55%, #8E5727 100%);
+                 box-shadow: 0 10px 0 #3A2614, 0 18px 26px rgba(0, 0, 0, 0.28); }
+  .sign .plank .t { -webkit-text-stroke: 12px #3A2614; paint-order: stroke fill; }
+  .sign .plank b { color: #F6D84A; font-weight: 700; }
+  .sign .nail { position: absolute; top: 18px; width: 16px; height: 16px; border-radius: 50%;
+                background: #E9D9B8; border: 4px solid #3A2614; }
+  .sign .leafs { position: absolute; top: -46px; width: 120px; height: 90px; overflow: visible; }
+  .sign .emo { display: inline-block; font-size: 1.0em; }
+  .sign .w { display: inline-block; }
+  .sign.wrapline .plank { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                          row-gap: 6px; }
+
+  /* log-slice badge for the sizes (95CM ...) */
+  .log { position: absolute; left: 0; top: 0; opacity: 0; }
+  .log .disc { position: relative; width: 300px; height: 300px; border-radius: 50%;
+               border: 9px solid #3A2614; box-shadow: 0 12px 0 #3A2614, 0 20px 28px rgba(0, 0, 0, 0.3);
+               background: radial-gradient(circle, #F2D9A6 0 14%, #E3C089 14% 15.5%, #F0D49B 15.5% 30%,
+                 #DDB47B 30% 31.5%, #EDCC90 31.5% 47%, #D7A96D 47% 48.5%, #E8C384 48.5% 66%,
+                 #A86B34 66% 76%, #7E4A1F 76% 100%); }
+  .log .num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+              justify-content: center; line-height: 0.9; color: #3A2614; }
+  .log .num .n { font-size: 118px; color: #4F7A28; -webkit-text-stroke: 10px #FFF4D6; paint-order: stroke fill; }
+  .log .num .u { font-size: 54px; }
+  .log .emo { position: absolute; right: -18px; top: -16px; font-size: 76px; }
+
+  /* captions: cream hand-lettered words with dark ink outline; active word goes durian-yellow with a
+     green brush stroke drawn under it */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 28px; align-items: center; opacity: 0;
+         font-size: 78px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFF4D6;
+                  -webkit-text-stroke: 15px #3A2614; paint-order: stroke fill; }
+  .cap .word.key .a { color: #BFE07A; }
+  .cap .word .y { position: absolute; z-index: 1; left: 0; top: 0; white-space: nowrap; color: #F6D84A;
+                  -webkit-text-stroke: 15px #3A2614; paint-order: stroke fill; opacity: 0; }
+  .cap .brush { position: absolute; z-index: 0; left: -14px; bottom: -22px; overflow: visible; }
+
+  /* leaf sweep between sections */
+  .sweep { position: absolute; inset: 0; overflow: visible; }
+
+  /* progress vine + speed tag */
+  #vine { position: absolute; height: 10px; border-radius: 5px; background: rgba(255, 244, 214, 0.5); }
+  #vine .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 5px;
+                background: #6FA531; transform-origin: 0 50%; }
+  #vine svg { position: absolute; top: -22px; left: -20px; overflow: visible; }
+  .tag { position: absolute; font-size: 42px; color: #FFF4D6; padding: 8px 22px 10px; border-radius: 14px;
+         background: #8E5727; border: 5px solid #3A2614; opacity: 0;
+         -webkit-text-stroke: 8px #3A2614; paint-order: stroke fill; }
+
+  /* end card */
+  .board { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+           align-items: center; gap: 30px; }
+  .board .row { display: flex; align-items: center; gap: 14px; padding: 14px 34px 16px; border-radius: 16px;
+                font-size: 50px; line-height: 1; white-space: nowrap; border: 6px solid #3A2614;
+                box-shadow: 0 8px 0 #3A2614; }
+  .board .row.wood { color: #FFF4D6; -webkit-text-stroke: 9px #3A2614; paint-order: stroke fill;
+                     background: linear-gradient(180deg, #C58A4E, #8E5727); }
+  .board .row.leaf { color: #3A2614; background: #F6D84A; }
+  .board .row b { color: #F6D84A; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="35.960" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="35.960" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 11;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the pillows' smileys when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);   // captions never overlap in time
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 70 && f[0] < x + w + 70 && f[1] > y - 70 && f[1] < y + h + 70) c += 2600;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // two leaves on a twig (svg), used on signs, sweeps and the vine
+  function leafPath(cx, cy, len, ang, fill) {
+    const a = ang * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a), nx = -dy, ny = dx;
+    const tx = cx + dx * len, ty = cy + dy * len, w = len * 0.36;
+    const m1x = cx + dx * len * 0.5 + nx * w, m1y = cy + dy * len * 0.5 + ny * w;
+    const m2x = cx + dx * len * 0.5 - nx * w, m2y = cy + dy * len * 0.5 - ny * w;
+    return `<path d="M${cx},${cy} Q${m1x},${m1y} ${tx},${ty} Q${m2x},${m2y} ${cx},${cy} Z" fill="${fill}" ` +
+           `stroke="#2F4A12" stroke-width="5" stroke-linejoin="round"/>` +
+           `<path d="M${cx},${cy} L${cx + dx * len * 0.85},${cy + dy * len * 0.85}" stroke="#2F4A12" ` +
+           `stroke-width="3" fill="none" opacity="0.6"/>`;
+  }
+  function sprig(parent, left) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "leafs");
+    s.setAttribute("viewBox", "0 0 120 90");
+    s.innerHTML = leafPath(60, 80, 66, left ? -150 : -30, "#7FB13A") + leafPath(60, 80, 54, -90, "#9CCB4F");
+    s.style[left ? "left" : "right"] = "-40px";
+    parent.appendChild(s);
+    return s;
+  }
+
+  // a few leaves flutter out of a spot
+  function leafBurst(x, y, t) {
+    for (let i = 0; i < 6; i++) {
+      const s = document.createElementNS(NS, "svg");
+      s.setAttribute("viewBox", "0 0 80 80");
+      s.style.cssText = `position:absolute;left:${x - 30}px;top:${y - 30}px;width:60px;height:60px;opacity:0;overflow:visible`;
+      s.innerHTML = leafPath(40, 70, 56, -90, i % 2 ? "#7FB13A" : "#9CCB4F");
+      fx.appendChild(s);
+      const a = (i / 6) * Math.PI * 2 + rnd() * 0.5, d = 150 + rnd() * 110;
+      tl.fromTo(s, { opacity: 0, scale: 0.3, x: 0, y: 0, rotation: rnd() * 90 },
+        { opacity: 1, scale: 0.9 + rnd() * 0.4, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.7 + 40,
+          rotation: 200 + rnd() * 160, duration: 0.7, ease: "power2.out" }, t);
+      tl.to(s, { opacity: 0, y: "+=60", duration: 0.35, ease: "power1.in" }, t + 0.6);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      return s;
+    });
+    let fs = 78;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw, ch + 30, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                   wy: 1.4, wx: 0.8, isCaption: true });
+    cap.style.left = p.x + "px";
+    cap.style.top = p.y + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 10, p.x + cw + 10, p.y + ch + 26] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, y: p.y + 18 }, { opacity: 1, y: p.y, duration: 0.16, ease: "back.out(2)" }, C.t0);
+    cap.style.top = "0px";
+    C.words.forEach((w, i) => {
+      const s = spans[i], ww = s.offsetWidth;
+      const br = document.createElementNS(NS, "svg");
+      br.setAttribute("class", "brush");
+      br.setAttribute("width", ww + 28);
+      br.setAttribute("height", 40);
+      const len = ww + 28;
+      br.innerHTML = `<path d="M6,26 C${len * 0.3},14 ${len * 0.6},34 ${len - 6},18" fill="none" stroke="#6FA531" ` +
+        `stroke-width="18" stroke-linecap="round"/>`;
+      s.insertBefore(br, s.firstChild);
+      const path = br.querySelector("path"), L = len * 1.15;
+      path.style.strokeDasharray = L;
+      tl.set(path, { strokeDashoffset: L }, 0);
+      tl.to(path, { strokeDashoffset: 0, duration: 0.16, ease: "power2.out" }, w.s);
+      const y = s.querySelector(".y"), a = s.querySelector(".a");
+      tl.set(y, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(s, { scale: 1 }, { scale: 1.12, duration: 0.1, yoyo: true, repeat: 1, ease: "power1.out" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.set(y, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+      tl.to(path, { opacity: 0, duration: 0.08 }, off - 0.02);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.1 }, C.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ labels: hanging wooden signs / log badges
+  let flip = 1;
+  function sign(L) {
+    if (L.kind === "log") return logBadge(L);
+    const box = el("div", "sign");
+    const plank = el("div", "plank", box);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w t", plank, w));
+    const emo = el("span", "emo", plank, L.emoji);
+    // try the biggest readable layout first: one line, then two lines at decreasing widths; the first one that
+    // has a spot clear of her head (and of the captions on screen) wins, else the cheapest of them
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 104 : 84, min: B ? 80 : 66 },
+      { wrap: true, maxw: 680, fs: B ? 92 : 78 },
+      { wrap: true, maxw: 560, fs: B ? 80 : 70 },
+      { wrap: true, maxw: 460, fs: B ? 68 : 60 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      plank.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      plank.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (plank.offsetWidth > MAXW && fs > c.min) { fs -= 2; plank.style.fontSize = fs + "px"; }
+        if (plank.offsetWidth > MAXW) continue;
+      } else {
+        while ((plank.offsetWidth > c.maxw || plank.offsetHeight > 300) && fs > 44) {
+          fs -= 2; plank.style.fontSize = fs + "px";
+        }
+      }
+      const w = plank.offsetWidth, h = plank.offsetHeight;
+      const p = place(w, h + 46, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                   wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    plank.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    plank.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x, y: p.y + 30, w, h, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    for (const side of ["left", "right"]) {
+      const n = el("div", "nail", plank);
+      n.style[side] = "18px";
+    }
+    const lf = sprig(plank, flip > 0);
+    box.style.left = p.x + "px";
+    box.style.top = (p.y + 30) + "px";
+    const rot = 2.5 * flip; flip = -flip;
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { y: -160, rotation: rot * 6 },
+      { y: 0, rotation: rot, duration: 0.85, ease: "elastic.out(1, 0.45)" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.22, stagger: 0.05, ease: "back.out(2)" },
+      L.t0 + 0.08);
+    tl.fromTo(emo, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(3)" },
+      L.t0 + 0.15);
+    tl.fromTo(lf, { rotation: -14, transformOrigin: "50% 100%" },
+      { rotation: 8, duration: 0.6, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.6)),
+        ease: "sine.inOut" }, L.t0);
+    if (L.big) leafBurst(p.x + w / 2, p.y + 30 + h / 2, L.t0 + 0.1);
+    tl.to(box, { rotation: -rot * 3, y: -40, opacity: 0, duration: 0.16, ease: "power2.in" }, L.t1 - 0.16);
+  }
+
+  function logBadge(L) {
+    const box = el("div", "log");
+    const disc = el("div", "disc", box);
+    const num = el("div", "num", disc, `<span class="n">${L.html}</span><span class="u">${L.unit || "CM"}</span>`);
+    const emo = el("span", "emo", box, L.emoji);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                 // shrink the badge before letting it touch anything
+      const q = place(300 * zz, 312 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y + 60, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    p = { x: p.x / z, y: p.y / z, c: p.c, clear: p.clear };   // zoom scales the left/top offsets too
+    L.placed = { x: p.x * z, y: p.y * z, w: 300 * z, h: 312 * z, clear: p.clear, zoom: z };
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(disc, { scale: 0.1, rotation: -200 }, { scale: 1, rotation: -6, duration: 0.6, ease: "back.out(1.8)" },
+      L.t0);
+    tl.fromTo(num, { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+      L.t0 + 0.25);
+    tl.fromTo(emo, { scale: 0, y: 20 }, { scale: 1, y: 0, duration: 0.35, ease: "back.out(3)" }, L.t0 + 0.35);
+    leafBurst((p.x + 150) * z, (p.y + 150) * z, L.t0 + 0.15);
+    tl.to(box, { scale: 0.5, opacity: 0, duration: 0.15, ease: "power2.in", transformOrigin: "50% 50%" },
+      L.t1 - 0.15);
+  }
+
+  // ------------------------------------------------------------ leaf sweep transition
+  function sweep(W) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "sweep");
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    let inner = `<path d="M-200,-100 L520,-100 L120,2020 L-600,2020 Z" fill="#4F7A28"/>` +
+                `<path d="M480,-100 L620,-100 L220,2020 L80,2020 Z" fill="#9CCB4F"/>`;
+    for (let i = 0; i < 16; i++) {
+      const x = -260 + rnd() * 700, y = rnd() * 1920;
+      inner += leafPath(x, y, 90 + rnd() * 80, rnd() * 360, i % 3 ? "#7FB13A" : "#C6E58A");
+    }
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    tl.fromTo(s, { x: -900, y: 0 }, { x: 1700, y: 0, duration: 0.6, ease: "power2.inOut" }, W.t - 0.3);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 34) + "px";
+    tl.fromTo(g, { opacity: 0, rotation: -12 }, { opacity: 1, rotation: -3, duration: 0.2, ease: "back.out(3)" },
+      T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: signboard stack, face-aware
+  function endcard(N) {
+    const b = el("div", "board");
+    const rows = [
+      { cls: "wood", html: N.title, big: true },
+      { cls: "wood", html: N.sizes },
+      { cls: "leaf", html: N.cta },
+    ];
+    const els = rows.map(r => {
+      const d = el("div", "row " + r.cls, b, r.html);
+      if (r.big) { d.style.fontSize = "70px"; d.style.padding = "18px 44px 22px"; }
+      return d;
+    });
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const p = place(w, h, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1180,
+                            wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    b.style.left = p.x + "px";
+    b.style.top = p.y + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    els.forEach((d, i) => {
+      tl.fromTo(d, { y: -120, opacity: 0, rotation: i % 2 ? 6 : -6 },
+        { y: 0, opacity: 1, rotation: i % 2 ? 1.5 : -1.5, duration: 0.7, ease: "elastic.out(1, 0.5)" },
+        N.t0 + 0.05 + i * 0.16);
+    });
+    leafBurst(p.x + w / 2, p.y + 40, N.t0 + 0.2);
+  }
+
+  function vine() {
+    const v = el("div", "", fx);
+    v.id = "vine";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 6) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const k = document.createElementNS(NS, "svg");
+    k.setAttribute("width", 54);
+    k.setAttribute("height", 54);
+    k.setAttribute("viewBox", "0 0 80 80");
+    k.innerHTML = leafPath(40, 60, 54, -60, "#9CCB4F") + leafPath(40, 60, 46, -125, "#7FB13A");
+    v.appendChild(k);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    vine();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(sign);
+    E.tags.forEach(tag);
+    E.wipes.forEach(sweep);
+    endcard(E.end);
+    // placement report for check.py (read via `hyperframes snapshot`-free route: edit.py writes its own copy)
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk durian #2, "Kebun Durian" look: wooden frame with leaves, a hanging
+     signboard title and a log-slice badge, all kept in the tree band and beside her hood (never over her face).
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #4F7A28; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 24.6s; the top 1536 rows are shown (trees above her hood) */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #frame { position: absolute; inset: 0; }
+  .sign { position: absolute; display: flex; align-items: center; gap: 18px; white-space: nowrap; line-height: 1;
+          color: #FFF4D6; border: 8px solid #3A2614; border-radius: 26px 14px 24px 16px;
+          background:
+            repeating-linear-gradient(176deg, rgba(58, 38, 20, 0) 0 22px, rgba(58, 38, 20, 0.16) 22px 25px),
+            linear-gradient(180deg, #C58A4E 0%, #A86B34 55%, #8E5727 100%);
+          box-shadow: 0 12px 0 #3A2614, 0 20px 30px rgba(0, 0, 0, 0.35); }
+  .sign .t { -webkit-text-stroke: 13px #3A2614; paint-order: stroke fill; }
+  .sign b { color: #F6D84A; font-weight: 700; }
+  #title { left: 50%; top: 52px; font-size: 98px; padding: 22px 54px 26px; }
+  #sub { left: 50%; top: 232px; font-size: 50px; padding: 12px 34px 14px; color: #3A2614; background: #F6D84A;
+         border-width: 7px; box-shadow: 0 9px 0 #3A2614; }
+  .nail { position: absolute; top: 16px; width: 16px; height: 16px; border-radius: 50%; background: #E9D9B8;
+          border: 4px solid #3A2614; }
+  #log { position: absolute; left: 792px; top: 340px; width: 236px; height: 236px; border-radius: 50%;
+         border: 9px solid #3A2614; box-shadow: 0 12px 0 #3A2614, 0 20px 30px rgba(0, 0, 0, 0.35);
+         background: radial-gradient(circle, #F2D9A6 0 14%, #E3C089 14% 15.5%, #F0D49B 15.5% 30%,
+           #DDB47B 30% 31.5%, #EDCC90 31.5% 47%, #D7A96D 47% 48.5%, #E8C384 48.5% 66%,
+           #A86B34 66% 76%, #7E4A1F 76% 100%); }
+  #log .in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+             justify-content: center; line-height: 0.9; color: #3A2614; }
+  #log .n { font-size: 96px; color: #4F7A28; -webkit-text-stroke: 9px #FFF4D6; paint-order: stroke fill; }
+  #log .u { font-size: 40px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="frame" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="sign"><span class="t">BANTAL PELUK <b>DURIAN</b></span></div>
+  <div id="sub" class="sign">😊 BUAT ORANG TERSENYUM</div>
+  <div id="log"><div class="in"><span class="n">4</span><span class="u">SAIZ</span></div></div>
+</div>
+<script>
+  // wooden frame with leaf sprigs on the corners (static cover: one paused, empty-ish timeline)
+  const leaf = (cx, cy, len, ang, fill) => {
+    const a = ang * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a), nx = -dy, ny = dx, w = len * 0.36;
+    const tx = cx + dx * len, ty = cy + dy * len;
+    const m1 = [cx + dx * len * 0.5 + nx * w, cy + dy * len * 0.5 + ny * w];
+    const m2 = [cx + dx * len * 0.5 - nx * w, cy + dy * len * 0.5 - ny * w];
+    return `<path d="M${cx},${cy} Q${m1[0]},${m1[1]} ${tx},${ty} Q${m2[0]},${m2[1]} ${cx},${cy} Z" fill="${fill}" ` +
+           `stroke="#2F4A12" stroke-width="6" stroke-linejoin="round"/>` +
+           `<path d="M${cx},${cy} L${cx + dx * len * 0.85},${cy + dy * len * 0.85}" stroke="#2F4A12" stroke-width="4" opacity="0.6"/>`;
+  };
+  let s = `<defs><pattern id="grain" width="40" height="12" patternUnits="userSpaceOnUse">` +
+          `<rect width="40" height="12" fill="#A86B34"/><path d="M0,9 L40,7" stroke="#8E5727" stroke-width="3"/></pattern></defs>` +
+          `<path fill-rule="evenodd" fill="url(#grain)" stroke="#3A2614" stroke-width="8" ` +
+          `d="M0,0 H1080 V1536 H0 Z M30,30 V1506 H1050 V30 Z"/>` +
+          `<rect x="30" y="30" width="1020" height="1476" fill="none" stroke="#FFF4D6" stroke-width="5" opacity="0.8"/>`;
+  const corner = (x, y, sx, sy) => {
+    s += leaf(x, y, 120, sx > 0 ? (sy > 0 ? 35 : -35) : (sy > 0 ? 145 : -145), "#7FB13A");
+    s += leaf(x, y, 100, sx > 0 ? (sy > 0 ? 75 : -75) : (sy > 0 ? 105 : -105), "#9CCB4F");
+    s += leaf(x, y, 90, sx > 0 ? (sy > 0 ? 5 : -5) : (sy > 0 ? 175 : -175), "#6FA531");
+  };
+  corner(18, 1518, 1, -1); corner(1062, 1518, -1, -1);
+  document.getElementById("frame").innerHTML = s;
+  document.fonts.load('700 98px "Fredoka"').then(() => {
+    for (const id of ["title", "sub"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 960) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+      if (id === "title") for (const side of ["left", "right"]) {
+        const nl = document.createElement("div"); nl.className = "nail"; nl.style[side] = "16px"; n.appendChild(nl);
+      }
+    }
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -1.5 }, 0).set("#sub", { rotation: 1.5 }, 0).set("#log", { rotation: 8 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
