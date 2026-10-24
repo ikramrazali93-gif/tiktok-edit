@@ -1,0 +1,8 @@
+{
+  "name": "bantal-durian-3-comp",
+  "private": true,
+  "description": "HyperFrames graphics layer for the bantal peluk durian #3 (pop komik) TikTok edit (rendered by ../edit.py)",
+  "devDependencies": {
+    "hyperframes": "0.8.181"
+  }
+}

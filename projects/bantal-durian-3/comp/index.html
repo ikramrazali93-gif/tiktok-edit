@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk durian #3, "pop komik" look: graphics layer as a HyperFrames composition.
+     The cut video (base.mp4) and all timings/positions come from edit.py via data.js; this file only draws and
+     animates. Every label/caption/burst position is chosen in edit.py so it stays off her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* labels: comic speech bubbles (white, thick ink outline, hard offset shadow, tail drawn in svg) */
+  .lab { position: absolute; opacity: 0; }
+  .lab .wrap { position: relative; }
+  .lab svg.bub { position: absolute; overflow: visible; }
+  .lab .txt { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+              column-gap: 18px; row-gap: 2px; padding: 18px 38px 22px; color: #141414; font-size: 84px;
+              line-height: 1.02; letter-spacing: 1px; text-align: center; }
+  .lab .txt b { font-weight: 700; color: #FF3B3B; }
+  .lab .w { display: inline-block; white-space: nowrap; }
+  .lab .emo { display: inline-block; font-size: 1.0em; }
+  /* "big" labels: yellow halftone burst panel */
+  .lab.big .txt { color: #141414; font-size: 124px; }
+  .lab.big .txt b { color: #FF3B3B; -webkit-text-stroke: 0; }
+
+  /* captions: comic lettering; the active word jumps into a yellow ink box */
+  .cap { position: absolute; display: flex; gap: 22px; align-items: center; opacity: 0;
+         font-size: 78px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; white-space: nowrap; }
+  .cap .word .box { position: absolute; left: -16px; right: -16px; top: -12px; bottom: -14px; background: #FFE135;
+                    border: 7px solid #141414; border-radius: 12px; box-shadow: 7px 8px 0 #141414; opacity: 0; }
+  .cap .word .a { position: relative; color: #FFFFFF; -webkit-text-stroke: 15px #141414; paint-order: stroke fill; }
+  .cap .word.key .a { color: #FFE135; }
+  .cap .word .d { position: absolute; left: 0; top: 0; color: #141414; opacity: 0; }
+
+  /* onomatopoeia bursts ("POP!", "GEBU!") */
+  .burst { position: absolute; opacity: 0; }
+  .burst svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  .burst span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                font-size: 70px; line-height: 0.95; text-align: center; color: #FFFFFF;
+                -webkit-text-stroke: 12px #141414; paint-order: stroke fill; }
+
+  /* speed lines + halftone slam (transition) */
+  .slam { position: absolute; inset: 0; opacity: 0; }
+  .dots { position: absolute; inset: 0;
+          background-image: radial-gradient(#141414 28%, transparent 30%); background-size: 46px 46px; }
+
+  /* progress bar + speed tag */
+  #prog { position: absolute; height: 18px; border-radius: 9px; background: #FFFFFF; border: 5px solid #141414; }
+  #prog .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 5px;
+                background: #FF3B3B; transform-origin: 0 50%; }
+  .tag { position: absolute; font-size: 52px; color: #141414; background: #2EC4F1; padding: 8px 24px 12px;
+         border: 6px solid #141414; border-radius: 10px; box-shadow: 6px 7px 0 #141414; opacity: 0; }
+
+  /* end card */
+  .frame { position: absolute; border: 14px solid #141414; border-radius: 28px; opacity: 0; }
+  .endpill { position: absolute; opacity: 0; }
+  .endpill .in { display: flex; align-items: center; gap: 14px; padding: 14px 34px 18px; border-radius: 14px;
+                 font-size: 54px; line-height: 1; white-space: nowrap; border: 7px solid #141414;
+                 box-shadow: 8px 9px 0 #141414; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="39.040" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="39.040" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 11;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  // jagged starburst polygon around (cx, cy)
+  function starPath(cx, cy, rx, ry, n, inner) {
+    let p = "";
+    for (let i = 0; i < n * 2; i++) {
+      const a = (i / (n * 2)) * Math.PI * 2 - Math.PI / 2, k = i % 2 ? inner : 1;
+      const j = i % 2 ? 1 : 0.92 + rnd() * 0.16;
+      p += (i ? "L" : "M") + (cx + Math.cos(a) * rx * k * j).toFixed(1) + "," + (cy + Math.sin(a) * ry * k * j).toFixed(1) + " ";
+    }
+    return p + "Z";
+  }
+
+  // speech bubble (rounded rect + tail) or halftone burst panel, sized to the text box w x h
+  function bubble(w, h, big, tail, fill) {
+    const pad = 70, svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "bub");
+    svg.setAttribute("width", w + pad * 2);
+    svg.setAttribute("height", h + pad * 2);
+    svg.style.left = -pad + "px";
+    svg.style.top = -pad + "px";
+    const x0 = pad, y0 = pad, x1 = pad + w, y1 = pad + h;
+    let body;
+    if (big) {
+      const d = starPath(pad + w / 2, pad + h / 2, w / 2 + 46, h / 2 + 42, 18, 0.86);
+      body = `<defs><pattern id="ht${Math.floor(rnd() * 1e6)}" width="22" height="22" patternUnits="userSpaceOnUse">` +
+             `<circle cx="11" cy="11" r="4.5" fill="#F5B800"/></pattern></defs>`;
+      const pid = body.match(/id="(ht\d+)"/)[1];
+      body += `<path d="${d}" transform="translate(9 11)" fill="#141414"/>` +
+              `<path d="${d}" fill="#FFE135" stroke="#141414" stroke-width="9" stroke-linejoin="round"/>` +
+              `<path d="${d}" fill="url(#${pid})" opacity="0.55"/>`;
+    } else {
+      const r = 34;
+      let tp = "";
+      if (tail) {                                   // tail toward the subject: "bl" bottom-left, "br" bottom-right
+        const bx = tail === "bl" ? x0 + w * 0.26 : x1 - w * 0.26, dir = tail === "bl" ? -1 : 1;
+        tp = `M${bx - 30},${y1 - 4} L${bx + dir * 46},${y1 + 58} L${bx + 34},${y1 - 4} Z`;
+      }
+      const rect = `M${x0 + r},${y0} H${x1 - r} Q${x1},${y0} ${x1},${y0 + r} V${y1 - r} Q${x1},${y1} ${x1 - r},${y1} ` +
+                   `H${x0 + r} Q${x0},${y1} ${x0},${y1 - r} V${y0 + r} Q${x0},${y0} ${x0 + r},${y0} Z`;
+      body = `<g transform="translate(9 11)" fill="#141414"><path d="${rect}"/>${tp ? `<path d="${tp}"/>` : ""}</g>` +
+             (tp ? `<path d="${tp}" fill="${fill}" stroke="#141414" stroke-width="9" stroke-linejoin="round"/>` : "") +
+             `<path d="${rect}" fill="${fill}" stroke="#141414" stroke-width="9"/>` +
+             (tp ? `<path d="${tp}" fill="${fill}" transform="translate(0 -12)"/>` : "");
+    }
+    svg.innerHTML = body;
+    return svg;
+  }
+
+  // ------------------------------------------------------------ labels
+  let flip = 1;
+  function label(L) {
+    const lab = el("div", "lab" + (L.big ? " big" : ""));
+    const wrap = el("div", "wrap", lab);
+    const txt = el("div", "txt", wrap);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", txt, w));
+    const emo = L.emoji ? el("span", "emo", txt, L.emoji) : null;
+    let fs = L.fs || (L.big ? 124 : 84);
+    txt.style.fontSize = fs + "px";
+    txt.style.maxWidth = L.maxw + "px";
+    // shrink until it fits the allowed box (width and height) chosen in edit.py
+    const maxh = L.maxh - (L.tail ? 60 : 0);            // the tail hangs below the text box
+    while ((txt.scrollWidth > L.maxw + 1 || txt.offsetHeight > maxh) && fs > 34) {
+      fs -= 2; txt.style.fontSize = fs + "px";
+    }
+    txt.style.maxWidth = "none";
+    txt.style.width = Math.min(L.maxw, txt.scrollWidth + 2) + "px";
+    const w = txt.offsetWidth, h = txt.offsetHeight;
+    wrap.insertBefore(bubble(w, h, L.big, L.tail, L.fs ? "#FFE135" : "#FFFFFF"), txt);   // punch labels: yellow
+    const x = clamp(L.x - w / 2, S.l + 20, S.r - 20 - w), y = L.top;
+    lab.style.left = x + "px";
+    lab.style.top = y + "px";
+    L.box = [x, y, x + w, y + h];
+    const rot = (L.rot !== undefined ? L.rot : -3 * flip); flip = -flip;
+    tl.set(lab, { opacity: 1 }, L.t0);
+    tl.fromTo(wrap, { scale: 0.1, rotation: rot * 6, transformOrigin: "50% 50%" },
+      { scale: 1, rotation: rot, duration: 0.45, ease: "back.out(2.6)" }, L.t0);
+    tl.fromTo(ws, { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.2, stagger: 0.045,
+      ease: "back.out(3)" }, L.t0 + 0.06);
+    if (emo) {
+      tl.fromTo(emo, { scale: 0, rotation: -60 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(3)" },
+        L.t0 + 0.14);
+      const wob = Math.max(0, Math.floor((L.t1 - L.t0 - 0.6) / 0.4));
+      if (wob > 0) tl.to(emo, { y: -10, duration: 0.2, yoyo: true, repeat: wob * 2 - 1, ease: "sine.inOut" },
+        L.t0 + 0.55);
+    }
+    tl.to(wrap, { scale: 1.12, duration: 0.07, ease: "power1.out" }, L.t1 - 0.16);
+    tl.to(wrap, { scale: 0.2, duration: 0.09, ease: "power2.in" }, L.t1 - 0.09);
+    tl.set(lab, { opacity: 0 }, L.t1);
+  }
+
+  // ------------------------------------------------------------ captions: active word jumps into an ink box
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "box", s);
+      el("span", "a", s, w.w);
+      el("span", "d", s, w.w);
+      return s;
+    });
+    let fs = 78;
+    const maxw = C.maxw || (S.r - S.l - 60);
+    cap.style.fontSize = fs + "px";
+    while (cap.offsetWidth > maxw && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const cx = C.x || CX;
+    cap.style.left = clamp(cx - cw / 2, S.l + 20, S.r - 20 - cw) + "px";
+    cap.style.top = (C.y - ch / 2) + "px";
+    tl.fromTo(cap, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.14, ease: "back.out(2.5)" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], box = s.querySelector(".box"), a = s.querySelector(".a"), d = s.querySelector(".d");
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      const rot = (i % 2 ? 3 : -3);
+      tl.set(d, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(box, { opacity: 1, scale: 0.4, rotation: rot * 3 }, { scale: 1, rotation: rot, duration: 0.16,
+        ease: "back.out(3)" }, w.s);
+      tl.fromTo(s, { y: 0 }, { y: -10, duration: 0.08, yoyo: true, repeat: 1, ease: "power1.out" }, w.s);
+      tl.set(box, { opacity: 0 }, off);
+      tl.set(d, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.08 }, C.t1 - 0.08);
+  }
+
+  // ------------------------------------------------------------ "POP!" bursts
+  function burst(B) {
+    const size = B.size || 230;
+    const b = el("div", "burst");
+    b.style.left = (B.x - size / 2) + "px";
+    b.style.top = (B.y - size / 2) + "px";
+    b.style.width = size + "px";
+    b.style.height = size + "px";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    const d = starPath(size / 2, size / 2, size / 2, size / 2 * 0.9, 12, 0.66);
+    svg.innerHTML = `<path d="${d}" transform="translate(7 8)" fill="#141414"/>` +
+                    `<path d="${d}" fill="${B.color || "#FF3B3B"}" stroke="#141414" stroke-width="8" stroke-linejoin="round"/>`;
+    b.appendChild(svg);
+    const sp = el("span", "", b, B.text);
+    sp.style.fontSize = (B.fs || Math.round(size * 0.3)) + "px";
+    tl.fromTo(b, { opacity: 1, scale: 0, rotation: -30 }, { scale: 1, rotation: B.rot || 8, duration: 0.35,
+      ease: "back.out(3.2)" }, B.t);
+    tl.to(b, { scale: 1.08, duration: 0.15, yoyo: true, repeat: 1, ease: "sine.inOut" }, B.t + 0.4);
+    tl.to(b, { scale: 0, opacity: 0, duration: 0.14, ease: "power2.in" }, B.t + (B.dur || 1.0));
+  }
+
+  // ------------------------------------------------------------ comic slam transition: speed lines + halftone sweep
+  function slam(W) {
+    const g = el("div", "slam");
+    const lines = document.createElementNS(NS, "svg");
+    lines.setAttribute("width", 1080);
+    lines.setAttribute("height", 1920);
+    lines.style.position = "absolute";
+    let p = "";
+    for (let i = 0; i < 64; i++) {
+      const a = (i / 64) * Math.PI * 2 + rnd() * 0.05, w = 0.012 + rnd() * 0.02, r0 = 330 + rnd() * 220;
+      const x0 = 540 + Math.cos(a) * r0, y0 = 960 + Math.sin(a) * r0;
+      const xa = 540 + Math.cos(a - w) * 1400, ya = 960 + Math.sin(a - w) * 1400;
+      const xb = 540 + Math.cos(a + w) * 1400, yb = 960 + Math.sin(a + w) * 1400;
+      p += `M${x0.toFixed(0)},${y0.toFixed(0)} L${xa.toFixed(0)},${ya.toFixed(0)} L${xb.toFixed(0)},${yb.toFixed(0)} Z `;
+    }
+    lines.innerHTML = `<path d="${p}" fill="#FFFFFF"/>`;
+    g.appendChild(lines);
+    const dots = el("div", "dots", g);
+    dots.style.background = "#FFE135";
+    dots.style.backgroundImage = "radial-gradient(#F5A800 30%, transparent 32%)";
+    dots.style.backgroundSize = "40px 40px";
+    dots.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0 100%)";
+    const t = W.t;
+    tl.set(g, { opacity: 1 }, t - 0.22);
+    tl.fromTo(dots, { xPercent: -110, skewX: -18 }, { xPercent: 110, duration: 0.42, ease: "power2.inOut" }, t - 0.22);
+    tl.fromTo(lines, { opacity: 0, scale: 1.3, transformOrigin: "50% 50%" },
+      { opacity: 0.9, scale: 1, duration: 0.12, ease: "power1.out" }, t - 0.02);
+    tl.to(lines, { opacity: 0, duration: 0.2 }, t + 0.16);
+    tl.set(g, { opacity: 0 }, t + 0.4);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (T.x || S.l + 20) + "px";
+    g.style.top = (T.y || S.t + 50) + "px";
+    tl.fromTo(g, { opacity: 0, scale: 0.3, rotation: -10 }, { opacity: 1, scale: 1, rotation: -4, duration: 0.2,
+      ease: "back.out(3)" }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: comic panel frame + title + pills
+  function endcard(N) {
+    const fr = el("div", "frame");
+    fr.style.left = (S.l - 20) + "px";
+    fr.style.top = (S.t + 30) + "px";
+    fr.style.width = (S.r - S.l + 40) + "px";
+    fr.style.height = (S.b - S.t - 10) + "px";
+    tl.fromTo(fr, { opacity: 0, scale: 1.15 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, N.t0);
+    label(Object.assign({}, N.title, { t0: N.t0 + 0.05, t1: N.t1 + 0.3 }));
+    N.pills.forEach((p, i) => {
+      const box = el("div", "endpill");
+      const inn = el("div", "in", box, p.html);
+      inn.style.background = p.bg;
+      inn.style.color = p.fg;
+      box.style.left = (CX - inn.offsetWidth / 2) + "px";
+      box.style.top = (p.y - inn.offsetHeight / 2) + "px";
+      tl.fromTo(box, { opacity: 0, x: (i % 2 ? 1 : -1) * 500, rotation: i % 2 ? 4 : -4 },
+        { opacity: 1, x: 0, rotation: i % 2 ? 2 : -2, duration: 0.42, ease: "back.out(1.8)" }, N.t0 + 0.3 + i * 0.14);
+    });
+    (N.bursts || []).forEach(burst);
+  }
+
+  function progress() {
+    const p = el("div", "", fx);
+    p.id = "prog";
+    p.style.left = S.l + "px";
+    p.style.top = (S.b - 26) + "px";                   // bottom edge of the safe area: the top band is for labels
+    p.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", p);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);
+    E.labels.forEach(label);
+    E.bursts.forEach(burst);
+    E.tags.forEach(tag);
+    E.wipes.forEach(slam);
+    endcard(E.end);
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

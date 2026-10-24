@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk durian #3, same "pop komik" look as the video: halftone yellow page,
+     the photo as a tilted comic panel, speech bubbles and a starburst. Nothing sits on her face (head box below).
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FFE135; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif;
+          background: #FFE135; }
+  #dots { position: absolute; inset: 0; background-image: radial-gradient(#F5B800 26%, transparent 28%);
+          background-size: 34px 34px; }
+  #rays { position: absolute; inset: 0; }
+  #panel { position: absolute; left: 70px; top: 150px; width: 940px; height: 1250px; border: 16px solid #141414;
+           border-radius: 22px; box-shadow: 18px 22px 0 #141414; overflow: hidden; background: #fff; }
+  #panel img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 34%; }
+  .bub { position: absolute; }
+  .bub svg { position: absolute; overflow: visible; left: 0; top: 0; }
+  .bub .t { position: relative; display: flex; align-items: center; justify-content: center; gap: 14px;
+            text-align: center; color: #141414; line-height: 1.0; white-space: nowrap; }
+  .bub .t b { color: #FF3B3B; font-weight: 700; }
+  #title .t { font-size: 96px; padding: 26px 46px 32px; }
+  #ask .t { font-size: 58px; padding: 18px 30px 22px; }
+  #burst { position: absolute; width: 290px; height: 290px; }
+  #burst span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                text-align: center; font-size: 66px; line-height: 0.95; color: #fff;
+                -webkit-text-stroke: 12px #141414; paint-order: stroke fill; }
+  #sizes { position: absolute; left: 50%; top: 1372px; font-size: 54px; padding: 14px 34px 18px; background: #fff;
+           color: #141414; border: 8px solid #141414; border-radius: 14px; box-shadow: 9px 10px 0 #141414;
+           white-space: nowrap; line-height: 1; }
+  #sizes b { color: #FF3B3B; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <div id="dots"></div>
+  <svg id="rays" viewBox="0 0 1080 1536"></svg>
+  <div id="panel"><img src="frame.jpg" alt="" /></div>
+  <div id="title" class="bub"><div class="t">BANTAL <b>DURIAN!</b> 💛</div></div>
+  <div id="ask" class="bub"><div class="t">MUKA <b>NI</b> COMEL! 👇</div></div>
+  <div id="burst"><svg viewBox="0 0 290 290" width="290" height="290"></svg><span>GEBU<br>GILER!</span></div>
+  <div id="sizes">📏 <b>95</b> • <b>75</b> • <b>52</b> • <b>30</b> CM</div>
+</div>
+<script>
+  const NS = "http://www.w3.org/2000/svg";
+  // white speed rays behind the panel
+  let r = "";
+  for (let i = 0; i < 40; i++) {
+    const a = i / 40 * Math.PI * 2, w = 0.035;
+    const x1 = 540 + Math.cos(a - w) * 1500, y1 = 760 + Math.sin(a - w) * 1500;
+    const x2 = 540 + Math.cos(a + w) * 1500, y2 = 760 + Math.sin(a + w) * 1500;
+    if (i % 2 === 0) r += `M540,760 L${x1.toFixed(0)},${y1.toFixed(0)} L${x2.toFixed(0)},${y2.toFixed(0)} Z `;
+  }
+  document.getElementById("rays").innerHTML = `<path d="${r}" fill="#FFFFFF" opacity="0.45"/>`;
+
+  // speech bubble behind .t: rounded rect + tail (dir: "bl" / "br" / null), ink outline + hard shadow
+  function bubble(id, tail, fill) {
+    const box = document.getElementById(id), t = box.querySelector(".t");
+    const w = t.offsetWidth, h = t.offsetHeight, rr = 30;
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("width", w); svg.setAttribute("height", h);
+    const rect = `M${rr},0 H${w - rr} Q${w},0 ${w},${rr} V${h - rr} Q${w},${h} ${w - rr},${h} H${rr} Q0,${h} 0,${h - rr} V${rr} Q0,0 ${rr},0 Z`;
+    let tp = "";
+    if (tail) {
+      const bx = tail === "bl" ? w * 0.25 : w * 0.75, dx = tail === "bl" ? -50 : 50;
+      tp = `M${bx - 32},${h - 4} L${bx + dx},${h + 70} L${bx + 34},${h - 4} Z`;
+    }
+    svg.innerHTML = `<g transform="translate(10 12)" fill="#141414"><path d="${rect}"/>${tp ? `<path d="${tp}"/>` : ""}</g>` +
+      (tp ? `<path d="${tp}" fill="${fill}" stroke="#141414" stroke-width="9" stroke-linejoin="round"/>` : "") +
+      `<path d="${rect}" fill="${fill}" stroke="#141414" stroke-width="9"/>` +
+      (tp ? `<path d="${tp}" fill="${fill}" transform="translate(0 -12)"/>` : "");
+    box.insertBefore(svg, t);
+    return [w, h];
+  }
+
+  document.fonts.load('700 96px "Fredoka"').then(() => {
+    const [tw] = bubble("title", null, "#FFFFFF");
+    const T = document.getElementById("title");
+    T.style.left = (540 - tw / 2) + "px"; T.style.top = "62px";
+    // "muka ni" bubble: left, over the trees beside the pillow tip, tail down-left to the pillow's top face
+    const [aw] = bubble("ask", "bl", "#2EC4F1");
+    const A = document.getElementById("ask");
+    A.style.left = "92px"; A.style.top = "250px";
+    // starburst bottom-left (ground / robe), away from her face
+    const B = document.getElementById("burst");
+    B.style.left = "40px"; B.style.top = "1080px";
+    let p = "";
+    for (let i = 0; i < 28; i++) {
+      const a = i / 28 * Math.PI * 2 - Math.PI / 2, k = i % 2 ? 0.66 : 1;
+      p += (i ? "L" : "M") + (145 + Math.cos(a) * 140 * k).toFixed(1) + "," + (145 + Math.sin(a) * 130 * k).toFixed(1) + " ";
+    }
+    B.querySelector("svg").innerHTML = `<path d="${p}Z" transform="translate(8 9)" fill="#141414"/>` +
+      `<path d="${p}Z" fill="#FF3B3B" stroke="#141414" stroke-width="8" stroke-linejoin="round"/>`;
+    const S = document.getElementById("sizes");
+    S.style.marginLeft = -S.offsetWidth / 2 + "px";
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#panel", { rotation: -1.5 }, 0).set("#title", { rotation: -2 }, 0).set("#ask", { rotation: 3 }, 0)
+      .set("#burst", { rotation: -10 }, 0).set("#sizes", { rotation: 1.5 }, 0).to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
