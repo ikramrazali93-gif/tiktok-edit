@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk durian #4, "Pastel lembut" look: blush-mint dreamy background, the photo in a
+     rounded window with a white rim, the title on a soft card in the top band and a pill under the photo, so
+     nothing sits on her face (the window starts below the title). frame.jpg is the 1080x1920 frame at 5.2s.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FFE9F1; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif;
+          background: linear-gradient(160deg, #FFD9E8 0%, #FFF1E6 45%, #D9F5E9 100%); }
+  .bokeh { position: absolute; border-radius: 50%; }
+  #win { position: absolute; left: 70px; top: 300px; width: 940px; height: 1110px; border-radius: 70px;
+         overflow: hidden; border: 10px solid #FFFFFF;
+         box-shadow: 0 0 0 16px rgba(255, 255, 255, 0.35), 0 26px 60px rgba(150, 90, 150, 0.35); }
+  /* the 1080x1920 frame scaled to 940 wide (x0.87) and moved up so her hood starts just inside the window */
+  #photo { position: absolute; left: -10px; top: -70px; width: 940px; height: 1671px; }
+  .card { position: absolute; display: flex; align-items: center; gap: 22px; white-space: nowrap; line-height: 1;
+          color: #6B3F7A; border-radius: 999px; border: 7px solid #FFFFFF;
+          background: linear-gradient(120deg, #FFE1EC 0%, #FFF6F9 50%, #DDF7EC 100%);
+          box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.35), 0 16px 40px rgba(150, 90, 150, 0.32); }
+  .card b { color: #E2588F; font-weight: 700; }
+  .bub { display: flex; align-items: center; justify-content: center; width: 1.4em; height: 1.4em; border-radius: 50%;
+         font-size: 0.8em; background: radial-gradient(circle at 35% 30%, #FFFFFF 0 22%, #FFD6E6 60%, #FFC1D8 100%); }
+  #title { left: 50%; top: 58px; font-size: 92px; padding: 26px 56px 30px 30px; }
+  #sub { left: 50%; top: 196px; font-size: 46px; padding: 12px 34px 14px; color: #FFFFFF;
+         background: linear-gradient(90deg, #F27BA8, #E2588F); border-width: 6px; }
+  #pill { left: 50%; top: 1370px; font-size: 64px; padding: 22px 50px 26px 26px; }
+  .spark { position: absolute; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <div id="win"><img id="photo" src="frame.jpg" alt="" /></div>
+  <div id="title" class="card"><span class="bub">🛏️</span><span>BILIK NAMPAK <b>KOSONG?</b></span></div>
+  <div id="sub" class="card">✨ SATU JE, TERUS NAIK SERI</div>
+  <div id="pill" class="card"><span class="bub">💛</span><span>BANTAL PELUK <b>DURIAN</b></span></div>
+</div>
+<script>
+  const root = document.getElementById("root");
+  let seed = 5;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const cols = ["rgba(255,255,255,0.75)", "rgba(255,193,216,0.6)", "rgba(189,239,217,0.6)", "rgba(255,231,168,0.55)"];
+  for (let i = 0; i < 26; i++) {                       // soft bokeh in the background bands
+    const b = document.createElement("div");
+    b.className = "bokeh";
+    const sz = 30 + rnd() * 90, x = rnd() * 1080, y = rnd() < 0.5 ? rnd() * 300 : 1400 + rnd() * 136;
+    b.style.cssText = `left:${x - sz / 2}px;top:${y - sz / 2}px;width:${sz}px;height:${sz}px;` +
+      `background:radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95), ${cols[i % 4]} 60%, rgba(255,255,255,0) 72%)`;
+    root.insertBefore(b, root.firstChild);
+  }
+  const spark = (x, y, s, fill) => {
+    const n = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    n.setAttribute("viewBox", "-50 -50 100 100");
+    n.setAttribute("class", "spark");
+    n.style.cssText = `left:${x - s / 2}px;top:${y - s / 2}px;width:${s}px;height:${s}px`;
+    n.innerHTML = `<path d="M0,-48 C6,-10 10,-6 48,0 C10,6 6,10 0,48 C-6,10 -10,6 -48,0 C-10,-6 -6,-10 0,-48 Z" fill="${fill}"/>`;
+    root.appendChild(n);
+  };
+  [[70, 290, 70, "#FFFFFF"], [1010, 310, 56, "#FFD6E6"], [985, 1330, 74, "#FFFFFF"], [95, 1440, 50, "#FFE7A8"],
+   [1020, 150, 44, "#FFFFFF"], [40, 120, 40, "#FFD6E6"]].forEach(a => spark(...a));
+  document.fonts.load('700 92px "Fredoka"').then(() => {
+    for (const id of ["title", "sub", "pill"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 1000) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+    }
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -1.5 }, 0).set("#sub", { rotation: 1.2 }, 0).set("#pill", { rotation: -1 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>

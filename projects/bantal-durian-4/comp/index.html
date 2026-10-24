@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk durian #4, "Pastel lembut" (soft dreamy) look: rounded blush-mint cards with a soft glow,
+     floaty easing, drifting bokeh and sparkles, a soft bloom transition. The cut video (base.mp4), timings and
+     her head boxes come from edit.py via data.js; this file draws, animates and places every graphic where it
+     keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* soft card label: blush -> mint gradient, white rim, soft glow; emoji sits in a round bubble */
+  .card { position: absolute; left: 0; top: 0; opacity: 0; }
+  .card .in { position: relative; display: flex; align-items: center; gap: 20px; white-space: nowrap;
+              padding: 24px 50px 28px 26px; font-size: 82px; line-height: 1; color: #6B3F7A;
+              border-radius: 999px; border: 6px solid rgba(255, 255, 255, 0.95);
+              background: linear-gradient(120deg, #FFE1EC 0%, #FFF3F7 48%, #DDF7EC 100%);
+              box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.28), 0 16px 40px rgba(150, 90, 150, 0.30),
+                          inset 0 -8px 18px rgba(255, 170, 200, 0.25); }
+  .card .in b { color: #E2588F; font-weight: 700; }
+  .card .bub { flex: none; display: flex; align-items: center; justify-content: center; width: 1.45em;
+               height: 1.45em; border-radius: 50%; font-size: 0.78em;
+               background: radial-gradient(circle at 35% 30%, #FFFFFF 0 22%, #FFD6E6 60%, #FFC1D8 100%);
+               box-shadow: inset 0 -4px 8px rgba(226, 88, 143, 0.25), 0 4px 10px rgba(150, 90, 150, 0.25); }
+  .card .w { display: inline-block; }
+  .card.wrapline .in { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                       row-gap: 6px; border-radius: 60px; padding: 24px 44px 28px; }
+  .card.wrapline .bub { order: -1; }
+  .card .shine { position: absolute; left: 34px; top: 12px; width: 38%; height: 26%; border-radius: 999px;
+                 background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0)); }
+
+  /* round size bubble (95CM ...) */
+  .orb { position: absolute; left: 0; top: 0; opacity: 0; }
+  .orb .ball { position: relative; width: 290px; height: 290px; border-radius: 50%;
+               border: 7px solid rgba(255, 255, 255, 0.95);
+               background: radial-gradient(circle at 34% 30%, #FFFFFF 0 10%, #FFE7F0 34%, #FFC9DD 70%, #F7A9C9 100%);
+               box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.25), 0 18px 40px rgba(150, 90, 150, 0.32); }
+  .orb .num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+              justify-content: center; line-height: 0.9; color: #6B3F7A; }
+  .orb .num .n { font-size: 116px; color: #E2588F; -webkit-text-stroke: 9px #FFFFFF; paint-order: stroke fill; }
+  .orb .num .u { font-size: 52px; }
+  .orb .emo { position: absolute; right: -14px; top: -14px; font-size: 72px; }
+
+  /* captions: plum letters with a soft white rim; the active word turns blush, floats up a little and gets a
+     soft glow; keywords are mint */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 26px; align-items: center; opacity: 0;
+         font-size: 76px; line-height: 1; letter-spacing: 0.5px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { display: block; white-space: nowrap; color: #6B3F7A;
+                  -webkit-text-stroke: 14px #FFFFFF; paint-order: stroke fill;
+                  filter: drop-shadow(0 6px 10px rgba(120, 60, 120, 0.35)); }
+  .cap .word.key .a { color: #2E9C7A; }
+  .cap .word .y { position: absolute; left: 0; top: 0; white-space: nowrap; color: #E2588F; opacity: 0;
+                  -webkit-text-stroke: 14px #FFFFFF; paint-order: stroke fill;
+                  filter: drop-shadow(0 0 16px rgba(255, 150, 190, 0.95)) drop-shadow(0 6px 10px rgba(120, 60, 120, 0.3)); }
+
+  /* soft bloom between sections */
+  .bloom { position: absolute; left: 50%; top: 50%; width: 2600px; height: 2600px; margin: -1300px 0 0 -1300px;
+           border-radius: 50%; opacity: 0;
+           background: radial-gradient(circle, rgba(255, 255, 255, 0.97) 0 22%, rgba(255, 228, 238, 0.92) 40%,
+                       rgba(222, 247, 236, 0.75) 58%, rgba(255, 255, 255, 0) 72%); }
+
+  /* drifting bokeh / sparkles */
+  .bokeh { position: absolute; border-radius: 50%; opacity: 0; }
+  .spark { position: absolute; opacity: 0; overflow: visible; }
+
+  /* progress bar */
+  #bar { position: absolute; height: 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.45); }
+  #bar .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 6px;
+               background: linear-gradient(90deg, #FFC1D8, #FFE7A8, #BDEFD9); transform-origin: 0 50%; }
+  #bar .dot { position: absolute; top: -9px; left: -15px; width: 30px; height: 30px; border-radius: 50%;
+              background: #FFFFFF; box-shadow: 0 0 14px 6px rgba(255, 170, 205, 0.9); }
+
+  /* end card: a soft cloud-like card with stacked pills */
+  .endc { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+          align-items: center; gap: 24px; padding: 40px 46px 46px; border-radius: 70px;
+          border: 6px solid rgba(255, 255, 255, 0.95);
+          background: linear-gradient(160deg, rgba(255, 238, 245, 0.94), rgba(232, 250, 242, 0.94));
+          box-shadow: 0 0 0 14px rgba(255, 255, 255, 0.25), 0 22px 50px rgba(150, 90, 150, 0.35); }
+  .endc .title { font-size: 72px; color: #6B3F7A; white-space: nowrap; line-height: 1.05; text-align: center; }
+  .endc .title b { color: #E2588F; }
+  .endc .pill { display: flex; align-items: center; gap: 12px; padding: 14px 34px 16px; border-radius: 999px;
+                font-size: 48px; line-height: 1; white-space: nowrap; color: #6B3F7A; background: #FFFFFF;
+                box-shadow: 0 6px 16px rgba(150, 90, 150, 0.22); }
+  .endc .pill.cta { color: #FFFFFF; background: linear-gradient(90deg, #F27BA8, #E2588F); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="30.060" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="30.060" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 23;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement (same as durian #2)
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the pillows' smileys when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 70 && f[0] < x + w + 70 && f[1] > y - 70 && f[1] < y + h + 70) c += 2600;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // 4-point sparkle (svg)
+  function sparkSvg(size, fill) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("viewBox", "-50 -50 100 100");
+    s.setAttribute("class", "spark");
+    s.style.width = size + "px";
+    s.style.height = size + "px";
+    s.innerHTML = `<path d="M0,-48 C6,-10 10,-6 48,0 C10,6 6,10 0,48 C-6,10 -10,6 -48,0 C-10,-6 -6,-10 0,-48 Z" ` +
+                  `fill="${fill}"/>`;
+    fx.appendChild(s);
+    return s;
+  }
+  // a few sparkles twinkle out of a spot
+  function twinkle(x, y, t, n) {
+    for (let i = 0; i < (n || 6); i++) {
+      const sz = 34 + rnd() * 34, s = sparkSvg(sz, i % 2 ? "#FFFFFF" : "#FFD6E6");
+      const a = (i / (n || 6)) * Math.PI * 2 + rnd() * 0.6, d = 120 + rnd() * 120;
+      s.style.left = (x - sz / 2) + "px";
+      s.style.top = (y - sz / 2) + "px";
+      tl.fromTo(s, { opacity: 0, scale: 0.2, x: 0, y: 0, rotation: 0 },
+        { opacity: 1, scale: 1, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.8 - 30, rotation: 90,
+          duration: 0.8, ease: "sine.out" }, t + i * 0.03);
+      tl.to(s, { opacity: 0, scale: 0.4, duration: 0.4, ease: "sine.in" }, t + 0.7 + i * 0.03);
+    }
+  }
+
+  // ------------------------------------------------------------ drifting bokeh along the sides (ambient)
+  function ambient() {
+    const cols = ["rgba(255,193,216,0.55)", "rgba(189,239,217,0.55)", "rgba(255,231,168,0.5)",
+                  "rgba(255,255,255,0.6)"];
+    const n = Math.round(E.total * 1.1);
+    for (let i = 0; i < n; i++) {
+      const side = i % 2, sz = 26 + rnd() * 46;
+      const x = side ? S.r - 20 - rnd() * 90 : S.l - 30 + rnd() * 90;
+      const b = el("div", "bokeh");
+      b.style.width = b.style.height = sz + "px";
+      b.style.left = x + "px";
+      b.style.top = (S.b - 40) + "px";
+      b.style.background = `radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), ${cols[i % 4]} 60%, rgba(255,255,255,0) 72%)`;
+      const t0 = (i / n) * E.total, dur = 5 + rnd() * 3;
+      tl.fromTo(b, { opacity: 0, y: 0, x: 0 },
+        { opacity: 0.9, y: -(S.b - S.t) * 0.55, x: (rnd() - 0.5) * 60, duration: dur * 0.6, ease: "sine.out" }, t0);
+      tl.to(b, { opacity: 0, y: -(S.b - S.t) * 0.85, duration: dur * 0.4, ease: "sine.in" }, t0 + dur * 0.6);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      return s;
+    });
+    let fs = 76;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw, ch + 30, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                   wy: 1.4, wx: 0.8, isCaption: true });
+    cap.style.left = p.x + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 24, p.x + cw + 10, p.y + ch + 20] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    cap.style.top = "0px";
+    tl.fromTo(cap, { opacity: 0, y: p.y + 26 }, { opacity: 1, y: p.y, duration: 0.28, ease: "sine.out" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i];
+      const y = s.querySelector(".y"), a = s.querySelector(".a");
+      tl.to(y, { opacity: 1, duration: 0.12, ease: "sine.out" }, w.s);
+      tl.to(a, { opacity: 0, duration: 0.12, ease: "sine.out" }, w.s);
+      tl.fromTo(s, { y: 0, scale: 1 }, { y: -10, scale: 1.08, duration: 0.18, ease: "sine.out" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.to(y, { opacity: 0, duration: 0.14, ease: "sine.in" }, off);
+      tl.to(a, { opacity: 1, duration: 0.14, ease: "sine.in" }, off);
+      tl.to(s, { y: 0, scale: 1, duration: 0.18, ease: "sine.inOut" }, off);
+    });
+    tl.to(cap, { opacity: 0, y: p.y - 12, duration: 0.16, ease: "sine.in" }, C.t1 - 0.16);
+  }
+
+  // ------------------------------------------------------------ labels: soft floating cards / size orbs
+  let flip = 1;
+  function card(L) {
+    if (L.kind === "orb") return orb(L);
+    const box = el("div", "card");
+    const inn = el("div", "in", box);
+    el("div", "shine", inn);
+    const bub = el("span", "bub", inn, L.emoji);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", inn, w));
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 98 : 80, min: B ? 76 : 64 },
+      { wrap: true, maxw: 680, fs: B ? 88 : 74 },
+      { wrap: true, maxw: 560, fs: B ? 78 : 66 },
+      { wrap: true, maxw: 460, fs: B ? 66 : 58 },
+      { wrap: false, fs: 62, min: 50 },                 // compact fallbacks before touching a caption
+      { wrap: true, maxw: 400, fs: 52 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      inn.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      inn.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (inn.offsetWidth > MAXW && fs > c.min) { fs -= 2; inn.style.fontSize = fs + "px"; }
+        if (inn.offsetWidth > MAXW) continue;
+      } else {
+        while ((inn.offsetWidth > c.maxw || inn.offsetHeight > 300) && fs > 44) {
+          fs -= 2; inn.style.fontSize = fs + "px";
+        }
+      }
+      const w = inn.offsetWidth, h = inn.offsetHeight;
+      const p = place(w + 20, h + 20, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                        wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    inn.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    inn.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x + 10, y: p.y + 10, w, h, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    box.style.left = (p.x + 10) + "px";
+    box.style.top = (p.y + 10) + "px";
+    const rot = 1.5 * flip; flip = -flip;
+    tl.set(box, { opacity: 0 }, 0);
+    tl.fromTo(box, { opacity: 0, y: 46, scale: 0.86, rotation: -rot * 2, filter: "blur(10px)" },
+      { opacity: 1, y: 0, scale: 1, rotation: rot, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.06, ease: "sine.out" },
+      L.t0 + 0.08);
+    tl.fromTo(bub, { scale: 0.3 }, { scale: 1, duration: 0.5, ease: "back.out(2.2)" }, L.t0 + 0.1);
+    const dur = L.t1 - L.t0;
+    if (dur > 0.9) {                                    // gentle float while it is on screen
+      tl.to(box, { y: -10, duration: 0.9, yoyo: true, repeat: Math.max(1, Math.floor((dur - 0.7) / 0.9)),
+                   ease: "sine.inOut" }, L.t0 + 0.55);
+    }
+    if (L.big) twinkle(p.x + 10 + w / 2, p.y + 10 + h / 2, L.t0 + 0.12, 7);
+    tl.to(box, { opacity: 0, y: -30, scale: 0.94, filter: "blur(6px)", duration: 0.22, ease: "sine.in" },
+      L.t1 - 0.22);
+  }
+
+  function orb(L) {
+    const box = el("div", "orb");
+    const ball = el("div", "ball", box);
+    const num = el("div", "num", ball, `<span class="n">${L.html}</span><span class="u">${L.unit || "CM"}</span>`);
+    const emo = el("span", "emo", box, L.emoji);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                 // shrink the orb before letting it touch anything
+      const q = place(290 * zz, 300 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y + 60, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    p = { x: p.x / z, y: p.y / z, c: p.c, clear: p.clear };
+    L.placed = { x: p.x * z, y: p.y * z, w: 290 * z, h: 300 * z, clear: p.clear, zoom: z };
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(ball, { scale: 0.2, y: 80, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.7, ease: "expo.out" },
+      L.t0);
+    tl.fromTo(num, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.5)" },
+      L.t0 + 0.2);
+    tl.fromTo(emo, { scale: 0, y: 20 }, { scale: 1, y: 0, duration: 0.4, ease: "back.out(3)" }, L.t0 + 0.3);
+    tl.to(ball, { y: -12, duration: 0.8, yoyo: true, repeat: 2, ease: "sine.inOut" }, L.t0 + 0.7);
+    twinkle((p.x + 145) * z, (p.y + 145) * z, L.t0 + 0.15, 6);
+    tl.to(box, { opacity: 0, duration: 0.2, ease: "sine.in" }, L.t1 - 0.2);
+  }
+
+  // ------------------------------------------------------------ soft bloom transition
+  function bloom(W) {
+    const b = el("div", "bloom");
+    tl.fromTo(b, { opacity: 0, scale: 0.05 }, { opacity: 1, scale: 1, duration: 0.32, ease: "sine.in" }, W.t - 0.32);
+    tl.to(b, { opacity: 0, scale: 1.15, duration: 0.4, ease: "sine.out" }, W.t);
+    twinkle(CX, 960, W.t - 0.05, 8);
+  }
+
+  function tag(T) {
+    const g = el("div", "card", fx);
+    const inn = el("div", "in", g, T.text);
+    inn.style.fontSize = "40px";
+    inn.style.padding = "10px 26px 12px";
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 40) + "px";
+    tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.2 }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.15 }, T.t1 - 0.15);
+  }
+
+  // ------------------------------------------------------------ end card, face-aware
+  function endcard(N) {
+    const b = el("div", "endc");
+    const title = el("div", "title", b, N.title);
+    const p1 = el("div", "pill", b, N.sizes);
+    const p2 = el("div", "pill cta", b, N.cta);
+    let fs = 72;
+    while (b.offsetWidth > MAXW && fs > 48) { fs -= 2; title.style.fontSize = fs + "px"; }
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const p = place(w, h, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1180,
+                            wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    b.style.left = p.x + "px";
+    b.style.top = p.y + "px";
+    tl.fromTo(b, { opacity: 0, y: 60, scale: 0.9, filter: "blur(10px)" },
+      { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, N.t0);
+    [title, p1, p2].forEach((d, i) => {
+      tl.fromTo(d, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "sine.out" }, N.t0 + 0.15 + i * 0.14);
+    });
+    tl.to(p2, { scale: 1.06, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, N.t0 + 0.7);
+    twinkle(p.x + w / 2, p.y + 40, N.t0 + 0.2, 8);
+  }
+
+  function bar() {
+    const v = el("div", "", fx);
+    v.id = "bar";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 8) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const d = el("div", "dot", v);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(d, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    ambient();
+    bar();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(card);
+    E.tags.forEach(tag);
+    E.wipes.forEach(bloom);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>
