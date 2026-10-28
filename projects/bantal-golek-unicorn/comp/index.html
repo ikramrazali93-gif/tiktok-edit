@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk unicorn (IMG_3179), "Pelangi unicorn hologram" look: frosted holographic cards with a rainbow
+     foil rim and a sheen sweep, rainbow arcs drawing in behind the big lines, glitter stars, an iridescent wipe.
+     The cut video (base.mp4), timings and her head boxes come from edit.py via data.js; this file draws,
+     animates and places every graphic where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* holographic label: rainbow foil rim (conic gradient) around a frosted pearl card, deep-violet lettering */
+  .holo { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 50%; }
+  .holo .rim { position: relative; padding: 8px; border-radius: 999px;
+               background: conic-gradient(from 210deg, #FF7AD9, #FFC46B, #FFF27A, #7DFFB2, #6BD7FF, #A98BFF, #FF7AD9);
+               box-shadow: 0 0 34px rgba(255, 140, 230, 0.55), 0 14px 26px rgba(70, 20, 100, 0.35); }
+  .holo .card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 20px;
+                white-space: nowrap; padding: 20px 46px 24px 22px; border-radius: 999px; font-size: 80px;
+                line-height: 1; color: #4B1D6B;
+                background: linear-gradient(135deg, #FFF6FD 0%, #F3E9FF 40%, #E6FBFF 75%, #FFF3FA 100%); }
+  .holo .card .t { -webkit-text-stroke: 10px #FFFFFF; paint-order: stroke fill; }
+  .holo .card b { font-weight: 700; color: #E0329A; }
+  .holo .sheen { position: absolute; top: -20%; left: -40%; width: 30%; height: 140%; transform: skewX(-20deg);
+                 background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.9), rgba(255,255,255,0)); }
+  .holo .badge { flex: none; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+                 width: 1.35em; height: 1.35em; font-size: 1em;
+                 background: radial-gradient(circle at 35% 30%, #FFFFFF 0 30%, #FDE3FF 60%, #D9C6FF 100%);
+                 box-shadow: inset 0 0 0 5px rgba(169, 139, 255, 0.55); }
+  .holo .badge span { font-size: 0.78em; }
+  .holo .w { display: inline-block; }
+  .holo.wrapline .card { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                         row-gap: 6px; border-radius: 60px; padding: 22px 40px 26px; }
+  .holo.wrapline .rim { border-radius: 68px; }
+  .arc { position: absolute; overflow: visible; }
+
+  /* captions: white bubble letters with a violet outline; the active word turns holographic pink/cyan and glows */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 26px; align-items: center; opacity: 0;
+         font-size: 80px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { display: block; white-space: nowrap; color: #FFFFFF;
+                  -webkit-text-stroke: 15px #5B2A86; paint-order: stroke fill; }
+  .cap .word.key .a { color: #FFE3F5; }
+  .cap .word .y { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0;
+                  color: #FF4FB4; -webkit-text-stroke: 15px #FFFFFF; paint-order: stroke fill;
+                  text-shadow: 0 0 22px rgba(255, 79, 180, 0.85), 0 0 40px rgba(107, 215, 255, 0.7); }
+
+  /* iridescent wipe between sections */
+  .wipe { position: absolute; inset: 0; overflow: visible; }
+
+  /* glitter star */
+  .star { position: absolute; width: 60px; height: 60px; opacity: 0; overflow: visible; }
+
+  /* progress bar: rainbow ribbon with a star knob */
+  #bar { position: absolute; height: 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.45); }
+  #bar .fill { position: absolute; inset: 0; border-radius: 6px; transform-origin: 0 50%;
+               background: linear-gradient(90deg, #FF7AD9, #FFC46B, #FFF27A, #7DFFB2, #6BD7FF, #A98BFF); }
+  #bar svg { position: absolute; top: -20px; left: -26px; overflow: visible; }
+  .tag { position: absolute; font-size: 42px; color: #4B1D6B; padding: 10px 24px 12px; border-radius: 999px;
+         background: linear-gradient(90deg, #FFE3F5, #E6FBFF); border: 5px solid #A98BFF; opacity: 0; }
+
+  /* end card: frosted holo card under a rainbow arc */
+  .board { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+           align-items: center; gap: 26px; padding: 54px 50px 44px; border-radius: 60px;
+           background: linear-gradient(160deg, rgba(255, 246, 253, 0.94), rgba(230, 251, 255, 0.94));
+           box-shadow: 0 0 0 9px #FFFFFF, 0 0 0 17px #E9B6FF, 0 0 50px rgba(255, 140, 230, 0.6); }
+  .board .row { display: flex; align-items: center; gap: 14px; white-space: nowrap; line-height: 1; }
+  .board .title { display: block; text-align: center; line-height: 1.05; font-size: 80px; color: #4B1D6B;
+                 -webkit-text-stroke: 10px #FFFFFF; paint-order: stroke fill; }
+  .board .title b { color: #E0329A; }
+  .board .sub { font-size: 44px; color: #4B1D6B; padding: 12px 30px 14px; border-radius: 999px;
+                background: #F3E9FF; border: 5px solid #A98BFF; }
+  .board .cta { font-size: 50px; color: #3A1C00; padding: 14px 36px 16px; border-radius: 999px;
+                background: #FFE14D; border: 6px solid #FFFFFF; box-shadow: 0 0 0 5px #E0329A; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="38.430" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="38.430" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const RAINBOW = ["#FF7AD9", "#FFC46B", "#FFF27A", "#7DFFB2", "#6BD7FF", "#A98BFF"];
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head and
+  // never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // 4-point glitter star (svg)
+  function starSvg(fill) {
+    return `<svg viewBox="-30 -30 60 60" class="star"><path d="M0,-28 C3,-6 6,-3 28,0 C6,3 3,6 0,28 C-3,6 -6,3 -28,0 ` +
+           `C-6,-3 -3,-6 0,-28 Z" fill="${fill}" stroke="#FFFFFF" stroke-width="3"/></svg>`;
+  }
+  function starBurst(x, y, t, n = 8, spread = 220, heads = []) {
+    // stars fly outwards; any star whose path would end on (or cross into) her head box is dropped
+    const inHead = (px, py) => heads.some(b => px > b[0] - 40 && px < b[2] + 40 && py > b[1] - 40 && py < b[3] + 40);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + rnd() * 0.6, d = spread * (0.6 + rnd() * 0.6);
+      if (inHead(x + Math.cos(a) * d, y + Math.sin(a) * d) || inHead(x + Math.cos(a) * d / 2, y + Math.sin(a) * d / 2))
+        continue;
+      const wrap = el("div", "", fx, starSvg(RAINBOW[i % RAINBOW.length]));
+      const s = wrap.firstChild;
+      s.style.left = (x - 30) + "px"; s.style.top = (y - 30) + "px";
+      tl.fromTo(s, { opacity: 0, scale: 0.2, x: 0, y: 0, rotation: 0 },
+        { opacity: 1, scale: 0.6 + rnd() * 0.7, x: Math.cos(a) * d, y: Math.sin(a) * d, rotation: 90 + rnd() * 90,
+          duration: 0.6, ease: "expo.out" }, t);
+      tl.to(s, { opacity: 0, scale: 0.1, duration: 0.35, ease: "power1.in" }, t + 0.5 + rnd() * 0.2);
+    }
+  }
+
+  // flat rainbow arc (elliptical, ARC_H px tall) drawing in just above a big label: it lives inside the band the
+  // label reserved in place(), so it never reaches her head
+  const ARC_H = 92;
+  function rainbowArc(cx, cyBottom, wid, t0, t1, ah = ARC_H) {
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "arc");
+    const R = wid / 2 + 10, H = ah + 8;
+    svg.setAttribute("width", 2 * R + 20);
+    svg.setAttribute("height", H);
+    svg.style.left = (cx - R - 10) + "px";
+    svg.style.top = (cyBottom - H) + "px";
+    let inner = "";
+    RAINBOW.forEach((c, i) => {
+      const rx = R - i * 13, ry = ah - i * 13;
+      inner += `<path d="M${R + 10 - rx},${H} A${rx},${ry} 0 0 1 ${R + 10 + rx},${H}" fill="none" stroke="${c}" ` +
+               `stroke-width="13" stroke-linecap="round"/>`;
+    });
+    svg.innerHTML = inner;
+    fx.insertBefore(svg, fx.firstChild);
+    svg.querySelectorAll("path").forEach((p, i) => {
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L;
+      tl.set(p, { strokeDashoffset: L }, 0);
+      tl.to(p, { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, t0 + i * 0.04);
+    });
+    tl.set(svg, { opacity: 0 }, 0);
+    tl.set(svg, { opacity: 0.92 }, t0);
+    tl.to(svg, { opacity: 0, duration: 0.18 }, t1 - 0.18);
+    return svg;
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      return s;
+    });
+    let fs = 80;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw, ch + 24, { t0: C.t0, t1: C.t1, heads: C.heads, px: CX, py: C.y, wy: 1.4, wx: 0.8,
+                                   isCaption: true });
+    cap.style.left = p.x + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 10, p.x + cw + 10, p.y + ch + 20] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, y: p.y + 20, scale: 0.92 },
+      { opacity: 1, y: p.y, scale: 1, duration: 0.22, ease: "back.out(2.2)" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], y = s.querySelector(".y"), a = s.querySelector(".a");
+      tl.set(y, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(s, { scale: 1, y: 0 }, { scale: 1.14, y: -8, duration: 0.12, yoyo: true, repeat: 1,
+        ease: "sine.out" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.set(y, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.12 }, C.t1 - 0.12);
+  }
+
+  // ------------------------------------------------------------ labels: holographic cards
+  function holo(L) {
+    const box = el("div", "holo");
+    const rim = el("div", "rim", box);
+    const card = el("div", "card", rim);
+    const badge = el("span", "badge", card, `<span>${L.emoji}</span>`);
+    const words = L.html.split(/\s+/).filter(Boolean);     // <b> never spans a space
+    // keep "<b>A" ... "B</b>" groups intact: rejoin the pieces of each bold run
+    const groups = [];
+    let cur = null;
+    for (const w of words) {
+      if (cur) { cur += " " + w; if (w.includes("</b>")) { groups.push(cur); cur = null; } }
+      else if (w.includes("<b>") && !w.includes("</b>")) cur = w;
+      else groups.push(w);
+    }
+    if (cur) groups.push(cur);
+    const ws = groups.map(w => el("span", "w t", card, w));
+    const sheen = el("div", "sheen", card);
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 98 : 80, min: B ? 76 : 62 },
+      { wrap: true, maxw: 700, fs: B ? 90 : 74 },
+      { wrap: true, maxw: 580, fs: B ? 80 : 66 },
+      { wrap: true, maxw: 470, fs: B ? 68 : 58 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      card.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      card.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (rim.offsetWidth > MAXW && fs > c.min) { fs -= 2; card.style.fontSize = fs + "px"; }
+        if (rim.offsetWidth > MAXW) continue;
+      } else {
+        while ((rim.offsetWidth > c.maxw + 20 || rim.offsetHeight > 320) && fs > 44) {
+          fs -= 2; card.style.fontSize = fs + "px";
+        }
+      }
+      const w = rim.offsetWidth, h = rim.offsetHeight;
+      const extra = B ? ARC_H - 20 : 0;                       // room for the rainbow arc above big labels
+      const p = place(w + 20, h + extra + 20, { t0: L.t0, t1: L.t1, heads: L.heads, px: CX, py: E.lab_y,
+                                                wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p, extra };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    card.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    card.style.fontSize = pick.fs + "px";
+    const { w, h, p, extra } = pick;
+    const x = p.x + 10, y = p.y + extra + 10;
+    L.placed = { x, y, w, h, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    box.style.left = x + "px";
+    box.style.top = y + "px";
+    if (B) rainbowArc(x + w / 2, y + 28, w * 0.86, L.t0, L.t1);
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scale: 0.4, rotation: -8, filter: "blur(10px)" },
+      { scale: 1, rotation: 0, filter: "blur(0px)", duration: 0.55, ease: "elastic.out(1, 0.55)" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, y: 22, scale: 0.7 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.3, stagger: 0.06, ease: "back.out(2.4)" }, L.t0 + 0.08);
+    tl.fromTo(badge, { scale: 0, rotation: -180 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.6)" },
+      L.t0 + 0.05);
+    tl.fromTo(sheen, { left: "-40%" }, { left: "130%", duration: 0.7, ease: "power2.inOut" }, L.t0 + 0.3);
+    if (L.t1 - L.t0 > 1.8) tl.fromTo(sheen, { left: "-40%" }, { left: "130%", duration: 0.7, ease: "power2.inOut" },
+      L.t0 + 1.4);
+    tl.to(box, { y: "-=6", duration: 0.9, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.9) - 1),
+      ease: "sine.inOut" }, L.t0 + 0.55);
+    starBurst(x + w / 2, y + h / 2, L.t0 + 0.06, B ? 10 : 6, B ? 300 : 200, L.heads);
+    tl.to(box, { scale: 0.6, opacity: 0, filter: "blur(8px)", duration: 0.18, ease: "power2.in" }, L.t1 - 0.18);
+  }
+
+  // ------------------------------------------------------------ iridescent wipe
+  function wipe(W) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "wipe");
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    let inner = `<defs><linearGradient id="ir${W.t}" x1="0" y1="0" x2="1" y2="1">` +
+      RAINBOW.map((c, i) => `<stop offset="${i / (RAINBOW.length - 1)}" stop-color="${c}"/>`).join("") +
+      `</linearGradient></defs>` +
+      `<path d="M-300,-200 L500,-200 L100,2120 L-700,2120 Z" fill="url(#ir${W.t})" opacity="0.96"/>` +
+      `<path d="M470,-200 L560,-200 L160,2120 L70,2120 Z" fill="#FFFFFF" opacity="0.9"/>`;
+    for (let i = 0; i < 14; i++) {
+      const x = -300 + rnd() * 720, y = rnd() * 1920, r = 14 + rnd() * 18;
+      inner += `<path transform="translate(${x},${y})" d="M0,-${r} C2,-4 4,-2 ${r},0 C4,2 2,4 0,${r} C-2,4 -4,2 ` +
+               `-${r},0 C-4,-2 -2,-4 0,-${r} Z" fill="#FFFFFF"/>`;
+    }
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    tl.fromTo(s, { x: -1000 }, { x: 1800, duration: 0.62, ease: "power2.inOut" }, W.t - 0.31);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 40) + "px";
+    tl.fromTo(g, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)" }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.12 }, T.t1 - 0.12);
+  }
+
+  // ------------------------------------------------------------ end card
+  function endcard(N) {
+    const b = el("div", "board");
+    const rows = [el("div", "row title", b, N.title), el("div", "row sub", b, N.sizes), el("div", "row cta", b, N.cta)];
+    let fs = 80;
+    rows[0].style.fontSize = fs + "px";
+    while (Math.max(...rows.map(r => r.offsetWidth)) > MAXW - 140 && fs > 44) {   // title only shrinks
+      fs -= 2; rows[0].style.fontSize = fs + "px";
+      if (rows[0].offsetWidth <= MAXW - 140) break;
+    }
+    const w = b.offsetWidth, h = b.offsetHeight, top = ARC_H + 10;
+    const p = place(w + 40, h + top + 30, { t0: N.t0, t1: N.t1, heads: N.heads, px: CX, py: N.py || 1180,
+                                            wy: 0.8, wx: 0.6 });
+    const bx = p.x + 20, by = p.y + top;
+    N.placed = { x: bx, y: by, w, h, clear: p.clear };
+    b.style.left = bx + "px";
+    b.style.top = by + "px";
+    rainbowArc(bx + w / 2, by + 14, Math.min(w, 760), N.t0, N.t1 + 1);
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { scale: 0.5, filter: "blur(12px)" }, { scale: 1, filter: "blur(0px)", duration: 0.6,
+      ease: "elastic.out(1, 0.6)" }, N.t0);
+    tl.fromTo(rows, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, stagger: 0.14, ease: "back.out(2)" },
+      N.t0 + 0.15);
+    tl.to(rows[2], { scale: 1.07, duration: 0.45, yoyo: true, repeat: 3, ease: "sine.inOut" }, N.t0 + 0.8);
+    starBurst(bx + w / 2, by + h / 2, N.t0 + 0.2, 12, 380, N.heads);
+  }
+
+  // ------------------------------------------------------------ progress ribbon + ambient glitter
+  function bar() {
+    const v = el("div", "", fx);
+    v.id = "bar";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 8) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const k = document.createElementNS(NS, "svg");
+    k.setAttribute("width", 52); k.setAttribute("height", 52); k.setAttribute("viewBox", "-30 -30 60 60");
+    k.innerHTML = `<path d="M0,-28 C3,-6 6,-3 28,0 C6,3 3,6 0,28 C-3,6 -6,3 -28,0 C-6,-3 -3,-6 0,-28 Z" ` +
+                  `fill="#FFF27A" stroke="#FFFFFF" stroke-width="4"/>`;
+    v.appendChild(k);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0, rotation: 0 }, { x: S.r - S.l, rotation: 720, duration: E.total, ease: "none" }, 0);
+  }
+  function glitter() {
+    // small twinkles along the lower-left edge (never near her head: it is always in the upper half)
+    for (let t = 0.6; t < E.total - 0.5; t += 0.9) {
+      const wrap = el("div", "", fx, starSvg(RAINBOW[Math.floor(rnd() * RAINBOW.length)]));
+      const s = wrap.firstChild;
+      s.style.left = (S.l + rnd() * 130) + "px";
+      s.style.top = (1000 + rnd() * 380) + "px";
+      tl.fromTo(s, { opacity: 0, scale: 0.1, rotation: 0 }, { opacity: 0.95, scale: 0.35 + rnd() * 0.35,
+        rotation: 90, duration: 0.35, ease: "sine.out" }, t);
+      tl.to(s, { opacity: 0, scale: 0.1, duration: 0.35, ease: "sine.in" }, t + 0.4);
+    }
+  }
+
+  function build() {
+    bar();
+    glitter();
+    E.captions.forEach(caption);                 // captions first: labels then steer around them
+    E.labels.forEach(holo);
+    E.tags.forEach(tag);
+    E.wipes.forEach(wipe);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

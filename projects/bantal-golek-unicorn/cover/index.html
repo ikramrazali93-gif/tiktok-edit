@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk unicorn, "Pelangi unicorn hologram" look: holographic foil frame, a pill in the
+     tree band above her hood, a pill on her coat and the title card with a rainbow arc lower left, never over her face.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #F3E9FF; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 62.4s (bolster held up diagonally, her face upper right);
+     shifted up 40px so the bolster's lower end stays in */
+  #photo { position: absolute; left: 0; top: -40px; width: 1080px; height: 1920px; }
+  #foil { position: absolute; inset: 0; }
+  .card { position: absolute; display: flex; align-items: center; gap: 18px; white-space: nowrap; line-height: 1;
+          color: #4B1D6B; border-radius: 999px; padding: 8px;
+          background: conic-gradient(from 210deg, #FF7AD9, #FFC46B, #FFF27A, #7DFFB2, #6BD7FF, #A98BFF, #FF7AD9);
+          box-shadow: 0 0 40px rgba(255, 140, 230, 0.6), 0 16px 30px rgba(70, 20, 100, 0.35); }
+  .card .in { display: flex; align-items: center; gap: 18px; border-radius: 999px; padding: 18px 44px 22px 22px;
+              background: linear-gradient(135deg, #FFF6FD 0%, #F3E9FF 40%, #E6FBFF 75%, #FFF3FA 100%); }
+  .card .t { -webkit-text-stroke: 10px #FFFFFF; paint-order: stroke fill; }
+  .card b { color: #E0329A; font-weight: 700; }
+  .badge { display: flex; align-items: center; justify-content: center; width: 1.3em; height: 1.3em; border-radius: 50%;
+           background: radial-gradient(circle at 35% 30%, #FFFFFF 0 30%, #FDE3FF 60%, #D9C6FF 100%);
+           box-shadow: inset 0 0 0 5px rgba(169, 139, 255, 0.55); }
+  .badge span { font-size: 0.78em; }
+  #title { left: 64px; top: 1150px; font-size: 86px; }
+  #title .in { flex-direction: column; gap: 4px; padding: 22px 56px 24px; border-radius: 70px; text-align: center; }
+  #title { border-radius: 78px; }
+  #p1 { left: 50%; top: 74px; font-size: 56px; }
+  #p2 { right: 70px; top: 880px; font-size: 52px; }
+  #arc { position: absolute; left: 0; top: 0; overflow: visible; }
+  /* everything stays outside her head box (x 508-972, y 248-766 in this layout) */
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="arc" width="1080" height="1536" viewBox="0 0 1080 1536"></svg>
+  <svg id="foil" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="card"><div class="in"><span class="t">BANTAL PELUK</span><span class="t"><b>UNICORN</b> 🦄</span></div></div>
+  <div id="p1" class="card"><div class="in"><span class="badge"><span>📏</span></span><span class="t">PANJANG <b>TAU!</b></span></div></div>
+  <div id="p2" class="card"><div class="in"><span class="badge"><span>🌈</span></span><span class="t">CORAK <b>PELANGI</b></span></div></div>
+</div>
+<script>
+  const RAINBOW = ["#FF7AD9", "#FFC46B", "#FFF27A", "#7DFFB2", "#6BD7FF", "#A98BFF"];
+  // holographic foil frame + glitter stars in the corners
+  const star = (x, y, r, c) => `<path transform="translate(${x},${y})" d="M0,-${r} C${r * 0.1},-${r * 0.2} ${r * 0.2},-${r * 0.1} ${r},0 ` +
+    `C${r * 0.2},${r * 0.1} ${r * 0.1},${r * 0.2} 0,${r} C-${r * 0.1},${r * 0.2} -${r * 0.2},${r * 0.1} -${r},0 ` +
+    `C-${r * 0.2},-${r * 0.1} -${r * 0.1},-${r * 0.2} 0,-${r} Z" fill="${c}" stroke="#FFFFFF" stroke-width="4"/>`;
+  let f = `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
+    RAINBOW.concat(RAINBOW[0]).map((c, i) => `<stop offset="${i / RAINBOW.length}" stop-color="${c}"/>`).join("") +
+    `</linearGradient></defs>` +
+    `<path fill-rule="evenodd" fill="url(#g)" d="M0,0 H1080 V1536 H0 Z M34,34 V1502 H1046 V34 Z"/>` +
+    `<rect x="34" y="34" width="1012" height="1468" fill="none" stroke="#FFFFFF" stroke-width="7"/>`;
+  [[70, 70, 46, "#FFF27A"], [1010, 70, 40, "#7DFFB2"], [70, 1466, 40, "#6BD7FF"], [1010, 1466, 46, "#FF7AD9"],
+   [150, 420, 26, "#FFFFFF"], [110, 620, 18, "#FFF27A"], [940, 1090, 22, "#FFFFFF"], [160, 1120, 20, "#FFFFFF"]]
+    .forEach(([x, y, r, c]) => f += star(x, y, r, c));
+  document.getElementById("foil").innerHTML = f;
+  // flat rainbow arc behind the title (title centre x set below once measured)
+  let a = "", CXT = 64 + 300;
+  RAINBOW.forEach((c, i) => {
+    const rx = 300 - i * 16, ry = 120 - i * 16;
+    a += `<path d="M${CXT - rx},${1190} A${rx},${ry} 0 0 1 ${CXT + rx},${1190}" fill="none" stroke="${c}" ` +
+         `stroke-width="16" stroke-linecap="round"/>`;
+  });
+  document.getElementById("arc").innerHTML = a;
+  document.fonts.load('700 92px "Fredoka"').then(() => {
+    const t = document.getElementById("title");
+    const p1 = document.getElementById("p1");
+    p1.style.marginLeft = -p1.offsetWidth / 2 + "px";
+    const cx = 64 + t.offsetWidth / 2;
+    document.getElementById("arc").innerHTML = RAINBOW.map((c, i) => {
+      const rx = t.offsetWidth / 2 - 10 - i * 16, ry = 120 - i * 16;
+      return `<path d="M${cx - rx},1190 A${rx},${ry} 0 0 1 ${cx + rx},1190" fill="none" stroke="${c}" ` +
+             `stroke-width="16" stroke-linecap="round"/>`;
+    }).join("");
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#p1", { rotation: -3 }, 0).set("#p2", { rotation: 2 }, 0).to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
