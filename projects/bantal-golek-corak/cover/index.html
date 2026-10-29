@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk panjang, "Crayon taman budak" look: hand-drawn crayon frame, paper-scrap
+     title above her hood, a crayon-circled "3" over the dinosaur bolster and a paper strip at the bottom; her face
+     stays clear. frame.jpg is the 1080x1920 frame at 61.0s, shown from row 200.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FFFDF4; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #photo { position: absolute; left: 0; top: -200px; width: 1080px; height: 1920px; }
+  #art { position: absolute; inset: 0; overflow: visible; }
+  .scrap { position: absolute; display: flex; align-items: center; gap: 14px; white-space: nowrap; line-height: 1;
+           color: #2A2A5A; }
+  .scrap b { font-weight: 700; }
+  #title { left: 50%; top: 46px; font-size: 84px; padding: 22px 40px 26px; }
+  #title b { color: #2F7BEA; }
+  #strip { left: 50%; top: 1372px; font-size: 54px; padding: 16px 34px 20px; }
+  #strip b { color: #E8473B; }
+  #three { position: absolute; left: 58px; top: 1010px; width: 250px; height: 250px; }
+  #three .n { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+              font-size: 170px; line-height: 1; color: #FFD23F; -webkit-text-stroke: 15px #2A2A5A;
+              paint-order: stroke fill; }
+  #three .u { position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%) rotate(-4deg);
+              font-size: 42px; color: #2A2A5A; white-space: nowrap; padding: 8px 20px 12px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="art" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="scrap">BANTAL PELUK <b>PANJANG</b></div>
+  <div id="three"><div class="n">3</div><div class="u">CORAK</div></div>
+  <div id="strip" class="scrap">JANGAN BELI SATU, <b>AMBIL 3!</b> 🙌</div>
+</div>
+<script>
+  let seed = 5;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const INK = "#2A2A5A", PAPER = "#FFFDF4";
+  const COL = { red: "#E8473B", yellow: "#FFD23F", blue: "#2F7BEA", green: "#43B649", pink: "#F06AA8" };
+  function wobblyRect(x, y, w, h, r, j) {
+    const pts = [];
+    const side = (x0, y0, x1, y1, n) => { for (let i = 0; i < n; i++) { const t = i / n;
+      pts.push([x0 + (x1 - x0) * t + (rnd() - 0.5) * j, y0 + (y1 - y0) * t + (rnd() - 0.5) * j]); } };
+    const nx = Math.max(3, Math.round(w / 90)), ny = Math.max(2, Math.round(h / 90));
+    side(x + r, y, x + w - r, y, nx); side(x + w, y + r, x + w, y + h - r, ny);
+    side(x + w - r, y + h, x + r, y + h, nx); side(x, y + h - r, x, y + r, ny);
+    let d = "";
+    for (let i = 0; i <= pts.length; i++) {
+      const p = pts[i % pts.length], q = pts[(i + 1) % pts.length], m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+      d += i === 0 ? `M${m[0]},${m[1]}` : `Q${p[0]},${p[1]} ${m[0]},${m[1]}`;
+    }
+    return d + "Z";
+  }
+  function loop(cx, cy, rx, ry) {
+    let d = "";
+    for (let i = 0; i <= 33; i++) { const a = (i / 28) * Math.PI * 2 - 1.2, k = 1 + (rnd() - 0.5) * 0.06 + i * 0.002;
+      d += (i ? "L" : "M") + (cx + Math.cos(a) * rx * k).toFixed(1) + "," + (cy + Math.sin(a) * ry * k).toFixed(1); }
+    return d;
+  }
+  function star(cx, cy, s) {
+    let d = "";
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? s * 0.42 : s;
+      d += (i ? "L" : "M") + (cx + Math.cos(a) * r).toFixed(1) + "," + (cy + Math.sin(a) * r).toFixed(1); }
+    return d + "Z";
+  }
+  document.fonts.load('700 84px "Fredoka"').then(() => {
+    const art = document.getElementById("art");
+    let s = `<defs>`;
+    for (const [k, c] of Object.entries(COL)) s += `<pattern id="h-${k}" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">` +
+      `<rect width="22" height="22" fill="${c}" opacity="0.35"/><path d="M0,5 L22,6 M0,16 L22,15" stroke="${c}" stroke-width="7" stroke-linecap="round"/></pattern>`;
+    s += `<filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter></defs>`;
+    // crayon frame: a paper border with three overlapping wobbly crayon outlines
+    s += `<path fill-rule="evenodd" fill="${PAPER}" d="M0,0 H1080 V1536 H0 Z ${wobblyRect(26, 26, 1028, 1484, 40, 14)}"/>`;
+    for (const [c, o] of [[COL.red, 22], [COL.blue, 30], [COL.yellow, 38]])
+      s += `<path d="${wobblyRect(o, o, 1080 - 2 * o, 1536 - 2 * o, 44, 16)}" fill="none" stroke="${c}" stroke-width="9" stroke-linejoin="round" filter="url(#rough)"/>`;
+    // doodles in the sky corners (away from her hood)
+    s += `<path d="${star(130, 300, 46)}" fill="${COL.yellow}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>`;
+    s += `<path d="${star(950, 280, 38)}" fill="${COL.pink}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>`;
+    s += `<path d="M80,420 Q110,380 140,420 T200,420 T260,420" fill="none" stroke="${COL.green}" stroke-width="8" stroke-linecap="round"/>`;
+    s += `<path d="M880,400 Q905,370 930,400 T980,400" fill="none" stroke="${COL.blue}" stroke-width="8" stroke-linecap="round"/>`;
+    // the circled 3 over the dinosaur bolster
+    s += `<circle cx="183" cy="1135" r="104" fill="url(#h-blue)"/>`;
+    s += `<path d="${loop(183, 1135, 118, 112)}" fill="none" stroke="${COL.red}" stroke-width="12" stroke-linecap="round"/>`;
+    art.innerHTML = s;
+    // paper scraps (title, bottom strip, "CORAK" tab) get a hatched crayon shadow + wobbly ink outline
+    for (const [id, col] of [["title", "yellow"], ["strip", "red"]]) {
+      const n = document.getElementById(id);
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+      const w = n.offsetWidth, h = n.offsetHeight;
+      const sv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      sv.setAttribute("width", w + 60); sv.setAttribute("height", h + 60);
+      sv.style.cssText = "position:absolute;left:-30px;top:-30px;overflow:visible;z-index:-1";
+      sv.innerHTML = `<path d="${wobblyRect(44, 46, w, h, 24, 9)}" fill="url(#h-${col})" stroke="${COL[col]}" stroke-width="6"/>` +
+        `<path d="${wobblyRect(30, 30, w, h, 24, 9)}" fill="${PAPER}" stroke="${INK}" stroke-width="7" stroke-linejoin="round" filter="url(#rough)"/>`;
+      n.insertBefore(sv, n.firstChild);
+      sv.innerHTML = sv.innerHTML;   // pattern refs resolve against the document defs in #art
+    }
+    const u = document.querySelector("#three .u");
+    const uw = u.offsetWidth, uh = u.offsetHeight;
+    const us = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    us.setAttribute("width", uw + 40); us.setAttribute("height", uh + 40);
+    us.style.cssText = "position:absolute;left:-20px;top:-20px;overflow:visible;z-index:-1";
+    us.innerHTML = `<path d="${wobblyRect(20, 20, uw, uh, 16, 7)}" fill="${COL.yellow}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>`;
+    u.insertBefore(us, u.firstChild);
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -2 }, 0).set("#strip", { rotation: 1.5 }, 0).set("#three .n", { rotation: -6 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>

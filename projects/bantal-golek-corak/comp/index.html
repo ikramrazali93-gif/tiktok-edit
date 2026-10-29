@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk panjang (bolsters), "Crayon taman budak" look: paper-scrap labels with wobbly hand-drawn ink
+     outlines and crayon-hatched shadows, crayon circles around the spoken word, doodle stars/hearts/squiggles,
+     a crayon scribble wipe and a crayon progress line. The cut video (base.mp4), timings and her head boxes come
+     from edit.py via data.js; this file draws, animates and places every graphic where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+  #defs { position: absolute; width: 0; height: 0; }
+
+  /* paper-scrap label: the paper and its crayon shadow are an svg drawn behind the text (.bgsvg) */
+  .paper { position: absolute; left: 0; top: 0; opacity: 0; }
+  .paper .in { position: relative; display: flex; align-items: center; gap: 16px; white-space: nowrap;
+               padding: 24px 44px 28px; color: #2A2A5A; font-size: 82px; line-height: 1; letter-spacing: 1px; }
+  .paper .in b { font-weight: 700; }
+  .paper .bgsvg { position: absolute; left: -30px; top: -30px; overflow: visible; z-index: -1; }
+  .paper .w { display: inline-block; position: relative; z-index: 1; }
+  .paper .emo { display: inline-block; position: relative; z-index: 1; font-size: 1.0em; }
+  .paper.wrapline .in { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                        row-gap: 6px; }
+
+  /* big crayon-circled number with a paper strip under it */
+  .num { position: absolute; left: 0; top: 0; opacity: 0; width: 330px; display: flex; flex-direction: column;
+         align-items: center; }
+  .num .ring { position: relative; width: 250px; height: 250px; }
+  .num .ring svg { position: absolute; inset: -20px; overflow: visible; }
+  .num .n { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            font-size: 190px; line-height: 1; color: #FFD23F; -webkit-text-stroke: 16px #2A2A5A;
+            paint-order: stroke fill; }
+  .num .emo { position: absolute; right: -40px; top: -10px; font-size: 64px; }
+  .num .strip { position: relative; margin-top: -10px; padding: 12px 28px 16px; font-size: 46px; line-height: 1;
+                color: #2A2A5A; white-space: nowrap; }
+  .num .strip svg { position: absolute; left: -20px; top: -20px; overflow: visible; z-index: -1; }
+
+  /* WAAAH! burst */
+  .burst { position: absolute; left: 0; top: 0; opacity: 0; width: 640px; height: 340px; }
+  .burst svg { position: absolute; inset: 0; overflow: visible; }
+  .burst .t { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px;
+              font-size: 120px; color: #FFFDF4; -webkit-text-stroke: 18px #2A2A5A; paint-order: stroke fill; }
+
+  /* captions: chunky white letters with an ink outline; the spoken word turns yellow and a red crayon loop
+     is scribbled around it */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 30px; align-items: center; opacity: 0;
+         font-size: 80px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFFDF4;
+                  -webkit-text-stroke: 15px #2A2A5A; paint-order: stroke fill; }
+  .cap .word.key .a { color: #9FD8FF; }
+  .cap .word .y { position: absolute; z-index: 1; left: 0; top: 0; white-space: nowrap; color: #FFD23F;
+                  -webkit-text-stroke: 15px #2A2A5A; paint-order: stroke fill; opacity: 0; }
+  .cap .loop { position: absolute; z-index: 2; left: -26px; top: -24px; overflow: visible; }
+
+  .wipe { position: absolute; inset: 0; overflow: visible; }
+  .doodle { position: absolute; overflow: visible; opacity: 0; }
+
+  /* crayon progress line + speed tag */
+  #prog { position: absolute; overflow: visible; }
+  #crayon { position: absolute; font-size: 54px; line-height: 1; }
+  .tag { position: absolute; left: 0; top: 0; opacity: 0; font-size: 48px; color: #2A2A5A; padding: 12px 26px 16px;
+         line-height: 1; white-space: nowrap; }
+  .tag svg { position: absolute; left: -20px; top: -20px; overflow: visible; z-index: -1; }
+
+  /* end card: paper sheet with tape */
+  .sheet { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+           align-items: center; gap: 22px; padding: 46px 50px 52px; }
+  .sheet > svg { position: absolute; left: -20px; top: -20px; overflow: visible; z-index: -1; }
+  .sheet .row { position: relative; display: flex; align-items: center; gap: 14px; line-height: 1;
+                white-space: nowrap; color: #2A2A5A; }
+  .sheet .title { font-size: 76px; }
+  .sheet .title b { color: #E8473B; }
+  .sheet .sub { font-size: 46px; }
+  .sheet .cta { font-size: 50px; padding: 14px 30px 18px; }
+  .sheet .cta svg { position: absolute; left: -16px; top: -16px; overflow: visible; z-index: -1; }
+  .sheet .tape { position: absolute; width: 150px; height: 46px; background: rgba(255, 210, 63, 0.75);
+                 border: 3px solid rgba(42, 42, 90, 0.25); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="39.555" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="39.555" muted playsinline></video>
+  <svg id="defs"></svg>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const INK = "#2A2A5A", PAPER = "#FFFDF4";
+  const COL = { red: "#E8473B", yellow: "#FFD23F", blue: "#2F7BEA", green: "#43B649", pink: "#F06AA8" };
+  const ORDER = ["red", "blue", "yellow", "green", "pink"];
+  let seed = 23;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+  const svg = (parent, w, h, cls) => {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("width", w); s.setAttribute("height", h);
+    s.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    if (cls) s.setAttribute("class", cls);
+    parent.insertBefore(s, parent.firstChild);
+    return s;
+  };
+
+  // crayon hatch patterns (diagonal strokes) in every colour
+  (function defs() {
+    let d = "";
+    for (const [k, c] of Object.entries(COL)) {
+      d += `<pattern id="h-${k}" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">` +
+           `<rect width="22" height="22" fill="${c}" opacity="0.35"/>` +
+           `<path d="M0,5 L22,6 M0,16 L22,15" stroke="${c}" stroke-width="7" stroke-linecap="round"/></pattern>`;
+    }
+    d += `<filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/>` +
+         `<feDisplacementMap in="SourceGraphic" scale="5"/></filter>`;
+    document.getElementById("defs").innerHTML = `<defs>${d}</defs>`;
+  })();
+
+  // ------------------------------------------------------------ hand-drawn shapes
+  // wobbly rounded rectangle through jittered points (closed smooth path)
+  function wobblyRect(x, y, w, h, r, j) {
+    const pts = [];
+    const side = (x0, y0, x1, y1, n) => {
+      for (let i = 0; i < n; i++) {
+        const t = i / n;
+        pts.push([x0 + (x1 - x0) * t + (rnd() - 0.5) * j, y0 + (y1 - y0) * t + (rnd() - 0.5) * j]);
+      }
+    };
+    const nx = Math.max(3, Math.round(w / 90)), ny = Math.max(2, Math.round(h / 90));
+    side(x + r, y, x + w - r, y, nx); side(x + w, y + r, x + w, y + h - r, ny);
+    side(x + w - r, y + h, x + r, y + h, nx); side(x, y + h - r, x, y + r, ny);
+    let d = "";
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i], q = pts[(i + 1) % pts.length];
+      const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+      d += (i === 0 ? `M${m[0].toFixed(1)},${m[1].toFixed(1)}` : `Q${p[0].toFixed(1)},${p[1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`);
+    }
+    const p0 = pts[0], q0 = pts[1];
+    d += `Q${p0[0].toFixed(1)},${p0[1].toFixed(1)} ${((p0[0] + q0[0]) / 2).toFixed(1)},${((p0[1] + q0[1]) / 2).toFixed(1)}Z`;
+    return d;
+  }
+  function wobblyCircle(cx, cy, r, j, turns) { return wobblyEllipse(cx, cy, r, r * 0.92, j, turns); }
+  function wobblyEllipse(cx, cy, rx, ry, j, turns) {
+    // a slightly overshooting hand-drawn loop (start and end don't meet exactly)
+    let d = "";
+    const n = Math.round(28 * (turns || 1.15));
+    for (let i = 0; i <= n; i++) {
+      const a = (i / 28) * Math.PI * 2 - 1.2, k = 1 + (rnd() - 0.5) * j + (i / n) * 0.06;
+      const x = cx + Math.cos(a) * rx * k, y = cy + Math.sin(a) * ry * k;
+      d += (i ? "L" : "M") + x.toFixed(1) + "," + y.toFixed(1);
+    }
+    return d;
+  }
+  // paper with crayon-hatched shadow behind a box of w x h (the svg is offset by -30,-30 in css)
+  function paperBg(parent, w, h, color, pad) {
+    pad = pad || 30;
+    const s = svg(parent, w + pad * 2 + 30, h + pad * 2 + 30, "bgsvg");
+    const sh = wobblyRect(pad + 14, pad + 16, w, h, 26, 9);
+    const pp = wobblyRect(pad, pad, w, h, 26, 9);
+    s.innerHTML = `<path d="${sh}" fill="url(#h-${color})" stroke="${COL[color]}" stroke-width="6" stroke-linejoin="round"/>` +
+                  `<path class="pp" d="${pp}" fill="${PAPER}"/>` +
+                  `<path class="ol" d="${pp}" fill="none" stroke="${INK}" stroke-width="7" stroke-linejoin="round" ` +
+                  `stroke-linecap="round" filter="url(#rough)"/>`;
+    return s;
+  }
+  function drawOn(path, t, dur) {
+    const L = path.getTotalLength ? path.getTotalLength() : 2000;
+    path.style.strokeDasharray = L;
+    tl.set(path, { strokeDashoffset: L }, 0);
+    tl.to(path, { strokeDashoffset: 0, duration: dur, ease: "power1.inOut" }, t);
+  }
+
+  // small doodles (star, heart, squiggle, spiral) drawn on around a spot
+  const DOODLES = [
+    s => `<path d="M${s / 2},4 L${s * 0.62},${s * 0.38} L${s - 4},${s * 0.4} L${s * 0.68},${s * 0.62} L${s * 0.78},${s - 4} ` +
+         `L${s / 2},${s * 0.76} L${s * 0.22},${s - 4} L${s * 0.32},${s * 0.62} L4,${s * 0.4} L${s * 0.38},${s * 0.38} Z"/>`,
+    s => `<path d="M${s / 2},${s * 0.85} C${s * 0.1},${s * 0.55} ${s * 0.05},${s * 0.2} ${s * 0.3},${s * 0.18} ` +
+         `C${s * 0.42},${s * 0.16} ${s / 2},${s * 0.3} ${s / 2},${s * 0.34} C${s / 2},${s * 0.3} ${s * 0.58},${s * 0.16} ` +
+         `${s * 0.7},${s * 0.18} C${s * 0.95},${s * 0.2} ${s * 0.9},${s * 0.55} ${s / 2},${s * 0.85} Z"/>`,
+    s => `<path d="M4,${s / 2} Q${s * 0.17},${s * 0.15} ${s * 0.33},${s / 2} T${s * 0.66},${s / 2} T${s - 4},${s / 2}"/>`,
+    s => { let d = `M${s / 2},${s / 2}`; for (let i = 1; i < 30; i++) { const a = i * 0.45, r = i * s / 66;
+             d += `L${(s / 2 + Math.cos(a) * r).toFixed(1)},${(s / 2 + Math.sin(a) * r).toFixed(1)}`; }
+           return `<path d="${d}"/>`; },
+  ];
+  function doodles(x, y, w, h, t, n) {
+    for (let i = 0; i < n; i++) {
+      const sz = 70 + rnd() * 40, kind = Math.floor(rnd() * DOODLES.length), c = COL[ORDER[Math.floor(rnd() * 5)]];
+      const d = document.createElementNS(NS, "svg");
+      d.setAttribute("class", "doodle");
+      d.setAttribute("width", sz); d.setAttribute("height", sz);
+      d.setAttribute("viewBox", `0 0 ${sz} ${sz}`);
+      // around the box edge, outside it
+      const side = i % 4, f = 0.15 + rnd() * 0.7;
+      let px = side === 0 ? x + w * f : side === 1 ? x + w + 10 : side === 2 ? x + w * f : x - sz - 10;
+      let py = side === 0 ? y - sz - 6 : side === 1 ? y + h * f - sz / 2 : side === 2 ? y + h + 6 : y + h * f - sz / 2;
+      px = Math.max(S.l, Math.min(S.r - sz, px)); py = Math.max(S.t, Math.min(S.b - sz, py));
+      d.style.left = px + "px"; d.style.top = py + "px";
+      d.innerHTML = DOODLES[kind](sz);
+      const p = d.querySelector("path");
+      p.setAttribute("fill", kind < 2 ? "none" : "none");
+      p.setAttribute("stroke", c); p.setAttribute("stroke-width", 7);
+      p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round");
+      fx.appendChild(d);
+      tl.set(d, { opacity: 1 }, t + i * 0.06);
+      drawOn(p, t + i * 0.06, 0.3);
+      tl.fromTo(d, { rotation: -20, scale: 0.6 }, { rotation: 8, scale: 1, duration: 0.5, ease: "back.out(3)" },
+        t + i * 0.06);
+      tl.to(d, { opacity: 0, scale: 0.6, duration: 0.25 }, t + 1.0 + i * 0.05);
+    }
+  }
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off pillow smileys when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions/labels already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 70 && f[0] < x + w + 70 && f[1] > y - 70 && f[1] < y + h + 70) c += 2600;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      return s;
+    });
+    let fs = 80;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw + 30, ch + 40, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                        wy: 1.4, wx: 0.8, isCaption: true });
+    cap.style.left = (p.x + 15) + "px";
+    cap.style.top = "0px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 10, p.x + cw + 40, p.y + ch + 46] });
+    C.placed = { x: p.x + 15, y: p.y + 20, w: cw, h: ch, clear: p.clear };
+    // short chunks (one quick word) get a shorter pop so the fade-out never starts before the pop-in ends
+    const din = Math.min(0.2, Math.max(0.06, (C.t1 - C.t0) * 0.4));
+    tl.fromTo(cap, { opacity: 0, y: p.y + 40, rotation: -2 }, { opacity: 1, y: p.y + 20, rotation: 0, duration: din,
+      ease: "back.out(2.5)" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], ww = s.offsetWidth, hh = s.offsetHeight;
+      const lp = document.createElementNS(NS, "svg");
+      lp.setAttribute("class", "loop");
+      lp.setAttribute("width", ww + 52); lp.setAttribute("height", hh + 48);
+      lp.innerHTML = `<path d="${wobblyEllipse((ww + 52) / 2, (hh + 48) / 2, ww / 2 + 16, hh / 2 + 14, 0.06, 1.12)}" ` +
+                     `fill="none" stroke="${COL.red}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
+      s.appendChild(lp);
+      const path = lp.querySelector("path");
+      drawOn(path, w.s, 0.18);
+      const y = s.querySelector(".y"), a = s.querySelector(".a");
+      tl.set(y, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(s, { scale: 1, rotation: 0 }, { scale: 1.14, rotation: i % 2 ? 3 : -3, duration: 0.1, yoyo: true,
+        repeat: 1, ease: "power1.out" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.set(y, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+      tl.to(path, { opacity: 0, duration: 0.08 }, off - 0.02);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.08 }, Math.max(C.t1 - 0.08, C.t0 + din));
+  }
+
+  // ------------------------------------------------------------ labels: paper scraps, circled numbers, burst
+  let flip = 1, ci = 0;
+  function label(L) {
+    if (L.kind === "num") return numBadge(L);
+    if (L.kind === "burst") return burst(L);
+    const color = L.color || ORDER[ci++ % ORDER.length];
+    const box = el("div", "paper");
+    const inn = el("div", "in", box);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => {
+      const s = el("span", "w", inn, w);
+      s.querySelectorAll("b").forEach(b => { b.style.color = COL[color] === COL.yellow ? "#E89B00" : COL[color]; });
+      return s;
+    });
+    const emo = el("span", "emo", inn, L.emoji);
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 100 : 82, min: B ? 78 : 64 },
+      { wrap: true, maxw: 680, fs: B ? 90 : 76 },
+      { wrap: true, maxw: 560, fs: B ? 80 : 68 },
+      { wrap: true, maxw: 460, fs: B ? 68 : 58 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      inn.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      inn.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (inn.offsetWidth > MAXW - 20 && fs > c.min) { fs -= 2; inn.style.fontSize = fs + "px"; }
+        if (inn.offsetWidth > MAXW - 20) continue;
+      } else {
+        while ((inn.offsetWidth > c.maxw || inn.offsetHeight > 300) && fs > 44) { fs -= 2; inn.style.fontSize = fs + "px"; }
+      }
+      const w = inn.offsetWidth, h = inn.offsetHeight;
+      const p = place(w + 30, h + 34, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                        wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    inn.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    inn.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x, y: p.y, w: w + 30, h: h + 34, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    placed.push({ t0: L.t0, t1: L.t1, r: [p.x, p.y, p.x + w + 30, p.y + h + 34] });
+    const bg = paperBg(inn, w, h, color);
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    const rot = (1.5 + rnd() * 2) * flip; flip = -flip;
+    const ol = bg.querySelector(".ol"), pp = bg.querySelector(".pp");
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scale: 0.3, rotation: rot * 5, transformOrigin: "50% 50%" },
+      { scale: 1, rotation: rot, duration: 0.7, ease: "elastic.out(1.1, 0.45)" }, L.t0);
+    drawOn(ol, L.t0, 0.28);
+    tl.fromTo(pp, { opacity: 0 }, { opacity: 1, duration: 0.12 }, L.t0 + 0.04);
+    tl.fromTo(ws, { opacity: 0, y: 24, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.26, stagger: 0.05,
+      ease: "back.out(2.5)" }, L.t0 + 0.08);
+    tl.fromTo(emo, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(3)" },
+      L.t0 + 0.15);
+    tl.to(emo, { rotation: 12, duration: 0.35, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.35) - 2),
+      ease: "sine.inOut" }, L.t0 + 0.55);
+    if (L.big) doodles(p.x, p.y, w + 30, h + 34, L.t0 + 0.12, 4);
+    tl.to(box, { scale: 0.4, rotation: -rot * 4, opacity: 0, duration: 0.16, ease: "back.in(2)" }, L.t1 - 0.16);
+  }
+
+  function numBadge(L) {
+    const box = el("div", "num");
+    const ring = el("div", "ring", box);
+    const rs = svg(ring, 290, 290);
+    rs.innerHTML = `<circle cx="145" cy="145" r="112" fill="url(#h-blue)"/>` +
+                   `<path d="${wobblyCircle(145, 145, 120, 0.05, 1.18)}" fill="none" stroke="${COL.red}" stroke-width="12" stroke-linecap="round"/>`;
+    const n = el("div", "n", ring, L.html);
+    const emo = el("span", "emo", box, L.emoji);
+    const strip = el("div", "strip", box, L.unit || "");
+    const sw = strip.offsetWidth, sh = strip.offsetHeight;
+    const ss = svg(strip, sw + 40, sh + 40);
+    ss.innerHTML = `<path d="${wobblyRect(20, 20, sw, sh, 18, 7)}" fill="${COL.yellow}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>`;
+    const bw = Math.max(330, sw + 20), bh = box.offsetHeight;
+    box.style.width = bw + "px";
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {
+      const q = place(bw * zz, bh * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                          wy: 0.8, wx: 0.6 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    L.placed = { x: p.x, y: p.y, w: bw * z, h: bh * z, clear: p.clear, zoom: z };
+    placed.push({ t0: L.t0, t1: L.t1, r: [p.x, p.y, p.x + bw * z, p.y + bh * z] });
+    box.style.left = (p.x / z) + "px";
+    box.style.top = (p.y / z) + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    drawOn(rs.querySelector("path"), L.t0, 0.3);
+    tl.fromTo(rs.querySelector("circle"), { opacity: 0 }, { opacity: 1, duration: 0.2 }, L.t0 + 0.1);
+    tl.fromTo(n, { scale: 0.2, rotation: -30 }, { scale: 1, rotation: -4, duration: 0.6, ease: "elastic.out(1.2, 0.4)" },
+      L.t0 + 0.1);
+    tl.fromTo(strip, { scaleX: 0, transformOrigin: "50% 50%" }, { scaleX: 1, duration: 0.3, ease: "back.out(2)" },
+      L.t0 + 0.25);
+    tl.fromTo(emo, { scale: 0, y: 20 }, { scale: 1, y: 0, duration: 0.35, ease: "back.out(3)" }, L.t0 + 0.3);
+    doodles(p.x, p.y, bw * z, bh * z, L.t0 + 0.2, 3);
+    tl.to(box, { scale: 0.5, opacity: 0, duration: 0.15, ease: "power2.in", transformOrigin: "50% 50%" },
+      L.t1 - 0.15);
+  }
+
+  function burst(L) {
+    const box = el("div", "burst");
+    const s = svg(box, 640, 340);
+    let d = "";
+    for (let i = 0; i < 22; i++) {
+      const a = (i / 22) * Math.PI * 2, r = i % 2 ? 150 : 205 + rnd() * 25;
+      d += (i ? "L" : "M") + (320 + Math.cos(a) * r * 1.5).toFixed(1) + "," + (170 + Math.sin(a) * r * 0.78).toFixed(1);
+    }
+    d += "Z";
+    s.innerHTML = `<path d="${d}" transform="translate(12,14)" fill="url(#h-red)" stroke="${COL.red}" stroke-width="6"/>` +
+                  `<path class="f" d="${d}" fill="${COL.yellow}" stroke="${INK}" stroke-width="8" stroke-linejoin="round" filter="url(#rough)"/>`;
+    const t = el("div", "t", box, `${L.html}<span style="font-size:0.7em">${L.emoji}</span>`);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7, 0.6]) {
+      const q = place(640 * zz, 340 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                            wy: 0.8, wx: 0.6 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    L.placed = { x: p.x, y: p.y, w: 640 * z, h: 340 * z, clear: p.clear, zoom: z };
+    placed.push({ t0: L.t0, t1: L.t1, r: [p.x, p.y, p.x + 640 * z, p.y + 340 * z] });
+    box.style.left = (p.x / z) + "px";
+    box.style.top = (p.y / z) + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(s, { scale: 0.1, rotation: -25, transformOrigin: "50% 50%" },
+      { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.2)" }, L.t0);
+    tl.fromTo(t, { scale: 0.3 }, { scale: 1, duration: 0.6, ease: "elastic.out(1.2, 0.4)" }, L.t0 + 0.08);
+    tl.to(t, { scale: 1.08, duration: 0.25, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.25) - 3),
+      ease: "sine.inOut" }, L.t0 + 0.6);
+    doodles(p.x, p.y, 640 * z, 340 * z, L.t0 + 0.1, 5);
+    tl.to(box, { scale: 0.4, opacity: 0, duration: 0.16, ease: "back.in(2)", transformOrigin: "50% 50%" }, L.t1 - 0.16);
+  }
+
+  // ------------------------------------------------------------ crayon scribble wipe
+  function wipe(W) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "wipe");
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    const cols = [COL.yellow, COL.blue, COL.red];
+    let inner = "";
+    cols.forEach((c, k) => {
+      let d = `M${-120 + k * 30},${-80 + k * 60}`;
+      for (let i = 0; i < 18; i++) {
+        const y = -80 + k * 60 + i * 120 + rnd() * 30;
+        d += ` L${1200 - rnd() * 40},${y + 50} L${-120 + rnd() * 40},${y + 115}`;
+      }
+      inner += `<path d="${d}" fill="none" stroke="${c}" stroke-width="${190 - k * 30}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    });
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    const ps = s.querySelectorAll("path");
+    ps.forEach((p, k) => {
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L;
+      tl.set(p, { strokeDashoffset: L }, 0);
+      tl.to(p, { strokeDashoffset: 0, duration: 0.34, ease: "power1.in" }, W.t - 0.38 + k * 0.03);
+      tl.to(p, { strokeDashoffset: -L, duration: 0.34, ease: "power1.out" }, W.t + k * 0.03);
+    });
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    const w = g.offsetWidth, h = g.offsetHeight;
+    const s = svg(g, w + 40, h + 40);
+    s.innerHTML = `<path d="${wobblyRect(20, 20, w, h, 16, 7)}" fill="${PAPER}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>`;
+    const p = place(w, h, { t0: T.t0, t1: T.t1, heads: T.heads, px: S.l + w / 2, py: S.t + 120, wy: 1, wx: 1 });
+    g.style.left = p.x + "px";
+    g.style.top = p.y + "px";
+    T.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    tl.fromTo(g, { opacity: 0, rotation: -14, scale: 0.5 }, { opacity: 1, rotation: -4, scale: 1, duration: 0.3,
+      ease: "back.out(3)" }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: taped paper sheet, face-aware
+  function endcard(N) {
+    const b = el("div", "sheet");
+    const r1 = el("div", "row title", b, N.title);
+    const r2 = el("div", "row sub", b, N.sizes);
+    const r3 = el("div", "row cta", b, N.cta);
+    const cw = r3.offsetWidth, chh = r3.offsetHeight;
+    const cs = svg(r3, cw + 32, chh + 32);
+    cs.innerHTML = `<path d="${wobblyRect(16, 16, cw, chh, 18, 7)}" fill="${COL.yellow}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>`;
+    let fs = 76;
+    while (b.offsetWidth > MAXW && fs > 50) { fs -= 2; r1.style.fontSize = fs + "px"; }
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const bs = svg(b, w + 40, h + 40);
+    bs.innerHTML = `<path d="${wobblyRect(34, 36, w, h, 30, 10)}" fill="url(#h-green)" stroke="${COL.green}" stroke-width="6"/>` +
+                   `<path d="${wobblyRect(20, 20, w, h, 30, 10)}" fill="${PAPER}" stroke="${INK}" stroke-width="8" stroke-linejoin="round" filter="url(#rough)"/>`;
+    for (const [side, rot] of [["left", -28], ["right", 28]]) {
+      const tp = el("div", "tape", b);
+      tp.style.top = "-18px"; tp.style[side] = "-30px"; tp.style.transform = `rotate(${rot}deg)`;
+    }
+    const p = place(w, h, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1100,
+                            wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    b.style.left = p.x + "px";
+    b.style.top = p.y + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { scale: 0.2, rotation: -10, transformOrigin: "50% 50%" },
+      { scale: 1, rotation: -2, duration: 0.7, ease: "elastic.out(1, 0.5)" }, N.t0);
+    [r1, r2, r3].forEach((d, i) => {
+      tl.fromTo(d, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2.5)" },
+        N.t0 + 0.15 + i * 0.15);
+    });
+    doodles(p.x, p.y, w, h, N.t0 + 0.3, 6);
+  }
+
+  // crayon line across the top that draws itself over the whole video, with a crayon riding its tip
+  function progress() {
+    const w = S.r - S.l, y = S.t + 10;
+    const s = document.createElementNS(NS, "svg");
+    s.id = "prog";
+    s.setAttribute("width", w + 20); s.setAttribute("height", 40);
+    s.style.left = (S.l - 10) + "px"; s.style.top = (y - 20) + "px";
+    let d = "M10,20";
+    for (let x = 30; x <= w + 10; x += 30) d += ` L${x},${(20 + (rnd() - 0.5) * 8).toFixed(1)}`;
+    s.innerHTML = `<path d="${d}" fill="none" stroke="rgba(255,253,244,0.55)" stroke-width="12" stroke-linecap="round"/>` +
+                  `<path class="f" d="${d}" fill="none" stroke="${COL.red}" stroke-width="12" stroke-linecap="round"/>`;
+    fx.appendChild(s);
+    const f = s.querySelector(".f"), L = f.getTotalLength();
+    f.style.strokeDasharray = L;
+    tl.fromTo(f, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: E.total, ease: "none" }, 0);
+    const c = el("div", "", fx, "🖍️");
+    c.id = "crayon";
+    c.style.left = (S.l - 24) + "px"; c.style.top = (y - 44) + "px";
+    tl.fromTo(c, { x: 0 }, { x: w, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(label);
+    E.tags.forEach(tag);
+    E.wipes.forEach(wipe);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           tags: E.tags.map(t => t.placed), end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

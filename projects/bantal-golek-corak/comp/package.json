@@ -1,0 +1,8 @@
+{
+  "name": "bantal-golek-corak-comp",
+  "private": true,
+  "description": "HyperFrames graphics layer for the bantal golek TikTok edit (rendered by ../edit.py)",
+  "devDependencies": {
+    "hyperframes": "0.8.181"
+  }
+}
