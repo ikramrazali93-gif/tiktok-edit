@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal selimut kucing reben, "Coquette reben & renda" look: ivory cards with a scalloped lace edge and a satin
+     bow on top, pink satin ribbon banners with notched tails for the big lines, pearls, soft pink / cream / powder
+     blue, Inter Display, gentle elegant easing. The cut video (base.mp4), timings and her head boxes come from
+     edit.py via data.js; this file draws, animates and places every graphic where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-SemiBold.otf") format("opentype"); font-weight: 600; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Bold.otf") format("opentype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Inter Display", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* lace card: ivory card, scalloped lace edge (svg behind), satin bow on the top edge */
+  .card { position: absolute; left: 0; top: 0; opacity: 0; }
+  .card .lace { position: absolute; left: -22px; top: -22px; overflow: visible; }
+  .card .ivory { position: relative; display: flex; align-items: center; gap: 16px; white-space: nowrap;
+                 padding: 40px 48px 34px; color: #8E3B5F; font-size: 74px; font-weight: 700; line-height: 1.02;
+                 letter-spacing: 1.5px; background: linear-gradient(180deg, #FFFBF7 0%, #FFF1F3 100%);
+                 border-radius: 30px; box-shadow: 0 12px 30px rgba(142, 59, 95, 0.28); }
+  .card .ivory b { color: #4F7FC0; font-weight: 700; }
+  .card .w { display: inline-block; position: relative; z-index: 2; }
+  .card .emo { display: inline-block; font-size: 0.9em; position: relative; z-index: 2; }
+  .card .bow { position: absolute; left: 50%; top: -58px; width: 150px; height: 96px; margin-left: -75px; z-index: 3;
+               overflow: visible; }
+  .card.wrapline .ivory { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                          row-gap: 4px; }
+
+  /* big lines: pink satin ribbon banner with notched tails */
+  .card.big .ivory { background: linear-gradient(180deg, #FFC9DA 0%, #F49AB9 55%, #EE86AA 100%); color: #FFFFFF;
+                     border-radius: 18px; padding: 44px 56px 38px;
+                     box-shadow: 0 12px 30px rgba(142, 59, 95, 0.32), inset 0 8px 0 rgba(255, 255, 255, 0.35); }
+  .card.big .ivory b { color: #FFFFFF; }
+  .card.big .ivory .w { -webkit-text-stroke: 9px #A8436D; paint-order: stroke fill; }
+  .card .tails { position: absolute; top: 0; overflow: visible; z-index: -1; }
+
+  /* captions: ivory letters with a rose outline; the spoken word sits on a satin pill with a lace stitch */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 24px; align-items: center; opacity: 0;
+         font-size: 70px; font-weight: 700; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFFBF7;
+                  -webkit-text-stroke: 13px #8E3B5F; paint-order: stroke fill; }
+  .cap .word.key .a { color: #CFE3FF; }
+  .cap .pill { position: absolute; z-index: 0; left: -16px; right: -16px; top: -12px; bottom: -14px;
+               border-radius: 999px; background: linear-gradient(180deg, #FFC2D6, #EF8DB0);
+               box-shadow: 0 6px 14px rgba(142, 59, 95, 0.35), inset 0 0 0 5px rgba(255, 255, 255, 0.85);
+               opacity: 0; transform: scale(0.6); }
+  .cap .pill::after { content: ""; position: absolute; inset: 9px; border-radius: 999px;
+                      border: 3px dashed rgba(255, 255, 255, 0.9); }
+
+  .pearl { position: absolute; border-radius: 50%; opacity: 0;
+           background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FFF4F2 35%, #E9D9DC 75%, #CDB9BE 100%);
+           box-shadow: 0 3px 6px rgba(120, 70, 90, 0.35); }
+  .minibow { position: absolute; opacity: 0; overflow: visible; }
+
+  /* progress: a string of pearls, the passed ones blush pink, a little bow leads */
+  #pearls { position: absolute; height: 20px; }
+  #pearls .track, #pearls .fill { position: absolute; inset: 0; }
+  #pearls .track { background: radial-gradient(circle at 10px 10px, rgba(255, 251, 247, 0.85) 6px, transparent 7.5px) 0 0 / 24px 20px repeat-x; }
+  #pearls .fill { background: radial-gradient(circle at 10px 10px, #F49AB9 6.5px, transparent 8px) 0 0 / 24px 20px repeat-x;
+                  transform-origin: 0 50%; }
+  #pearls .lead { position: absolute; top: -26px; left: -36px; width: 72px; height: 46px; overflow: visible; }
+  .tag { position: absolute; font-size: 40px; font-weight: 700; color: #8E3B5F; padding: 10px 26px 12px;
+         border-radius: 999px; background: #FFFBF7; opacity: 0; letter-spacing: 1px;
+         box-shadow: 0 6px 16px rgba(142, 59, 95, 0.3), inset 0 0 0 4px #F7C3D5; }
+
+  .sweep { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+
+  /* end card: ivory lace card with a big bow, kicker, title, powder-blue pill and a rose CTA */
+  .menu { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+          align-items: center; gap: 22px; padding: 76px 56px 46px; border-radius: 40px;
+          background: linear-gradient(180deg, #FFFBF7, #FFEFF3); box-shadow: 0 16px 40px rgba(142, 59, 95, 0.32); }
+  .menu .lace { position: absolute; left: -24px; top: -24px; overflow: visible; z-index: -1; }
+  .menu .bow { position: absolute; left: 50%; top: -84px; width: 210px; height: 134px; margin-left: -105px;
+               overflow: visible; }
+  .menu .row { display: flex; align-items: center; gap: 14px; line-height: 1; white-space: nowrap; }
+  .menu .kicker { font-size: 34px; font-weight: 600; color: #B7708F; letter-spacing: 10px; text-transform: lowercase; }
+  .menu .title { font-size: 76px; font-weight: 700; color: #8E3B5F; letter-spacing: 2px; }
+  .menu .title b { color: #4F7FC0; }
+  .menu .sub { font-size: 38px; font-weight: 700; color: #3F6CA8; padding: 14px 32px 16px; border-radius: 999px;
+               background: #E3EEFF; letter-spacing: 1.5px; box-shadow: inset 0 0 0 4px #FFFFFF; }
+  .menu .cta { font-size: 48px; font-weight: 700; color: #FFFFFF; padding: 20px 44px 22px; border-radius: 999px;
+               background: linear-gradient(180deg, #F7A9C4, #E9789F); letter-spacing: 1px;
+               box-shadow: 0 8px 18px rgba(142, 59, 95, 0.35), inset 0 0 0 5px rgba(255, 255, 255, 0.7); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="35.750" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="35.750" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 31;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+  const svg = (cls, w, h, inner, parent) => {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", cls);
+    s.setAttribute("width", w);
+    s.setAttribute("height", h);
+    s.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    s.innerHTML = inner;
+    if (parent) parent.appendChild(parent === fx ? s : s);
+    return s;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the pillow's face when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24 + (o.topPad || 0), y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 130 && f[0] < x + w + 130 && f[1] > y - 130 && f[1] < y + h + 130) c += 9000;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // satin bow (two loops, knot, two tails), drawn in a 150x96 box
+  function bowSvg(cls, w, h, c1, c2) {
+    const k = w / 150;
+    const inner = `<g transform="scale(${k})">
+      <path d="M75,46 C52,10 14,4 10,30 C6,56 44,62 75,48 Z" fill="${c1}" stroke="${c2}" stroke-width="4"/>
+      <path d="M75,46 C98,10 136,4 140,30 C144,56 106,62 75,48 Z" fill="${c1}" stroke="${c2}" stroke-width="4"/>
+      <path d="M68,52 L48,92 L60,86 L66,96 L74,56 Z" fill="${c1}" stroke="${c2}" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M82,52 L102,92 L90,86 L84,96 L76,56 Z" fill="${c1}" stroke="${c2}" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M24,28 C34,20 50,22 60,36" stroke="rgba(255,255,255,0.75)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M126,28 C116,20 100,22 90,36" stroke="rgba(255,255,255,0.75)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="75" cy="47" rx="13" ry="12" fill="${c2}"/>
+      <ellipse cx="72" cy="43" rx="5" ry="4" fill="rgba(255,255,255,0.6)"/></g>`;
+    return svg(cls, w, h, inner);
+  }
+
+  // scalloped lace edge around a w x h card (svg sits 22px outside the card on every side)
+  function laceSvg(w, h, pad, color, holes) {
+    const W = w + pad * 2, H = h + pad * 2, r = 15, step = 30;
+    let inner = `<rect x="${pad - 6}" y="${pad - 6}" width="${w + 12}" height="${h + 12}" rx="34" fill="${color}"/>`;
+    const per = 2 * (w + h), n = Math.round(per / step);
+    for (let i = 0; i < n; i++) {
+      let d = i * per / n, x, y;
+      if (d < w) { x = d; y = 0; } else if ((d -= w) < h) { x = w; y = d; }
+      else if ((d -= h) < w) { x = w - d; y = h; } else { x = 0; y = h - (d - w); }
+      inner += `<circle cx="${x + pad}" cy="${y + pad}" r="${r}" fill="${color}"/>`;
+      if (holes) inner += `<circle cx="${x + pad}" cy="${y + pad}" r="4" fill="${holes}"/>`;
+    }
+    return svg("lace", W, H, inner);
+  }
+
+  // pearls + tiny bows drift out of a spot
+  function pearlBurst(x, y, t, n) {
+    for (let i = 0; i < (n || 10); i++) {
+      const isBow = i % 4 === 0;
+      let p;
+      if (isBow) {
+        p = bowSvg("minibow", 54, 35, "#F7B8CC", "#C86A90");
+        fx.appendChild(p);
+      } else {
+        p = el("div", "pearl", fx);
+        const s = 16 + rnd() * 16;
+        p.style.width = s + "px"; p.style.height = s + "px";
+      }
+      p.style.left = (x - 12) + "px";
+      p.style.top = (y - 12) + "px";
+      const a = (i / (n || 10)) * Math.PI * 2 + rnd() * 0.5, d = 130 + rnd() * 110;
+      tl.fromTo(p, { opacity: 0, x: 0, y: 0, scale: 0.3, rotation: rnd() * 60 - 30 },
+        { opacity: 1, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.7 - 30, scale: 1, rotation: rnd() * 60 - 30,
+          duration: 0.8, ease: "power2.out" }, t);
+      tl.to(p, { opacity: 0, y: "+=50", duration: 0.5, ease: "sine.in" }, t + 0.75);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "pill", s);
+      el("span", "a", s, w.w);
+      return s;
+    });
+    let fs = 70;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw + 30, ch + 34, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                        wy: 1.4, wx: 0.8, isCaption: true });
+    const px = p.x + 15, py = p.y + 14;
+    cap.style.left = px + "px";
+    cap.style.top = py + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x, p.y, p.x + cw + 30, p.y + ch + 34] });
+    C.placed = { x: px, y: py, w: cw, h: ch, clear: p.clear };
+    const fin = Math.min(0.22, (C.t1 - C.t0) * 0.4), tout = Math.max(C.t1 - 0.12, C.t0 + fin);
+    tl.fromTo(cap, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: fin, ease: "power3.out",
+                                            immediateRender: true }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], pill = s.querySelector(".pill");
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      const pin = Math.min(0.16, Math.max(0.04, off - w.s - 0.1));
+      tl.fromTo(pill, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: pin, ease: "power2.out" }, w.s);
+      tl.fromTo(s, { y: 0 }, { y: -6, duration: 0.14, yoyo: true, repeat: 1, ease: "sine.out" }, w.s);
+      tl.fromTo(pill, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.8, duration: 0.08,
+                                                   immediateRender: false }, Math.max(w.s + pin, off - 0.08));
+    });
+    tl.fromTo(cap, { opacity: 1 }, { opacity: 0, duration: 0.12, immediateRender: false }, tout);
+  }
+
+  // ------------------------------------------------------------ labels: lace cards / ribbon banners
+  let flip = 1;
+  function card(L) {
+    const B = L.big;
+    const box = el("div", "card" + (B ? " big" : ""));
+    const ivory = el("div", "ivory", box);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", ivory, w));
+    const emo = el("span", "emo", ivory, L.emoji);
+    const configs = [
+      { wrap: false, fs: B ? 88 : 74, min: B ? 70 : 60 },
+      { wrap: true, maxw: 680, fs: B ? 82 : 70 },
+      { wrap: true, maxw: 560, fs: B ? 72 : 62 },
+      { wrap: true, maxw: 460, fs: B ? 62 : 54 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      ivory.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      ivory.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (ivory.offsetWidth > MAXW - 60 && fs > c.min) { fs -= 2; ivory.style.fontSize = fs + "px"; }
+        if (ivory.offsetWidth > MAXW - 60) continue;
+      } else {
+        while ((ivory.offsetWidth > c.maxw || ivory.offsetHeight > 300) && fs > 44) {
+          fs -= 2; ivory.style.fontSize = fs + "px";
+        }
+      }
+      const w = ivory.offsetWidth, h = ivory.offsetHeight;
+      // footprint: lace/tails reach 22-60px past the card, the bow 58px above it
+      const ex = B ? 64 : 22;
+      const p = place(w + ex * 2, h + 22 + 64, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX,
+                                                 py: E.lab_y, wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p, ex };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    ivory.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    ivory.style.fontSize = pick.fs + "px";
+    const { w, h, p, ex } = pick;
+    L.placed = { x: p.x, y: p.y, w: w + ex * 2, h: h + 86, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    let deco;
+    if (B) {                                            // notched satin tails on both ends
+      const tw = 70, inner =
+        `<path d="M${tw},10 L0,10 L22,${h / 2 + 4} L0,${h - 2} L${tw},${h - 2} Z" fill="#E9789F"/>` +
+        `<path d="M${w + tw},10 L${w + 2 * tw},10 L${w + 2 * tw - 22},${h / 2 + 4} L${w + 2 * tw},${h - 2} L${w + tw},${h - 2} Z" fill="#E9789F"/>` +
+        `<path d="M${tw},10 L${tw + 14},26 L${tw + 14},${h - 18} L${tw},${h - 2} Z" fill="#C8587F"/>` +
+        `<path d="M${w + tw},10 L${w + tw - 14},26 L${w + tw - 14},${h - 18} L${w + tw},${h - 2} Z" fill="#C8587F"/>`;
+      deco = svg("tails", w + 2 * tw, h + 10, inner);
+      deco.style.left = -tw + "px";
+      box.insertBefore(deco, ivory);
+    } else {
+      deco = laceSvg(w, h, 22, "#FFFFFF", "#F7C3D5");
+      box.insertBefore(deco, ivory);
+    }
+    const bow = bowSvg("bow", 150, 96, B ? "#FFFFFF" : "#F7B8CC", B ? "#E9789F" : "#C86A90");
+    box.appendChild(bow);
+    box.style.left = (p.x + ex) + "px";
+    box.style.top = (p.y + 64) + "px";
+    const rot = (B ? 0 : 1.5) * flip; flip = -flip;
+    tl.set(box, { opacity: 0 }, 0);
+    tl.fromTo(box, { opacity: 0, y: 34, scale: 0.92, rotation: 0 },
+      { opacity: 1, y: 0, scale: 1, rotation: rot, duration: 0.55, ease: "power3.out" }, L.t0);
+    tl.fromTo(deco, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "sine.out" }, L.t0 + 0.05);
+    tl.fromTo(bow, { scale: 0, rotation: -25, transformOrigin: "50% 50%" },
+      { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2.2)" }, L.t0 + 0.16);
+    tl.to(bow, { rotation: 6, duration: 0.7, yoyo: true, transformOrigin: "50% 50%",
+                 repeat: Math.max(1, Math.floor((L.t1 - L.t0 - 0.8) / 0.7)), ease: "sine.inOut" }, L.t0 + 0.76);
+    tl.fromTo(ws, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.06, ease: "power2.out" },
+      L.t0 + 0.12);
+    tl.fromTo(emo, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" },
+      L.t0 + 0.24);
+    if (B) pearlBurst(p.x + ex + w / 2, p.y + 64 + h / 2, L.t0 + 0.1, 12);
+    tl.fromTo(box, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.94, y: -10, duration: 0.2, ease: "sine.in",
+                                              immediateRender: false }, Math.max(L.t0 + 0.45, L.t1 - 0.2));
+  }
+
+  // ------------------------------------------------------------ ribbon sweep transition
+  // a wide satin ribbon sweeps diagonally across the frame with a big bow riding its middle
+  function sweep(W) {
+    const inner =
+      `<defs><linearGradient id="sat${W.t}" x1="0" y1="0" x2="0" y2="1">
+         <stop offset="0" stop-color="#FFD3E1"/><stop offset="0.35" stop-color="#F7A9C4"/>
+         <stop offset="0.5" stop-color="#FFE3EC"/><stop offset="0.7" stop-color="#F49AB9"/>
+         <stop offset="1" stop-color="#E9789F"/></linearGradient></defs>
+       <g transform="rotate(-24 540 960)">
+         <rect x="-900" y="380" width="2880" height="1160" fill="url(#sat${W.t})"/>
+         <rect x="-900" y="410" width="2880" height="8" fill="rgba(255,255,255,0.8)" />
+         <rect x="-900" y="1502" width="2880" height="8" fill="rgba(255,255,255,0.8)" />
+       </g>`;
+    const s = svg("sweep", 1080, 1920, inner);
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    fx.appendChild(s);
+    const b = bowSvg("minibow", 420, 269, "#FFFFFF", "#E9789F");
+    b.style.left = "330px"; b.style.top = "826px";
+    fx.appendChild(b);
+    tl.fromTo(s, { x: -2300 }, { x: 0, duration: 0.34, ease: "power2.in" }, W.t - 0.34);
+    tl.to(s, { x: 2300, duration: 0.36, ease: "power2.in" }, W.t + 0.02);
+    tl.fromTo(b, { opacity: 0, scale: 0.4, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.24,
+                                                             ease: "back.out(2)" }, W.t - 0.22);
+    tl.to(b, { opacity: 0, x: 900, rotation: 25, duration: 0.3, ease: "power2.in" }, W.t + 0.06);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 46) + "px";
+    tl.fromTo(g, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.12 }, T.t1 - 0.12);
+  }
+
+  // ------------------------------------------------------------ end card: lace card with a big bow, face-aware
+  function endcard(N) {
+    const b = el("div", "menu");
+    const rows = [
+      el("div", "row kicker", b, N.kicker),
+      el("div", "row title", b, N.title),
+      el("div", "row sub", b, N.sizes),
+      el("div", "row cta", b, N.cta),
+    ];
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const lace = laceSvg(w, h, 24, "#FFFFFF", "#F7C3D5");
+    b.insertBefore(lace, b.firstChild);
+    const bow = bowSvg("bow", 210, 134, "#F7B8CC", "#C86A90");
+    b.appendChild(bow);
+    const p = place(w + 48, h + 48 + 70, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX,
+                                           py: N.py || 1150, wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x + 24, y: p.y + 24 + 70, w, h, clear: p.clear };
+    b.style.left = (p.x + 24) + "px";
+    b.style.top = (p.y + 24 + 70) + "px";
+    tl.set(b, { opacity: 0 }, 0);
+    tl.fromTo(b, { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.65,
+                                                      ease: "power3.out" }, N.t0);
+    tl.fromTo(bow, { scale: 0, rotation: -30, transformOrigin: "50% 50%" },
+      { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2.2)" }, N.t0 + 0.2);
+    rows.forEach((d, i) => {
+      tl.fromTo(d, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+        N.t0 + 0.22 + i * 0.12);
+    });
+    tl.to(rows[3], { scale: 1.05, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, N.t0 + 0.9);
+    pearlBurst(p.x + 24 + w / 2, p.y + 90, N.t0 + 0.25, 12);
+  }
+
+  function progress() {
+    const v = el("div", "", fx);
+    v.id = "pearls";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 4) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    el("div", "track", v);
+    const f = el("div", "fill", v);
+    const k = bowSvg("lead", 72, 46, "#F7B8CC", "#C86A90");
+    v.appendChild(k);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(card);
+    E.tags.forEach(tag);
+    E.wipes.forEach(sweep);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  Promise.all([document.fonts.load('700 66px "Inter Display"'), document.fonts.load('600 34px "Inter Display"')])
+    .then(build);
+})();
+</script>
+</body>
+</html>

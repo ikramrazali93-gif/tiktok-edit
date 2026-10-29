@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for the bantal selimut kucing reben, "Coquette reben & renda" look: white lace scalloped frame
+     with pearls, a pink satin ribbon banner in the trees top-left, a lace title card with a satin bow low on the
+     blanket, a powder-blue pill and a little lace badge on the blanket. Her face (top right) stays clear.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-SemiBold.otf") format("opentype"); font-weight: 600; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Bold.otf") format("opentype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FFF1F3; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Inter Display", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 79.3s; rows 0-1536 are shown */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #frame { position: absolute; inset: 0; }
+  .lace-card { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 14px;
+               line-height: 1; white-space: nowrap; border-radius: 34px;
+               background: linear-gradient(180deg, #FFFBF7, #FFEFF3); box-shadow: 0 16px 36px rgba(142, 59, 95, 0.35); }
+  .lace-card svg.lace { position: absolute; overflow: visible; z-index: -1; }
+  .bow { position: absolute; left: 50%; overflow: visible; }
+  #title { left: 50%; top: 1070px; transform: translateX(-50%); padding: 70px 60px 40px; }
+  #title .k { font-size: 34px; font-weight: 600; color: #B7708F; letter-spacing: 12px; }
+  #title .t { font-size: 92px; font-weight: 700; color: #8E3B5F; letter-spacing: 2px; }
+  #title .t b { color: #4F7FC0; }
+  #pill { position: absolute; left: 50%; top: 1372px; transform: translateX(-50%); font-size: 40px; font-weight: 700;
+          color: #3F6CA8; padding: 14px 34px 16px; border-radius: 999px; background: #E3EEFF; letter-spacing: 1.5px;
+          white-space: nowrap; box-shadow: 0 8px 18px rgba(63, 108, 168, 0.3), inset 0 0 0 4px #FFFFFF; }
+  #banner { position: absolute; left: 64px; top: 96px; }
+  #banner .rib { position: relative; padding: 30px 52px 26px; font-size: 56px; font-weight: 700; color: #FFFFFF;
+                 border-radius: 14px; white-space: nowrap; letter-spacing: 1.5px;
+                 background: linear-gradient(180deg, #FFC9DA 0%, #F49AB9 55%, #EE86AA 100%);
+                 box-shadow: 0 12px 28px rgba(142, 59, 95, 0.35), inset 0 7px 0 rgba(255, 255, 255, 0.35); }
+  #banner .rib span { -webkit-text-stroke: 8px #A8436D; paint-order: stroke fill; }
+  #badge { left: 72px; top: 790px; padding: 54px 34px 26px; transform: rotate(-5deg); }
+  #badge .t { font-size: 46px; font-weight: 700; color: #8E3B5F; letter-spacing: 1px; }
+  #badge .t b { color: #4F7FC0; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="frame" viewBox="0 0 1080 1536"></svg>
+  <div id="banner"><div class="rib"><span>TENGAH TRENDING</span> 🎀</div></div>
+  <div id="badge" class="lace-card"><div class="t">SELIMUT <b>±170CM</b> 🐆</div></div>
+  <div id="title" class="lace-card"><div class="k">kucing reben</div><div class="t">BANTAL <b>SELIMUT</b></div></div>
+  <div id="pill">2 IN 1 • DESIGN LEOPARD</div>
+</div>
+<script>
+  const NS = "http://www.w3.org/2000/svg";
+  function bow(w, c1, c2) {
+    const k = w / 150, h = 96 * k;
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("width", w); s.setAttribute("height", h); s.setAttribute("class", "bow");
+    s.innerHTML = `<g transform="scale(${k})">
+      <path d="M75,46 C52,10 14,4 10,30 C6,56 44,62 75,48 Z" fill="${c1}" stroke="${c2}" stroke-width="4"/>
+      <path d="M75,46 C98,10 136,4 140,30 C144,56 106,62 75,48 Z" fill="${c1}" stroke="${c2}" stroke-width="4"/>
+      <path d="M68,52 L48,92 L60,86 L66,96 L74,56 Z" fill="${c1}" stroke="${c2}" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M82,52 L102,92 L90,86 L84,96 L76,56 Z" fill="${c1}" stroke="${c2}" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M24,28 C34,20 50,22 60,36" stroke="rgba(255,255,255,0.75)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M126,28 C116,20 100,22 90,36" stroke="rgba(255,255,255,0.75)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="75" cy="47" rx="13" ry="12" fill="${c2}"/><ellipse cx="72" cy="43" rx="5" ry="4" fill="rgba(255,255,255,0.6)"/></g>`;
+    s.style.marginLeft = (-w / 2) + "px";
+    s.style.top = (-h * 0.55) + "px";
+    return s;
+  }
+  function lace(card, pad) {
+    const w = card.offsetWidth, h = card.offsetHeight, step = 30, r = 15;
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "lace");
+    s.setAttribute("width", w + pad * 2); s.setAttribute("height", h + pad * 2);
+    s.style.left = -pad + "px"; s.style.top = -pad + "px";
+    let inner = `<rect x="${pad - 6}" y="${pad - 6}" width="${w + 12}" height="${h + 12}" rx="34" fill="#FFFFFF"/>`;
+    const per = 2 * (w + h), n = Math.round(per / step);
+    for (let i = 0; i < n; i++) {
+      let d = i * per / n, x, y;
+      if (d < w) { x = d; y = 0; } else if ((d -= w) < h) { x = w; y = d; }
+      else if ((d -= h) < w) { x = w - d; y = h; } else { x = 0; y = h - (d - w); }
+      inner += `<circle cx="${x + pad}" cy="${y + pad}" r="${r}" fill="#FFFFFF"/><circle cx="${x + pad}" cy="${y + pad}" r="4" fill="#F7C3D5"/>`;
+    }
+    s.innerHTML = inner;
+    card.insertBefore(s, card.firstChild);
+  }
+  // white lace scallop frame with pink eyelets, pearls in the corners
+  let f = "";
+  for (let x = 0; x <= 1080; x += 36) {
+    f += `<circle cx="${x}" cy="0" r="26" fill="#FFFFFF"/><circle cx="${x}" cy="10" r="5" fill="#F7C3D5"/>`;
+    f += `<circle cx="${x}" cy="1536" r="26" fill="#FFFFFF"/><circle cx="${x}" cy="1526" r="5" fill="#F7C3D5"/>`;
+  }
+  for (let y = 0; y <= 1536; y += 36) {
+    f += `<circle cx="0" cy="${y}" r="26" fill="#FFFFFF"/><circle cx="10" cy="${y}" r="5" fill="#F7C3D5"/>`;
+    f += `<circle cx="1080" cy="${y}" r="26" fill="#FFFFFF"/><circle cx="1070" cy="${y}" r="5" fill="#F7C3D5"/>`;
+  }
+  f += `<defs><radialGradient id="pg" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#FFFFFF"/>
+        <stop offset="0.45" stop-color="#FFF2F0"/><stop offset="1" stop-color="#D9C3C9"/></radialGradient></defs>`;
+  for (const [cx, cy] of [[46, 46], [1034, 46], [46, 1490], [1034, 1490]]) {
+    f += `<circle cx="${cx}" cy="${cy}" r="18" fill="url(#pg)" stroke="#E3CBD2" stroke-width="2"/>`;
+  }
+  document.getElementById("frame").innerHTML = f;
+  Promise.all([document.fonts.load('700 92px "Inter Display"'), document.fonts.load('600 34px "Inter Display"')])
+    .then(() => {
+      const title = document.getElementById("title"), badge = document.getElementById("badge");
+      lace(title, 22); lace(badge, 20);
+      title.appendChild(bow(200, "#F7B8CC", "#C86A90"));
+      badge.appendChild(bow(110, "#F7B8CC", "#C86A90"));
+      window.__timelines = window.__timelines || {};
+      window.__timelines["cover"] = gsap.timeline({ paused: true }).to({}, { duration: 1 });
+    });
+</script>
+</body>
+</html>
