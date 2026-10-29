@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for the bantal selimut karakter biru, "Galaksi angkasa" look: a starry deep-space frame with
+     a neon orbit ring, a holo-panel title in the tree band above her hood, a ringed-planet "2 IN 1" badge on her
+     coat and a glass sticker on the blanket. Her face and the pillow's face stay clear; no character name anywhere.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #0B0D2E; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 72.4s; rows 0-1536 are shown (trees above her hood) */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #frame { position: absolute; inset: 0; }
+  .holo { position: absolute; display: flex; align-items: center; justify-content: center; gap: 18px;
+          white-space: nowrap; line-height: 1; color: #FFFFFF; border-radius: 40px;
+          background: linear-gradient(135deg, rgba(14, 18, 52, 0.92) 0%, rgba(44, 22, 92, 0.92) 100%);
+          box-shadow: 0 0 0 6px rgba(95, 244, 255, 0.95), 0 0 0 12px rgba(167, 120, 255, 0.55),
+                      0 0 40px 12px rgba(95, 244, 255, 0.45), 0 18px 30px rgba(5, 5, 25, 0.55);
+          text-shadow: 0 0 14px rgba(190, 170, 255, 0.7); }
+  .holo b { color: #5FF4FF; text-shadow: 0 0 18px rgba(95, 244, 255, 0.95); }
+  #title { left: 50%; top: 52px; font-size: 92px; padding: 30px 50px 32px; }
+  #pill { position: absolute; left: 50%; top: 232px; font-size: 42px; line-height: 1; white-space: nowrap;
+          padding: 12px 32px 14px; border-radius: 999px; color: #10123A;
+          background: linear-gradient(90deg, #FFE45C, #FFC93C); box-shadow: 0 0 22px 6px rgba(255, 220, 90, 0.55); }
+  #sticker { left: 500px; top: 1180px; font-size: 52px; padding: 26px 34px 28px; transform: rotate(-5deg); }
+  #planet { position: absolute; left: 56px; top: 1150px; width: 360px; height: 300px; }
+  #planet svg { position: absolute; inset: 0; overflow: visible; }
+  #planet .ball { position: absolute; left: 60px; top: 30px; width: 240px; height: 240px; border-radius: 50%;
+                  background: radial-gradient(circle at 34% 28%, #9C8BFF 0%, #5A3FD8 38%, #2A1C86 70%, #140E45 100%);
+                  box-shadow: 0 0 40px 10px rgba(130, 100, 255, 0.6), inset -18px -24px 40px rgba(5, 0, 30, 0.6); }
+  #planet .in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+                justify-content: center; line-height: 0.95; font-size: 74px; color: #FFFFFF; z-index: 3;
+                text-shadow: 0 0 16px rgba(95, 244, 255, 0.95), 0 4px 0 #140E45; }
+  #planet .in small { font-size: 32px; color: #5FF4FF; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="frame" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="holo"><span>BANTAL + <b>SELIMUT</b> 🪐</span></div>
+  <div id="pill">💙 SET MATCHING ALIEN BIRU</div>
+  <div id="planet"><svg viewBox="0 0 360 300" class="back"></svg><div class="ball"></div><svg viewBox="0 0 360 300" class="front"></svg>
+    <div class="in"><span>2 IN 1</span><small>BANTAL • SELIMUT</small></div></div>
+  <div id="sticker" class="holo"><span>GEBU & <b>LEMBUT</b> ☁️</span></div>
+</div>
+<script>
+  let seed = 11;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  // deep-space frame: dark vignette border with stars and a dashed neon orbit line inside it
+  let s = `<defs><radialGradient id="vg" cx="50%" cy="50%" r="75%">
+      <stop offset="62%" stop-color="#0B0D2E" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0B0D2E" stop-opacity="0.92"/></radialGradient></defs>
+    <rect x="0" y="0" width="1080" height="1536" fill="url(#vg)"/>
+    <rect x="22" y="22" width="1036" height="1492" rx="54" fill="none" stroke="#5FF4FF" stroke-width="6"
+          style="filter:drop-shadow(0 0 10px #5FF4FF)"/>
+    <rect x="40" y="40" width="1000" height="1456" rx="44" fill="none" stroke="#A778FF" stroke-width="3"
+          stroke-dasharray="10 14"/>`;
+  const C = ["#FFFFFF", "#5FF4FF", "#C9B6FF", "#FFE45C"];
+  for (let k = 0; k < 70; k++) {             // stars only in the border band
+    let x = rnd() * 1080, y = rnd() * 1536;
+    if (x > 70 && x < 1010 && y > 70 && y < 1466) { if (rnd() < 0.5) x = rnd() < 0.5 ? 10 + rnd() * 50 : 1020 + rnd() * 50; else y = rnd() < 0.5 ? 10 + rnd() * 50 : 1476 + rnd() * 50; }
+    const r = 2 + rnd() * 6, c = C[k % C.length];
+    s += `<path transform="translate(${x} ${y}) scale(${r / 10})" d="M0,-10 C1,-2 2,-1 10,0 C2,1 1,2 0,10 C-1,2 -2,1 -10,0 C-2,-1 -1,-2 0,-10Z" fill="${c}" style="filter:drop-shadow(0 0 4px ${c})"/>`;
+  }
+  document.getElementById("frame").innerHTML = s;
+  // planet ring: back half behind the ball, front half over it
+  const ring = `<ellipse cx="180" cy="150" rx="176" ry="46" fill="none" stroke="#5FF4FF" stroke-width="10"
+      transform="rotate(-16 180 150)" style="filter:drop-shadow(0 0 8px #5FF4FF)"/>
+    <ellipse cx="180" cy="150" rx="158" ry="38" fill="none" stroke="#C9B6FF" stroke-width="4" transform="rotate(-16 180 150)"/>`;
+  const back = document.querySelector("#planet .back"), front = document.querySelector("#planet .front");
+  back.innerHTML = ring; front.innerHTML = ring;
+  back.style.clipPath = "inset(0 0 52% 0)"; front.style.clipPath = "inset(48% 0 0 0)";
+  document.fonts.load('700 92px "Fredoka"').then(() => {
+    for (const id of ["title", "pill"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 960) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+    }
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 1 });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>

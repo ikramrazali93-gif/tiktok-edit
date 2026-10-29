@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal selimut karakter biru, "Galaksi angkasa" (deep-space) look: dark glass holo panels with a neon
+     cyan->violet rim and glow, ringed-planet badges, twinkling star bursts, a comet sweep across each panel, a
+     hyperspace warp transition and an orbit-line progress bar with a little rocket. The cut video (base.mp4),
+     timings and her head boxes come from edit.py via data.js; this file draws, animates and places every graphic
+     where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* holo panel: dark glass, neon gradient rim, glow, tiny stars inside */
+  .card { position: absolute; left: 0; top: 0; opacity: 0; }
+  .card .glass { position: relative; display: flex; align-items: center; gap: 20px; white-space: nowrap;
+                 padding: 30px 46px 32px 34px; color: #FFFFFF; font-size: 80px; line-height: 1; letter-spacing: 1px;
+                 border-radius: 40px; overflow: hidden;
+                 background: linear-gradient(135deg, rgba(14, 18, 52, 0.90) 0%, rgba(38, 20, 78, 0.90) 100%);
+                 box-shadow: 0 0 0 5px rgba(95, 244, 255, 0.95), 0 0 0 10px rgba(167, 120, 255, 0.55),
+                             0 0 34px 10px rgba(95, 244, 255, 0.45), 0 18px 30px rgba(5, 5, 25, 0.55); }
+  .card .glass b { color: #5FF4FF; font-weight: 700; text-shadow: 0 0 18px rgba(95, 244, 255, 0.9); }
+  .card .w { display: inline-block; position: relative; z-index: 2; text-shadow: 0 0 12px rgba(190, 170, 255, 0.6); }
+  .card .emo { position: relative; z-index: 2; display: inline-flex; align-items: center; justify-content: center;
+               width: 1.35em; height: 1.35em; border-radius: 50%; font-size: 0.78em; flex: none;
+               background: radial-gradient(circle at 35% 30%, #7B6CFF 0%, #3A2C9E 60%, #1B1650 100%);
+               box-shadow: 0 0 16px rgba(167, 120, 255, 0.85), inset 0 0 0 3px rgba(255, 255, 255, 0.25); }
+  .card .dots { position: absolute; inset: 0; z-index: 1; }
+  .card .comet { position: absolute; z-index: 1; top: -40%; left: 0; width: 120px; height: 180%;
+                 background: linear-gradient(90deg, transparent, rgba(160, 240, 255, 0.55), transparent);
+                 transform: skewX(-20deg); }
+  .card.wrapline .glass { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                          row-gap: 8px; }
+  .card.big .glass { background: linear-gradient(135deg, rgba(30, 14, 70, 0.92) 0%, rgba(10, 40, 90, 0.92) 100%); }
+
+  /* ringed planet badge */
+  .planet { position: absolute; left: 0; top: 0; opacity: 0; }
+  .planet .orb { position: relative; width: 300px; height: 300px; }
+  .planet .ball { position: absolute; left: 30px; top: 30px; width: 240px; height: 240px; border-radius: 50%;
+                  background: radial-gradient(circle at 34% 28%, #9C8BFF 0%, #5A3FD8 38%, #2A1C86 70%, #140E45 100%);
+                  box-shadow: 0 0 40px 10px rgba(130, 100, 255, 0.55), inset -18px -24px 40px rgba(5, 0, 30, 0.6); }
+  .planet .ring { position: absolute; left: -40px; top: 0; width: 380px; height: 300px; overflow: visible; }
+  .planet .txt { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                 text-align: center; font-size: 62px; line-height: 1.02; color: #FFFFFF; z-index: 3; padding: 0 40px;
+                 text-shadow: 0 0 16px rgba(95, 244, 255, 0.95), 0 4px 0 #140E45; }
+  .planet .txt b { color: #5FF4FF; }
+  .planet .emo { position: absolute; right: -8px; top: -18px; font-size: 74px; z-index: 4; }
+
+  /* captions: white with a navy outline; the spoken word gets a glowing neon orbit capsule */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 26px; align-items: center; opacity: 0;
+         font-size: 74px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFFFFF;
+                  -webkit-text-stroke: 14px #10123A; paint-order: stroke fill; }
+  .cap .word.key .a { color: #C9B6FF; }
+  .cap .halo { position: absolute; z-index: 0; left: -18px; right: -18px; top: -12px; bottom: -14px;
+               border-radius: 999px; border: 5px solid #5FF4FF; background: rgba(16, 18, 58, 0.55);
+               box-shadow: 0 0 22px 6px rgba(95, 244, 255, 0.65), inset 0 0 14px rgba(95, 244, 255, 0.45);
+               opacity: 0; transform: scale(0.5); }
+
+  .star { position: absolute; opacity: 0; }
+  .warp { position: absolute; inset: 0; overflow: visible; }
+
+  /* progress: an orbit line that fills cyan, a little rocket rides it */
+  #orbit { position: absolute; height: 10px; }
+  #orbit .track, #orbit .fill { position: absolute; left: 0; right: 0; top: 3px; height: 4px; border-radius: 2px; }
+  #orbit .track { background: rgba(200, 210, 255, 0.35); }
+  #orbit .fill { background: linear-gradient(90deg, #A778FF, #5FF4FF); transform-origin: 0 50%;
+                 box-shadow: 0 0 12px rgba(95, 244, 255, 0.9); }
+  #orbit .rocket { position: absolute; top: -24px; left: -26px; font-size: 46px; transform: rotate(45deg); }
+  .tag { position: absolute; font-size: 42px; color: #FFFFFF; padding: 8px 24px 10px; border-radius: 999px;
+         background: rgba(16, 18, 58, 0.85); box-shadow: 0 0 0 4px #5FF4FF, 0 0 18px rgba(95, 244, 255, 0.7);
+         opacity: 0; }
+
+  /* end card: holo panel with an orbit ring and planets */
+  .endc { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+          align-items: center; gap: 24px; padding: 60px 52px 46px; border-radius: 46px;
+          background: linear-gradient(160deg, rgba(14, 18, 52, 0.92), rgba(44, 22, 92, 0.92));
+          box-shadow: 0 0 0 6px rgba(95, 244, 255, 0.95), 0 0 0 12px rgba(167, 120, 255, 0.5),
+                      0 0 44px 14px rgba(95, 244, 255, 0.4); }
+  .endc .orbits { position: absolute; inset: -60px; overflow: visible; }
+  .endc .row { position: relative; display: flex; align-items: center; gap: 14px; line-height: 1; white-space: nowrap; }
+  .endc .title { font-size: 72px; color: #FFFFFF; text-shadow: 0 0 16px rgba(190, 170, 255, 0.8); }
+  .endc .title b { color: #5FF4FF; text-shadow: 0 0 18px rgba(95, 244, 255, 0.9); }
+  .endc .sub { font-size: 42px; color: #E6E0FF; padding: 12px 30px 14px; border-radius: 999px;
+               background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 3px rgba(167, 120, 255, 0.8); }
+  .endc .cta { font-size: 50px; color: #10123A; padding: 16px 42px 18px; border-radius: 999px;
+               background: linear-gradient(90deg, #FFE45C, #FFC93C);
+               box-shadow: 0 0 22px 6px rgba(255, 220, 90, 0.6); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="46.920" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="46.920" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const STARC = ["#FFFFFF", "#5FF4FF", "#C9B6FF", "#FFE45C"];
+  let seed = 31;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the pillow's face when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 130 && f[0] < x + w + 130 && f[1] > y - 130 && f[1] < y + h + 130) c += 9000;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // 4-point star (svg)
+  function starSvg(size, color) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("width", size);
+    s.setAttribute("height", size);
+    s.setAttribute("viewBox", "-10 -10 20 20");
+    s.innerHTML = `<path d="M0,-10 C1,-2 2,-1 10,0 C2,1 1,2 0,10 C-1,2 -2,1 -10,0 C-2,-1 -1,-2 0,-10Z" fill="${color}"/>`;
+    s.style.filter = `drop-shadow(0 0 6px ${color})`;
+    return s;
+  }
+
+  // twinkling stars fly out of a spot and drift (zero-gravity)
+  function starBurst(x, y, t, n) {
+    for (let i = 0; i < (n || 10); i++) {
+      const sz = 22 + rnd() * 30;
+      const p = el("div", "star");
+      p.appendChild(starSvg(sz, STARC[i % STARC.length]));
+      p.style.left = (x - sz / 2) + "px";
+      p.style.top = (y - sz / 2) + "px";
+      const a = (i / (n || 10)) * Math.PI * 2 + rnd() * 0.5, d = 150 + rnd() * 130;
+      tl.fromTo(p, { opacity: 0, x: 0, y: 0, scale: 0.2, rotation: 0 },
+        { opacity: 1, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.8, scale: 1, rotation: 90,
+          duration: 0.7, ease: "power3.out" }, t);
+      tl.to(p, { opacity: 0, scale: 0.3, x: `+=${Math.cos(a) * 40}`, y: `+=${Math.sin(a) * 40 - 30}`,
+                 duration: 0.5, ease: "sine.in" }, t + 0.65);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "halo", s);
+      el("span", "a", s, w.w);
+      return s;
+    });
+    let fs = 74;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw + 30, ch + 34, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                        wy: 1.4, wx: 0.8, isCaption: true });
+    const px = p.x + 15, py = p.y + 14;
+    cap.style.left = px + "px";
+    cap.style.top = py + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x, p.y, p.x + cw + 30, p.y + ch + 34] });
+    C.placed = { x: px, y: py, w: cw, h: ch, clear: p.clear };
+    // fade in/out never overlap (short one-word chunks would otherwise leave a ghost caption on screen)
+    const fin = Math.min(0.2, (C.t1 - C.t0) * 0.4), tout = Math.max(C.t1 - 0.1, C.t0 + fin);
+    tl.fromTo(cap, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: fin, ease: "power3.out",
+                                            immediateRender: true }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], halo = s.querySelector(".halo");
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      const hin = Math.min(0.14, Math.max(0.04, off - w.s - 0.1));
+      tl.fromTo(halo, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: hin, ease: "back.out(2.2)" }, w.s);
+      const txt = s.querySelector(".a"), base = w.key ? "#C9B6FF" : "#FFFFFF";
+      tl.set(txt, { color: "#5FF4FF" }, w.s);
+      tl.fromTo(s, { y: 0 }, { y: -10, duration: 0.14, yoyo: true, repeat: 1, ease: "sine.out" }, w.s);
+      tl.fromTo(halo, { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.15, duration: 0.07,
+                                                  immediateRender: false }, Math.max(w.s + hin, off - 0.07));
+      tl.set(txt, { color: base }, Math.max(w.s + hin, off - 0.02));
+    });
+    tl.fromTo(cap, { opacity: 1 }, { opacity: 0, duration: 0.1, immediateRender: false }, tout);
+  }
+
+  // ------------------------------------------------------------ labels: holo panels / ringed planet
+  let flip = 1;
+  function card(L) {
+    if (L.kind === "planet") return planet(L);
+    const box = el("div", "card" + (L.big ? " big" : ""));
+    const glass = el("div", "glass", box);
+    const dots = el("div", "dots", glass);
+    const comet = el("div", "comet", glass);
+    const emo = el("span", "emo", glass, L.emoji);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", glass, w));
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 96 : 80, min: B ? 76 : 62 },
+      { wrap: true, maxw: 680, fs: B ? 88 : 74 },
+      { wrap: true, maxw: 560, fs: B ? 76 : 66 },
+      { wrap: true, maxw: 460, fs: B ? 64 : 56 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      glass.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      glass.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (glass.offsetWidth > MAXW && fs > c.min) { fs -= 2; glass.style.fontSize = fs + "px"; }
+        if (glass.offsetWidth > MAXW) continue;
+      } else {
+        while ((glass.offsetWidth > c.maxw || glass.offsetHeight > 320) && fs > 44) {
+          fs -= 2; glass.style.fontSize = fs + "px";
+        }
+      }
+      const w = glass.offsetWidth, h = glass.offsetHeight;
+      // +36 px all round for the neon rim + glow
+      const p = place(w + 36, h + 36, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                        wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    glass.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    glass.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x, y: p.y, w: w + 36, h: h + 36, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    // tiny stars sprinkled inside the glass
+    for (let i = 0; i < Math.round(w / 70); i++) {
+      const d = el("div", "", dots);
+      const sz = 3 + rnd() * 4;
+      d.style.cssText = `position:absolute;left:${rnd() * w}px;top:${rnd() * h}px;width:${sz}px;height:${sz}px;` +
+                        `border-radius:50%;background:#fff;opacity:${0.35 + rnd() * 0.5}`;
+    }
+    box.style.left = (p.x + 18) + "px";
+    box.style.top = (p.y + 18) + "px";
+    const rot = 1.5 * flip; flip = -flip;
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { y: 90, scale: 0.7, rotation: -6 * flip, filter: "blur(14px)", opacity: 0 },
+      { y: 0, scale: 1, rotation: rot, filter: "blur(0px)", opacity: 1, duration: 0.6, ease: "power3.out" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.06, ease: "power2.out" },
+      L.t0 + 0.12);
+    tl.fromTo(emo, { scale: 0, rotation: -90 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.6)" },
+      L.t0 + 0.15);
+    tl.fromTo(comet, { x: -160 }, { x: w + 160, duration: 0.7, ease: "power1.inOut" }, L.t0 + 0.2);
+    const hold = L.t1 - L.t0;
+    if (hold > 1.0) {                                       // zero-gravity float while it is on screen
+      tl.to(box, { y: -10, duration: Math.min(1.2, hold / 2), yoyo: true, repeat: 1, ease: "sine.inOut" },
+        L.t0 + 0.6);
+    }
+    if (L.big) starBurst(p.x + w / 2 + 18, p.y + h / 2 + 18, L.t0 + 0.1, 12);
+    tl.fromTo(box, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.85, y: "-=40", duration: 0.18, ease: "power2.in",
+                                              immediateRender: false }, Math.max(L.t0 + 0.4, L.t1 - 0.18));
+  }
+
+  function planet(L) {
+    const box = el("div", "planet");
+    const orb = el("div", "orb", box);
+    const ring = document.createElementNS(NS, "svg");
+    ring.setAttribute("class", "ring");
+    ring.setAttribute("viewBox", "-190 -150 380 300");
+    ring.innerHTML =
+      `<ellipse cx="0" cy="0" rx="178" ry="46" fill="none" stroke="#5FF4FF" stroke-width="10" ` +
+      `transform="rotate(-16)" style="filter:drop-shadow(0 0 8px #5FF4FF)"/>` +
+      `<ellipse cx="0" cy="0" rx="160" ry="38" fill="none" stroke="#C9B6FF" stroke-width="4" transform="rotate(-16)"/>`;
+    const back = ring.cloneNode(true);                      // back half of the ring sits behind the ball
+    back.style.clipPath = "inset(0 0 52% 0)";
+    ring.style.clipPath = "inset(48% 0 0 0)";
+    orb.appendChild(back);
+    el("div", "ball", orb);
+    orb.appendChild(ring);
+    const txt = el("div", "txt", orb, L.html);
+    const emo = el("span", "emo", box, L.emoji);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                     // shrink the badge before letting it touch anything
+      const q = place(340 * zz, 300 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    p = { x: p.x / z, y: p.y / z, c: p.c, clear: p.clear };   // zoom scales the left/top offsets too
+    L.placed = { x: p.x * z, y: p.y * z, w: 340 * z, h: 300 * z, clear: p.clear, zoom: z };
+    box.style.left = (p.x + 20) + "px";
+    box.style.top = p.y + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(orb, { scale: 0.1, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.7, ease: "back.out(1.8)" },
+      L.t0);
+    tl.fromTo(txt, { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.5)" },
+      L.t0 + 0.25);
+    tl.fromTo(emo, { scale: 0, y: 30 }, { scale: 1, y: 0, duration: 0.4, ease: "back.out(2.5)" }, L.t0 + 0.35);
+    tl.to(orb, { rotation: 6, duration: Math.max(0.6, L.t1 - L.t0 - 0.8), ease: "sine.inOut" }, L.t0 + 0.7);
+    starBurst((p.x + 190) * z, (p.y + 150) * z, L.t0 + 0.1, 12);
+    tl.fromTo(box, { scale: 1, opacity: 1 }, { scale: 0.5, opacity: 0, duration: 0.16, ease: "power2.in",
+      transformOrigin: "50% 50%", immediateRender: false }, Math.max(L.t0 + 0.4, L.t1 - 0.16));
+  }
+
+  // ------------------------------------------------------------ hyperspace warp transition
+  function warp(W) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "warp");
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    let inner = `<rect x="0" y="0" width="1080" height="1920" fill="#0B0D2E"/>`;
+    for (let i = 0; i < 90; i++) {                          // star streaks radiating from the centre
+      const a = rnd() * Math.PI * 2, r0 = 60 + rnd() * 300, r1 = r0 + 300 + rnd() * 900;
+      const c = STARC[i % STARC.length], wdt = 3 + rnd() * 6;
+      inner += `<line x1="${540 + Math.cos(a) * r0}" y1="${960 + Math.sin(a) * r0}" ` +
+               `x2="${540 + Math.cos(a) * r1}" y2="${960 + Math.sin(a) * r1}" stroke="${c}" ` +
+               `stroke-width="${wdt}" stroke-linecap="round" opacity="${0.5 + rnd() * 0.5}"/>`;
+    }
+    inner += `<circle cx="540" cy="960" r="140" fill="#5FF4FF" opacity="0.55" style="filter:blur(40px)"/>`;
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    tl.fromTo(s, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" },
+      { opacity: 1, scale: 1.1, duration: 0.3, ease: "power2.in" }, W.t - 0.3);
+    tl.to(s, { opacity: 0, scale: 2.2, duration: 0.32, ease: "power2.out" }, W.t + 0.02);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 40) + "px";
+    tl.fromTo(g, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out" }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: holo panel in orbit, face-aware
+  function endcard(N) {
+    const b = el("div", "endc");
+    const rows = [
+      el("div", "row title", b, N.title),
+      el("div", "row sub", b, N.sizes),
+      el("div", "row cta", b, N.cta),
+    ];
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const orbits = document.createElementNS(NS, "svg");
+    orbits.setAttribute("class", "orbits");
+    orbits.setAttribute("width", w + 120);
+    orbits.setAttribute("height", h + 120);
+    const cx = (w + 120) / 2, cy = (h + 120) / 2;
+    orbits.innerHTML =
+      `<ellipse cx="${cx}" cy="${cy}" rx="${w / 2 + 50}" ry="${h / 2 + 40}" fill="none" stroke="#5FF4FF" ` +
+      `stroke-width="3" stroke-dasharray="10 14" opacity="0.8"/>` +
+      `<circle class="moon" cx="${cx + w / 2 + 50}" cy="${cy}" r="18" fill="#FFE45C" ` +
+      `style="filter:drop-shadow(0 0 10px #FFE45C)"/>`;
+    b.insertBefore(orbits, b.firstChild);
+    const p = place(w + 120, h + 120, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1150,
+                                        wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x + 60, y: p.y + 60, w, h, clear: p.clear };
+    b.style.left = (p.x + 60) + "px";
+    b.style.top = (p.y + 60) + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { y: 120, scale: 0.75, filter: "blur(16px)" },
+      { y: 0, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "power3.out" }, N.t0);
+    tl.fromTo(orbits, { rotation: -25, opacity: 0, transformOrigin: "50% 50%" },
+      { rotation: 0, opacity: 1, duration: 1.2, ease: "sine.out" }, N.t0 + 0.15);
+    rows.forEach((d, i) => {
+      tl.fromTo(d, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+        N.t0 + 0.2 + i * 0.15);
+    });
+    tl.to(rows[2], { scale: 1.07, duration: 0.45, yoyo: true, repeat: 5, ease: "sine.inOut" }, N.t0 + 0.8);
+    starBurst(p.x + 60 + w / 2, p.y + 90, N.t0 + 0.2, 14);
+  }
+
+  function progress() {
+    const v = el("div", "", fx);
+    v.id = "orbit";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 6) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    el("div", "track", v);
+    const f = el("div", "fill", v);
+    const k = el("div", "rocket", v, "🚀");
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(card);
+    E.tags.forEach(tag);
+    E.wipes.forEach(warp);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>
