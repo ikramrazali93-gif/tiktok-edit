@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal selimut beruang strawberry, "Kedai kek strawberry" (bakery) look: cream frosting cards with dripping
+     pink icing, sprinkles, strawberry slices, piped-cream borders, sweet bouncy easing. The cut video (base.mp4),
+     timings and her head boxes come from edit.py via data.js; this file draws, animates and places every graphic
+     where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* frosting card: cream sponge card, pink icing dripping over the top edge, sprinkles on the icing */
+  .card { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 0%; }
+  .card .cake { position: relative; display: flex; align-items: center; gap: 18px; white-space: nowrap;
+                padding: 46px 46px 24px; color: #5A2E2A; font-size: 82px; line-height: 1; letter-spacing: 1px;
+                background: linear-gradient(180deg, #FFF8EF 0%, #FFEBDD 100%);
+                border-radius: 34px; border: 6px solid #5A2E2A;
+                box-shadow: 0 9px 0 #5A2E2A, 0 18px 26px rgba(90, 46, 42, 0.30); }
+  .card .cake b { color: #F0436E; font-weight: 700; }
+  .card .icing { position: absolute; left: -6px; top: -6px; overflow: visible; }
+  .card .emo { display: inline-block; font-size: 0.95em; }
+  .card .w { display: inline-block; position: relative; z-index: 2; }
+  .card .emo { position: relative; z-index: 2; }
+  .card.wrapline .cake { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                         row-gap: 6px; }
+
+  /* macaron badge (2 IN 1 ...) */
+  .mac { position: absolute; left: 0; top: 0; opacity: 0; }
+  .mac .shell { position: relative; width: 300px; height: 250px; }
+  .mac .top, .mac .bot { position: absolute; left: 0; width: 300px; height: 112px; border-radius: 150px / 56px;
+                         background: linear-gradient(180deg, #FF9FBE, #FF6F98); border: 7px solid #5A2E2A; }
+  .mac .top { top: 0; }
+  .mac .bot { bottom: 0; }
+  .mac .fill { position: absolute; left: 14px; right: 14px; top: 98px; height: 54px; border-radius: 27px;
+               background: #FFF6EC; border: 6px solid #5A2E2A; }
+  .mac .txt { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+              gap: 10px; font-size: 64px; color: #FFF6EC; -webkit-text-stroke: 11px #5A2E2A;
+              paint-order: stroke fill; z-index: 3; }
+  .mac .txt b { color: #FFF6EC; }
+  .mac .emo { position: absolute; right: -20px; top: -26px; font-size: 76px; z-index: 4; }
+
+  /* captions: cream letters with chocolate outline; the spoken word sits on a pink frosting blob */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 26px; align-items: center; opacity: 0;
+         font-size: 76px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFF8EF;
+                  -webkit-text-stroke: 15px #5A2E2A; paint-order: stroke fill; }
+  .cap .word.key .a { color: #FFC2D4; }
+  .cap .blob { position: absolute; z-index: 0; left: -18px; right: -18px; top: -12px; bottom: -14px;
+               border-radius: 999px; background: linear-gradient(180deg, #FF8FB1, #F0436E);
+               border: 6px solid #5A2E2A; box-shadow: 0 6px 0 #5A2E2A; opacity: 0; transform: scale(0.4); }
+  .cap .blob::after { content: ""; position: absolute; left: 18%; top: 14%; width: 26%; height: 22%;
+                      border-radius: 999px; background: rgba(255, 255, 255, 0.55); }
+
+  .drip { position: absolute; inset: 0; overflow: visible; }
+  .sprk { position: absolute; width: 30px; height: 11px; border-radius: 6px; opacity: 0; }
+
+  /* progress: piped cream beads filling pink, a strawberry leads */
+  #beads { position: absolute; height: 18px; }
+  #beads .track, #beads .fill { position: absolute; inset: 0; border-radius: 9px; }
+  #beads .track { background: radial-gradient(circle at 9px 9px, rgba(255, 248, 239, 0.75) 7px, transparent 8px) 0 0 / 22px 18px repeat-x; }
+  #beads .fill { background: radial-gradient(circle at 9px 9px, #FF6F98 7px, transparent 8px) 0 0 / 22px 18px repeat-x;
+                 transform-origin: 0 50%; }
+  #beads .berry { position: absolute; top: -26px; left: -26px; font-size: 52px; }
+  .tag { position: absolute; font-size: 42px; color: #FFF8EF; padding: 8px 22px 10px; border-radius: 999px;
+         background: #F0436E; border: 5px solid #5A2E2A; opacity: 0;
+         -webkit-text-stroke: 8px #5A2E2A; paint-order: stroke fill; }
+
+  /* end card: bakery menu card with a piped scallop border */
+  .menu { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+          align-items: center; gap: 24px; padding: 64px 50px 44px; border-radius: 44px;
+          background: linear-gradient(180deg, #FFF8EF, #FFE6EE); border: 7px solid #5A2E2A;
+          box-shadow: 0 10px 0 #5A2E2A, 0 20px 30px rgba(90, 46, 42, 0.3); }
+  .menu .pipe { position: absolute; inset: -22px; overflow: visible; }
+  .menu .row { display: flex; align-items: center; gap: 14px; line-height: 1; white-space: nowrap; }
+  .menu .title { font-size: 70px; color: #5A2E2A; }
+  .menu .title b { color: #F0436E; }
+  .menu .sub { font-size: 44px; color: #5A2E2A; padding: 12px 30px 14px; border-radius: 999px; background: #FFE0E9;
+               border: 5px solid #5A2E2A; }
+  .menu .cta { font-size: 50px; color: #FFF8EF; padding: 16px 40px 18px; border-radius: 999px; background: #F0436E;
+               border: 6px solid #5A2E2A; box-shadow: 0 7px 0 #5A2E2A; -webkit-text-stroke: 8px #5A2E2A;
+               paint-order: stroke fill; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="40.700" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="40.700" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const SPRINKLES = ["#FF6F98", "#FFD54F", "#7ED6C6", "#9FA8FF", "#FFFFFF", "#FF9F6E"];
+  let seed = 23;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the pillow's face when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 130 && f[0] < x + w + 130 && f[1] > y - 130 && f[1] < y + h + 130) c += 9000;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // pink icing with drips, sized to a card (svg path, top edge flat, bottom edge wavy with long drips)
+  function icingSvg(w, color, depth) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "icing");
+    s.setAttribute("width", w + 12);
+    s.setAttribute("height", depth + 60);
+    s.setAttribute("viewBox", `0 0 ${w + 12} ${depth + 60}`);
+    const n = Math.max(4, Math.round(w / 90));
+    let d = `M0,30 Q0,0 30,0 L${w - 18},0 Q${w + 12},0 ${w + 12},30 L${w + 12},${depth}`;
+    for (let i = n; i > 0; i--) {
+      const xa = (w + 12) * i / n, xb = (w + 12) * (i - 1) / n, xm = (xa + xb) / 2;
+      const long = (i % 2 === 0) ? 26 + rnd() * 26 : 6 + rnd() * 8;
+      d += ` C${xa - 8},${depth + long + 10} ${xm + 14},${depth + long + 14} ${xm},${depth + long}`;
+      d += ` C${xm - 14},${depth + long + 14} ${xb + 8},${depth + long + 10} ${xb},${depth}`;
+    }
+    d += " Z";
+    let inner = `<path d="${d}" fill="${color}" stroke="#5A2E2A" stroke-width="6" stroke-linejoin="round"/>` +
+                `<path d="M30,14 L${w * 0.55},14" stroke="rgba(255,255,255,0.55)" stroke-width="8" stroke-linecap="round"/>`;
+    for (let i = 0; i < Math.round(w / 34); i++) {     // sprinkles on the icing
+      const x = 24 + rnd() * (w - 36), y = 10 + rnd() * (depth - 18), a = rnd() * 180;
+      inner += `<rect x="${x}" y="${y}" width="18" height="6" rx="3" fill="${SPRINKLES[i % SPRINKLES.length]}" ` +
+               `transform="rotate(${a} ${x + 9} ${y + 3})"/>`;
+    }
+    s.innerHTML = inner;
+    return s;
+  }
+
+  // sprinkles + strawberry slices burst out of a spot
+  function sprinkleBurst(x, y, t, n) {
+    for (let i = 0; i < (n || 12); i++) {
+      const isBerry = i % 6 === 0;
+      const p = isBerry ? el("div", "", fx, "🍓") : el("div", "sprk", fx);
+      if (isBerry) p.style.cssText = "position:absolute;font-size:46px;opacity:0";
+      else p.style.background = SPRINKLES[i % SPRINKLES.length];
+      p.style.left = (x - 15) + "px";
+      p.style.top = (y - 6) + "px";
+      const a = (i / (n || 12)) * Math.PI * 2 + rnd() * 0.4, d = 140 + rnd() * 120;
+      tl.fromTo(p, { opacity: 0, x: 0, y: 0, rotation: rnd() * 180, scale: 0.4 },
+        { opacity: 1, x: Math.cos(a) * d, y: Math.sin(a) * d * 0.75, rotation: 220 + rnd() * 200, scale: 1,
+          duration: 0.6, ease: "power2.out" }, t);
+      tl.to(p, { opacity: 0, y: "+=70", duration: 0.35, ease: "power1.in" }, t + 0.55);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "blob", s);
+      el("span", "a", s, w.w);
+      return s;
+    });
+    let fs = 76;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw + 30, ch + 34, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                        wy: 1.4, wx: 0.8, isCaption: true });
+    const px = p.x + 15, py = p.y + 14;
+    cap.style.left = px + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x, p.y, p.x + cw + 30, p.y + ch + 34] });
+    C.placed = { x: px, y: py, w: cw, h: ch, clear: p.clear };
+    // fade in/out never overlap (short one-word chunks would otherwise leave a ghost caption on screen)
+    const fin = Math.min(0.18, (C.t1 - C.t0) * 0.4), tout = Math.max(C.t1 - 0.1, C.t0 + fin);
+    cap.style.top = py + "px";
+    tl.fromTo(cap, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: fin, ease: "back.out(2.2)",
+                                            immediateRender: true }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], blob = s.querySelector(".blob");
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      const bin = Math.min(0.14, Math.max(0.04, off - w.s - 0.1));
+      tl.fromTo(blob, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: bin, ease: "back.out(3)" }, w.s);
+      tl.fromTo(s, { y: 0 }, { y: -8, duration: 0.1, yoyo: true, repeat: 1, ease: "power1.out" }, w.s);
+      tl.fromTo(blob, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.5, duration: 0.06,
+                                                   immediateRender: false }, Math.max(w.s + bin, off - 0.06));
+    });
+    tl.fromTo(cap, { opacity: 1 }, { opacity: 0, duration: 0.1, immediateRender: false }, tout);
+  }
+
+  // ------------------------------------------------------------ labels: frosting cards / macaron badge
+  let flip = 1;
+  function card(L) {
+    if (L.kind === "macaron") return macaron(L);
+    const box = el("div", "card");
+    const cake = el("div", "cake", box);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", cake, w));
+    const emo = el("span", "emo", cake, L.emoji);
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 100 : 82, min: B ? 78 : 64 },
+      { wrap: true, maxw: 680, fs: B ? 90 : 76 },
+      { wrap: true, maxw: 560, fs: B ? 78 : 68 },
+      { wrap: true, maxw: 460, fs: B ? 66 : 58 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      cake.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      cake.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (cake.offsetWidth > MAXW && fs > c.min) { fs -= 2; cake.style.fontSize = fs + "px"; }
+        if (cake.offsetWidth > MAXW) continue;
+      } else {
+        while ((cake.offsetWidth > c.maxw || cake.offsetHeight > 320) && fs > 44) {
+          fs -= 2; cake.style.fontSize = fs + "px";
+        }
+      }
+      const w = cake.offsetWidth, h = cake.offsetHeight;
+      const p = place(w + 12, h + 60, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                        wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    cake.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    cake.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x, y: p.y, w: w + 12, h: h + 60, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    const ic = icingSvg(w, B ? "#FF6F98" : "#FF8FB1", 30);
+    cake.insertBefore(ic, cake.firstChild);
+    box.style.left = (p.x + 6) + "px";
+    box.style.top = (p.y + 6) + "px";
+    const rot = 2 * flip; flip = -flip;
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scaleX: 1.25, scaleY: 0.55, y: -60, rotation: 0 },
+      { scaleX: 1, scaleY: 1, y: 0, rotation: rot, duration: 0.7, ease: "elastic.out(1, 0.5)" }, L.t0);
+    tl.fromTo(ic, { scaleY: 0.2, transformOrigin: "50% 0%" }, { scaleY: 1, duration: 0.5, ease: "back.out(2)" },
+      L.t0 + 0.08);
+    tl.fromTo(ws, { opacity: 0, y: 16, scale: 0.8 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.22, stagger: 0.05, ease: "back.out(2.4)" }, L.t0 + 0.1);
+    tl.fromTo(emo, { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(3)" },
+      L.t0 + 0.18);
+    tl.to(emo, { rotation: 10, duration: 0.5, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.5) - 1),
+                 ease: "sine.inOut" }, L.t0 + 0.6);
+    if (L.big) sprinkleBurst(p.x + w / 2, p.y + h / 2 + 20, L.t0 + 0.1, 14);
+    tl.fromTo(box, { scale: 1, opacity: 1 }, { scale: 0.6, opacity: 0, duration: 0.16, ease: "power2.in",
+                                              immediateRender: false }, Math.max(L.t0 + 0.4, L.t1 - 0.16));
+  }
+
+  function macaron(L) {
+    const box = el("div", "mac");
+    const shell = el("div", "shell", box);
+    el("div", "top", shell);
+    el("div", "fill", shell);
+    el("div", "bot", shell);
+    const txt = el("div", "txt", shell, L.html);
+    const emo = el("span", "emo", box, L.emoji);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                 // shrink the badge before letting it touch anything
+      const q = place(300 * zz, 262 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y + 60, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    p = { x: p.x / z, y: p.y / z, c: p.c, clear: p.clear };   // zoom scales the left/top offsets too
+    L.placed = { x: p.x * z, y: p.y * z, w: 300 * z, h: 262 * z, clear: p.clear, zoom: z };
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(shell, { scale: 0.1, rotation: -30 }, { scale: 1, rotation: -4, duration: 0.6, ease: "back.out(2)" },
+      L.t0);
+    tl.fromTo(txt, { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(3)" },
+      L.t0 + 0.22);
+    tl.fromTo(emo, { scale: 0, y: 20 }, { scale: 1, y: 0, duration: 0.35, ease: "back.out(3)" }, L.t0 + 0.32);
+    sprinkleBurst((p.x + 150) * z, (p.y + 130) * z, L.t0 + 0.12, 12);
+    tl.fromTo(box, { scale: 1, opacity: 1 }, { scale: 0.5, opacity: 0, duration: 0.15, ease: "power2.in",
+      transformOrigin: "50% 50%", immediateRender: false }, Math.max(L.t0 + 0.4, L.t1 - 0.15));
+  }
+
+  // ------------------------------------------------------------ icing-pour transition
+  function pour(W) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "drip");
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    s.setAttribute("preserveAspectRatio", "none");
+    let d = "M0,0 L1080,0 L1080,1700";
+    const n = 9;
+    for (let i = n; i > 0; i--) {
+      const xa = 1080 * i / n, xb = 1080 * (i - 1) / n, xm = (xa + xb) / 2, long = 120 + rnd() * 160;
+      d += ` C${xa - 20},${1700 + long + 30} ${xm + 30},${1700 + long + 40} ${xm},${1700 + long}`;
+      d += ` C${xm - 30},${1700 + long + 40} ${xb + 20},${1700 + long + 30} ${xb},1700`;
+    }
+    d += " Z";
+    let inner = `<path d="${d}" fill="#FF8FB1" stroke="#5A2E2A" stroke-width="10"/>`;
+    for (let i = 0; i < 70; i++) {
+      const x = rnd() * 1080, y = rnd() * 1650, a = rnd() * 180;
+      inner += `<rect x="${x}" y="${y}" width="40" height="13" rx="6" fill="${SPRINKLES[i % SPRINKLES.length]}" ` +
+               `transform="rotate(${a} ${x + 20} ${y + 6})"/>`;
+    }
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    tl.fromTo(s, { y: -2200 }, { y: 0, duration: 0.32, ease: "power2.in" }, W.t - 0.32);
+    tl.to(s, { y: 2200, duration: 0.34, ease: "power2.in" }, W.t + 0.02);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 40) + "px";
+    tl.fromTo(g, { opacity: 0, rotation: -12 }, { opacity: 1, rotation: -3, duration: 0.2, ease: "back.out(3)" },
+      T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: bakery menu card, face-aware
+  function endcard(N) {
+    const b = el("div", "menu");
+    const rows = [
+      el("div", "row title", b, N.title),
+      el("div", "row sub", b, N.sizes),
+      el("div", "row cta", b, N.cta),
+    ];
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const pipe = document.createElementNS(NS, "svg");
+    pipe.setAttribute("class", "pipe");
+    pipe.setAttribute("width", w + 44);
+    pipe.setAttribute("height", h + 44);
+    let beads = "";
+    const per = 2 * (w + h), step = 46, n = Math.round(per / step);
+    for (let i = 0; i < n; i++) {                       // piped cream beads around the card
+      let d = i * per / n, x, y;
+      if (d < w) { x = d; y = 0; } else if ((d -= w) < h) { x = w; y = d; }
+      else if ((d -= h) < w) { x = w - d; y = h; } else { x = 0; y = h - (d - w); }
+      beads += `<circle cx="${x + 22}" cy="${y + 22}" r="17" fill="${i % 2 ? '#FFF8EF' : '#FF8FB1'}" stroke="#5A2E2A" stroke-width="5"/>`;
+    }
+    pipe.innerHTML = beads;
+    b.insertBefore(pipe, b.firstChild);
+    const p = place(w + 44, h + 44, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1150,
+                                      wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x + 22, y: p.y + 22, w, h, clear: p.clear };
+    b.style.left = (p.x + 22) + "px";
+    b.style.top = (p.y + 22) + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { scaleX: 1.3, scaleY: 0.5, y: -80 }, { scaleX: 1, scaleY: 1, y: 0, duration: 0.7,
+                                                        ease: "elastic.out(1, 0.5)" }, N.t0);
+    tl.fromTo(pipe.querySelectorAll("circle"), { scale: 0, transformOrigin: "50% 50%" },
+      { scale: 1, duration: 0.2, stagger: 0.012, ease: "back.out(3)" }, N.t0 + 0.15);
+    rows.forEach((d, i) => {
+      tl.fromTo(d, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "back.out(2.5)" },
+        N.t0 + 0.2 + i * 0.14);
+    });
+    tl.to(rows[2], { scale: 1.07, duration: 0.45, yoyo: true, repeat: 5, ease: "sine.inOut" }, N.t0 + 0.8);
+    sprinkleBurst(p.x + w / 2, p.y + 40, N.t0 + 0.2, 16);
+  }
+
+  function progress() {
+    const v = el("div", "", fx);
+    v.id = "beads";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 4) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    el("div", "track", v);
+    const f = el("div", "fill", v);
+    const k = el("div", "berry", v, "🍓");
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(card);
+    E.tags.forEach(tag);
+    E.wipes.forEach(pour);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

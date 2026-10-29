@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for the bantal selimut beruang strawberry, "Kedai kek strawberry" look: piped-cream frame,
+     a dripping-icing title card in the tree band above her hood, and a frosting sticker that sits on the pillow's
+     printed band (so the printed character name never shows). Her face stays clear.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FFE6EE; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 137.6s; rows 0-1536 are shown (trees above her hood) */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #frame { position: absolute; inset: 0; }
+  .card { position: absolute; display: flex; align-items: center; justify-content: center; gap: 16px;
+          white-space: nowrap; line-height: 1; color: #5A2E2A; border: 7px solid #5A2E2A; border-radius: 36px;
+          background: linear-gradient(180deg, #FFF8EF 0%, #FFEBDD 100%);
+          box-shadow: 0 10px 0 #5A2E2A, 0 20px 30px rgba(90, 46, 42, 0.35); }
+  .card b { color: #F0436E; font-weight: 700; }
+  .card svg { position: absolute; left: -7px; top: -7px; overflow: visible; }
+  .card .t { position: relative; z-index: 2; }
+  #title { left: 50%; top: 66px; font-size: 96px; padding: 58px 54px 30px; }
+  #pill { position: absolute; left: 50%; top: 300px; font-size: 44px; line-height: 1; white-space: nowrap;
+          padding: 12px 32px 14px; border-radius: 999px; color: #FFF8EF; background: #F0436E;
+          border: 6px solid #5A2E2A; box-shadow: 0 8px 0 #5A2E2A;
+          -webkit-text-stroke: 8px #5A2E2A; paint-order: stroke fill; }
+  #sticker { left: 372px; top: 972px; font-size: 66px; padding: 56px 52px 40px; transform: rotate(-6deg); }
+  #burst { position: absolute; left: 70px; top: 1150px; width: 250px; height: 250px; }
+  #burst svg { position: absolute; inset: 0; }
+  #burst .in { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+               justify-content: center; line-height: 0.95; font-size: 50px; color: #FFF8EF;
+               -webkit-text-stroke: 9px #5A2E2A; paint-order: stroke fill; transform: rotate(-10deg); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="frame" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="card"><span class="t">BANTAL + <b>SELIMUT</b> 🍓</span></div>
+  <div id="pill">🎀 2 IN 1 • PINK LOVER WAJIB ADA</div>
+  <div id="sticker" class="card"><span class="t">GEBU & <b>LEMBUT</b> ☁️</span></div>
+  <div id="burst"><svg viewBox="0 0 250 250"></svg><div class="in"><span>2 IN 1</span><span style="font-size:38px">SELIMUT</span></div></div>
+</div>
+<script>
+  const SPR = ["#FF6F98", "#FFD54F", "#7ED6C6", "#9FA8FF", "#FFFFFF", "#FF9F6E"];
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  // piped cream border: a ring of beads around the photo
+  let s = "";
+  const bead = (x, y, i) => `<circle cx="${x}" cy="${y}" r="20" fill="${i % 2 ? '#FFF8EF' : '#FF8FB1'}" stroke="#5A2E2A" stroke-width="5"/>`;
+  let i = 0;
+  for (let x = 24; x <= 1056; x += 44) { s += bead(x, 24, i++); s += bead(x, 1512, i++); }
+  for (let y = 68; y <= 1468; y += 44) { s += bead(24, y, i++); s += bead(1056, y, i++); }
+  document.getElementById("frame").innerHTML = s;
+  // starburst "2 IN 1" badge on the blanket, bottom-left
+  let b = "", pts = [];
+  for (let k = 0; k < 24; k++) {
+    const a = k / 24 * Math.PI * 2, r = k % 2 ? 98 : 122;
+    pts.push(`${125 + Math.cos(a) * r},${125 + Math.sin(a) * r}`);
+  }
+  b += `<polygon points="${pts.join(" ")}" fill="#F0436E" stroke="#5A2E2A" stroke-width="8" stroke-linejoin="round"/>`;
+  for (let k = 0; k < 10; k++) {
+    const x = 50 + rnd() * 150, y = 50 + rnd() * 150, a = rnd() * 180;
+    b += `<rect x="${x}" y="${y}" width="22" height="7" rx="3" fill="${SPR[k % SPR.length]}" opacity="0.9" ` +
+         `transform="rotate(${a} ${x + 11} ${y + 3})"/>`;
+  }
+  document.querySelector("#burst svg").innerHTML = b;
+  // dripping icing on top of a card
+  function icing(card, color) {
+    const w = card.offsetWidth - 14 + 14, depth = 34, NS = "http://www.w3.org/2000/svg";
+    const sv = document.createElementNS(NS, "svg");
+    sv.setAttribute("width", w); sv.setAttribute("height", depth + 60);
+    const n = Math.max(4, Math.round(w / 90));
+    let d = `M0,30 Q0,0 30,0 L${w - 30},0 Q${w},0 ${w},30 L${w},${depth}`;
+    for (let k = n; k > 0; k--) {
+      const xa = w * k / n, xb = w * (k - 1) / n, xm = (xa + xb) / 2, long = k % 2 ? 8 + rnd() * 8 : 26 + rnd() * 24;
+      d += ` C${xa - 8},${depth + long + 10} ${xm + 14},${depth + long + 14} ${xm},${depth + long}`;
+      d += ` C${xm - 14},${depth + long + 14} ${xb + 8},${depth + long + 10} ${xb},${depth}`;
+    }
+    let inner2 = `<path d="${d} Z" fill="${color}" stroke="#5A2E2A" stroke-width="6" stroke-linejoin="round"/>`;
+    for (let k = 0; k < Math.round(w / 34); k++) {
+      const x = 24 + rnd() * (w - 48), y = 10 + rnd() * (depth - 16), a = rnd() * 180;
+      inner2 += `<rect x="${x}" y="${y}" width="18" height="6" rx="3" fill="${SPR[k % SPR.length]}" transform="rotate(${a} ${x + 9} ${y + 3})"/>`;
+    }
+    sv.innerHTML = inner2;
+    card.insertBefore(sv, card.firstChild);
+  }
+  document.fonts.load('700 96px "Fredoka"').then(() => {
+    for (const id of ["title", "pill"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 960) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+    }
+    icing(document.getElementById("title"), "#FF6F98");
+    icing(document.getElementById("sticker"), "#FF8FB1");
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 1 });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
