@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for bantal peluk unicorn, video 2, "Minimal editorial bersih" look: full-bleed photo with a thin
+     cream frame line, a letter-spaced kicker in the tree band (top left, clear of her hood) and a cream editorial card
+     on her coat (lower right, clear of her face and the bolster). Key text stays inside the 3:4 crop.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Medium.otf") format("opentype"); font-weight: 500; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-SemiBold.otf") format("opentype"); font-weight: 600; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Bold.otf") format("opentype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FBF7F1; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden;
+          font-family: "Inter Display", "Noto Color Emoji", sans-serif; color: #24212A; }
+  /* frame.jpg is the 1080x1920 frame at 4.2s (bolster upright on the left, her face upper middle);
+     shifted up 110px so the whole bolster stays in */
+  #photo { position: absolute; left: 0; top: -110px; width: 1080px; height: 1920px; }
+  #line { position: absolute; inset: 34px; border: 3px solid rgba(255, 253, 249, 0.92); }
+  #kick { position: absolute; left: 76px; top: 92px; display: flex; align-items: center; gap: 18px;
+          font-weight: 500; font-size: 30px; letter-spacing: 7px; text-transform: uppercase; color: #FFFDF9;
+          text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45); }
+  #kick .rule { width: 60px; height: 3px; background: #FFFDF9; }
+  #card { position: absolute; right: 56px; top: 1040px; width: 540px; background: #FFFDF9; border-radius: 8px;
+          padding: 40px 44px 44px 46px; box-shadow: 0 30px 70px rgba(36, 18, 40, 0.32); }
+  #card .bar { position: absolute; left: 0; top: 0; bottom: 0; width: 9px; background: #E5578C; border-radius: 8px 0 0 8px; }
+  #card .k { font-weight: 500; font-size: 26px; letter-spacing: 6px; text-transform: uppercase; color: #E5578C; }
+  #card .t { margin-top: 16px; font-weight: 600; font-size: 66px; white-space: nowrap; line-height: 1.02; letter-spacing: -1.5px; }
+  #card .t b { font-weight: 700; color: #E5578C; }
+  #card .r { margin: 22px 0 16px; width: 70px; height: 3px; background: #E5578C; }
+  #card .s { font-weight: 500; font-size: 29px; color: #6E6772; white-space: nowrap; }
+  /* her face sits around x 430-810, y 210-700 in this layout: nothing is placed there */
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <div id="line"></div>
+  <div id="kick"><span>No. 02</span><span class="rule"></span><span>Bantal golek</span></div>
+  <div id="card">
+    <div class="bar"></div>
+    <div class="k">Teman tidur</div>
+    <div class="t">Teman dakap<br><b>malam-malam.</b></div>
+    <div class="r"></div>
+    <div class="s">Panjang · Macam-macam corak</div>
+  </div>
+</div>
+<script>
+  Promise.all([document.fonts.load('500 30px "Inter Display"'), document.fonts.load('600 78px "Inter Display"'),
+               document.fonts.load('700 78px "Inter Display"')]).then(() => {
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>

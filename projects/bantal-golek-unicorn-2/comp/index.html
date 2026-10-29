@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal peluk unicorn, video 2 (IMG_3180), "Minimal editorial bersih" look: cream paper cards with a small
+     letter-spaced kicker, a thin blush rule and a headline in Inter Display; captions on a soft cream strip with a
+     thin underline that glides to the spoken word; a cream page-turn wipe; a hairline progress bar.
+     The cut video (base.mp4), timings and her head boxes come from edit.py via data.js; this file draws,
+     animates and places every graphic where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Medium.otf") format("opentype"); font-weight: 500; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-SemiBold.otf") format("opentype"); font-weight: 600; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Bold.otf") format("opentype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden;
+          font-family: "Inter Display", "Noto Color Emoji", sans-serif; color: #24212A; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* editorial card: cream paper, left blush bar, kicker + hairline rule, headline */
+  .ed { position: absolute; left: 0; top: 0; opacity: 0; }
+  .ed .card { position: relative; background: #FFFDF9; border-radius: 6px; padding: 26px 42px 30px 40px;
+              box-shadow: 0 24px 54px rgba(36, 18, 40, 0.24); }
+  .ed .bar { position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: #E5578C;
+             border-radius: 6px 0 0 6px; transform-origin: 50% 0; }
+  .ed .kick { display: flex; align-items: center; gap: 16px; font-weight: 500; font-size: 25px; line-height: 1;
+              letter-spacing: 6px; text-transform: uppercase; color: #E5578C; white-space: nowrap; }
+  .ed .kick .no { color: #8C8590; letter-spacing: 3px; }
+  .ed .rule { width: 54px; height: 3px; background: #E5578C; transform-origin: 0 50%; }
+  .ed .head { margin-top: 16px; font-weight: 600; font-size: 70px; line-height: 1.06; letter-spacing: -1px;
+              white-space: nowrap; }
+  .ed .head b { font-weight: 700; color: #E5578C; }
+  .ed .head .w { display: inline-block; }
+  .ed .head .emo { font-size: 0.78em; margin-left: 4px; }
+  .ed.wrapline .head { white-space: normal; }
+
+  /* captions: cream strip, ink words, a blush underline glides to the spoken word */
+  .cap { position: absolute; left: 0; top: 0; opacity: 0; display: flex; gap: 20px; align-items: baseline;
+         padding: 14px 30px 22px; border-radius: 14px; background: rgba(255, 253, 249, 0.9);
+         box-shadow: 0 14px 34px rgba(36, 18, 40, 0.18); font-weight: 600; font-size: 58px; line-height: 1.1;
+         letter-spacing: -0.5px; white-space: nowrap; }
+  .cap .word { position: relative; display: inline-block; color: #24212A; }
+  .cap .word.key { font-weight: 700; }
+  .cap .ul { position: absolute; left: 0; bottom: 10px; height: 5px; border-radius: 3px; background: #E5578C; width: 10px; }
+
+  /* page-turn wipe */
+  .wipe { position: absolute; top: 0; left: 0; width: 1400px; height: 1920px; background: #FBF7F1; }
+  .wipe .edge { position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: #E5578C; }
+  .wipe .mark { position: absolute; left: 520px; top: 900px; font-weight: 500; font-size: 30px; letter-spacing: 8px;
+                text-transform: uppercase; color: #E5578C; }
+
+  /* hairline progress */
+  #prog { position: absolute; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.55); }
+  #prog .fill { position: absolute; inset: 0; border-radius: 2px; background: #E5578C; transform-origin: 0 50%; }
+  .tag { position: absolute; font-weight: 500; font-size: 30px; letter-spacing: 4px; color: #24212A;
+         padding: 10px 22px 12px; border-radius: 6px; background: #FFFDF9; opacity: 0; }
+
+  /* end card */
+  .board { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column; align-items: flex-start;
+           gap: 22px; padding: 50px 56px 52px 52px; border-radius: 8px; background: #FFFDF9;
+           box-shadow: 0 30px 70px rgba(36, 18, 40, 0.3); }
+  .board .bar { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: #E5578C; border-radius: 8px 0 0 8px; }
+  .board .kick { font-weight: 500; font-size: 26px; letter-spacing: 6px; text-transform: uppercase; color: #E5578C;
+                 white-space: nowrap; }
+  .board .title { font-weight: 600; font-size: 80px; line-height: 1.02; letter-spacing: -1.5px; white-space: nowrap; }
+  .board .title b { font-weight: 700; color: #E5578C; }
+  .board .rule { width: 70px; height: 3px; background: #E5578C; }
+  .board .sub { font-weight: 500; font-size: 34px; color: #6E6772; letter-spacing: 0.5px; white-space: nowrap; }
+  .board .cta { font-weight: 600; font-size: 42px; color: #FFFDF9; background: #24212A; padding: 18px 34px 20px;
+                border-radius: 999px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="22.660" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="22.660" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head and
+  // never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => el("span", "word" + (w.key ? " key" : ""), cap, w.w));
+    const ul = el("div", "ul", cap);
+    let fs = 58;
+    while (cap.offsetWidth > MAXW && fs > 36) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw, ch + 20, { t0: C.t0, t1: C.t1, heads: C.heads, px: CX, py: C.y, wy: 1.4, wx: 0.8,
+                                   isCaption: true });
+    cap.style.left = p.x + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 10, p.x + cw + 10, p.y + ch + 20] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, y: p.y + 16 }, { opacity: 1, y: p.y, duration: 0.3, ease: "power3.out" }, C.t0);
+    const first = spans[0];
+    tl.set(ul, { x: first.offsetLeft, width: first.offsetWidth, opacity: 1 }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i];
+      tl.to(ul, { x: s.offsetLeft, width: s.offsetWidth, duration: 0.18, ease: "power2.out" }, w.s);
+      tl.to(s, { color: "#E5578C", duration: 0.12 }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.to(s, { color: "#24212A", duration: 0.12 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.15 }, C.t1 - 0.15);
+  }
+
+  // ------------------------------------------------------------ labels: editorial cards
+  let labelNo = 0;
+  function card(L) {
+    labelNo += 1;
+    const box = el("div", "ed");
+    const c = el("div", "card", box);
+    const bar = el("div", "bar", c);
+    const kick = el("div", "kick", c, `<span class="no">${String(labelNo).padStart(2, "0")}</span>` +
+                                     `<span class="rule"></span><span>${L.kick}</span>`);
+    const head = el("div", "head", c);
+    // keep "<b>A B</b>" runs together, split the rest into words
+    const words = L.html.split(/\s+/).filter(Boolean), groups = [];
+    let cur = null;
+    for (const w of words) {
+      if (cur) { cur += " " + w; if (w.includes("</b>")) { groups.push(cur); cur = null; } }
+      else if (w.includes("<b>") && !w.includes("</b>")) cur = w;
+      else groups.push(w);
+    }
+    if (cur) groups.push(cur);
+    const ws = groups.map((g, i) => el("span", "w", head, g + (i < groups.length - 1 ? "&nbsp;" : "")));
+    if (L.emoji) ws.push(el("span", "w emo", head, L.emoji));
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 80 : 70, min: B ? 62 : 56 },
+      { wrap: true, maxw: 640, fs: B ? 76 : 66 },
+      { wrap: true, maxw: 520, fs: B ? 68 : 60 },
+      { wrap: true, maxw: 420, fs: B ? 60 : 54 },
+    ];
+    let pick = null;
+    for (const cf of configs) {
+      box.classList.toggle("wrapline", cf.wrap);
+      head.style.maxWidth = cf.wrap ? cf.maxw + "px" : "none";
+      let fs = cf.fs;
+      head.style.fontSize = fs + "px";
+      if (!cf.wrap) {
+        while (c.offsetWidth > MAXW && fs > cf.min) { fs -= 2; head.style.fontSize = fs + "px"; }
+        if (c.offsetWidth > MAXW) continue;
+      } else {
+        while ((c.offsetWidth > cf.maxw + 90 || c.offsetHeight > 330) && fs > 42) { fs -= 2; head.style.fontSize = fs + "px"; }
+      }
+      const w = c.offsetWidth, h = c.offsetHeight;
+      // editorial alignment: hug the left margin
+      const p = place(w + 20, h + 20, { t0: L.t0, t1: L.t1, heads: L.heads, px: S.l + w / 2 + 20, py: E.lab_y,
+                                        wy: 1, wx: 0.35 });
+      const cand = { cf, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.cf.wrap);
+    head.style.maxWidth = pick.cf.wrap ? pick.cf.maxw + "px" : "none";
+    head.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    const x = p.x + 10, y = p.y + 10;
+    L.placed = { x, y, w, h, clear: p.clear, fs: pick.fs, wrap: pick.cf.wrap };
+    box.style.left = x + "px";
+    box.style.top = y + "px";
+    const rule = kick.querySelector(".rule");
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(c, { clipPath: "inset(0% 100% 0% 0%)", y: 14 },
+      { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 0.55, ease: "power3.inOut" }, L.t0);
+    tl.fromTo(bar, { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: "power3.out" }, L.t0 + 0.05);
+    tl.fromTo(kick, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, L.t0 + 0.18);
+    tl.fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, L.t0 + 0.22);
+    tl.fromTo(ws, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.05, ease: "power3.out" },
+      L.t0 + 0.22);
+    tl.to(box, { opacity: 0, y: "-=12", duration: 0.26, ease: "power2.in" }, L.t1 - 0.26);
+  }
+
+  // ------------------------------------------------------------ page-turn wipe
+  function wipe(W) {
+    const p = el("div", "wipe");
+    el("div", "edge", p);
+    tl.set(p, { x: 1100 }, 0);
+    tl.fromTo(p, { x: 1100 }, { x: -1420, duration: 0.7, ease: "power3.inOut" }, W.t - 0.35);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 40) + "px";
+    tl.fromTo(g, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, T.t0);
+    tl.to(g, { opacity: 0, duration: 0.15 }, T.t1 - 0.15);
+  }
+
+  // ------------------------------------------------------------ end card
+  function endcard(N) {
+    const b = el("div", "board");
+    el("div", "bar", b);
+    const rows = [el("div", "kick", b, N.kick), el("div", "title", b, N.title), el("div", "rule", b),
+                  el("div", "sub", b, N.sizes), el("div", "cta", b, N.cta)];
+    let fs = 80;
+    while (b.offsetWidth > MAXW - 40 && fs > 48) { fs -= 2; rows[1].style.fontSize = fs + "px"; }
+    const w = b.offsetWidth, h = b.offsetHeight;
+    const p = place(w + 40, h + 40, { t0: N.t0, t1: N.t1, heads: N.heads, px: S.l + w / 2 + 30, py: N.py || 1080,
+                                      wy: 0.8, wx: 0.4 });
+    const bx = p.x + 20, by = p.y + 20;
+    N.placed = { x: bx, y: by, w, h, clear: p.clear };
+    b.style.left = bx + "px";
+    b.style.top = by + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.65,
+      ease: "power3.inOut" }, N.t0);
+    tl.fromTo(rows, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.1, ease: "power3.out" },
+      N.t0 + 0.25);
+    tl.fromTo(rows[2], { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out", transformOrigin: "0 50%" },
+      N.t0 + 0.45);
+    tl.to(rows[4], { scale: 1.04, duration: 0.6, yoyo: true, repeat: 2, ease: "sine.inOut" }, N.t0 + 1.0);
+  }
+
+  // ------------------------------------------------------------ hairline progress
+  function progress() {
+    const v = el("div", "", fx);
+    v.id = "prog";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 10) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);                 // captions first: labels then steer around them
+    E.labels.forEach(card);
+    E.tags.forEach(tag);
+    endcard(E.end);
+    E.wipes.forEach(wipe);                       // wipes on top of everything
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  Promise.all([document.fonts.load('500 30px "Inter Display"'), document.fonts.load('600 60px "Inter Display"'),
+               document.fonts.load('700 60px "Inter Display"')]).then(build);
+})();
+</script>
+</body>
+</html>
