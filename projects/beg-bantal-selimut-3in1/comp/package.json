@@ -1,0 +1,8 @@
+{
+  "name": "kusyen-burung-hantu-comp",
+  "private": true,
+  "description": "HyperFrames graphics layer for the kusyen burung hantu TikTok edit (rendered by ../edit.py)",
+  "devDependencies": {
+    "hyperframes": "0.8.181"
+  }
+}

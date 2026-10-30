@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Beg bantal selimut 3 in 1, "Hutan malam" (night woodland) look: glowing lantern cards hanging on a cord,
+     fireflies, moon badges, leaf silhouettes, a night-curtain wipe and wooden tags on a branch for the end card.
+     The cut video (base.mp4), timings and her head boxes come from edit.py via data.js; this file draws,
+     animates and places every graphic where it keeps clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* lantern card: deep forest-night glass card with an amber glowing rim, hung on a cord with a brass ring */
+  .lantern { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% -60px; }
+  .lantern .cord { position: absolute; left: 50%; top: -64px; width: 4px; height: 66px; margin-left: -2px;
+                   background: linear-gradient(180deg, rgba(245, 185, 74, 0), #C9963F 40%, #E7B65C); }
+  .lantern .ring { position: absolute; left: 50%; top: -84px; width: 28px; height: 28px; margin-left: -14px;
+                   border-radius: 50%; border: 5px solid #E7B65C; box-shadow: 0 0 14px rgba(255, 196, 92, 0.8); }
+  .lantern .card { position: relative; display: flex; align-items: center; gap: 22px; white-space: nowrap;
+                   padding: 24px 46px 26px 26px; color: #FFF3D6; font-size: 80px; line-height: 1;
+                   border-radius: 34px; border: 5px solid #F5B94A;
+                   background: radial-gradient(120% 140% at 30% 0%, rgba(255, 200, 97, 0.22), rgba(255, 200, 97, 0) 55%),
+                               linear-gradient(170deg, #16352A 0%, #0F2433 60%, #0B1626 100%);
+                   box-shadow: 0 0 0 3px rgba(11, 22, 38, 0.65), 0 0 34px rgba(255, 184, 64, 0.55),
+                               0 18px 30px rgba(0, 0, 0, 0.35); }
+  .lantern .card .t { -webkit-text-stroke: 10px #0B1626; paint-order: stroke fill; }
+  .lantern .card b { color: #FFC861; font-weight: 700; text-shadow: 0 0 22px rgba(255, 184, 64, 0.85); }
+  .lantern .emo { flex: none; display: flex; align-items: center; justify-content: center; width: 1.25em;
+                  height: 1.25em; border-radius: 50%; font-size: 0.82em;
+                  background: radial-gradient(circle, #FFE5A8 0%, #F5B94A 70%, #C9863A 100%);
+                  box-shadow: 0 0 22px rgba(255, 196, 92, 0.9); }
+  .lantern .w { display: inline-block; }
+  .lantern .words { display: flex; gap: 0.26em; align-items: center; }
+  .lantern.wrapline .card { white-space: normal; }
+  .lantern.wrapline .words { flex-wrap: wrap; justify-content: center; text-align: center; row-gap: 8px; }
+  .lantern .leaf { position: absolute; width: 120px; height: 120px; overflow: visible; }
+
+  /* moon badge for the numbers (3 IN 1, 170 CM) */
+  .moon { position: absolute; left: 0; top: 0; opacity: 0; }
+  .moon .disc { position: relative; width: 300px; height: 300px; border-radius: 50%;
+                background: radial-gradient(circle at 38% 34%, #FFF6D8 0%, #FFE7A3 45%, #F2C66C 100%);
+                box-shadow: 0 0 0 6px rgba(11, 22, 38, 0.55), 0 0 60px rgba(255, 220, 140, 0.85),
+                            0 0 120px rgba(255, 200, 97, 0.45); }
+  .moon .crater { position: absolute; border-radius: 50%; background: rgba(214, 160, 70, 0.28); }
+  .moon .num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+               justify-content: center; line-height: 0.92; color: #0F2433; }
+  .moon .num .n { font-size: 124px; }
+  .moon .num .u { font-size: 50px; color: #16352A; }
+  .moon .emo { position: absolute; right: -14px; top: -10px; font-size: 70px;
+               filter: drop-shadow(0 0 10px rgba(255, 210, 120, 0.9)); }
+
+  /* captions: cream words with a night-navy outline; the active word glows amber with a firefly over it */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 26px; align-items: center; opacity: 0;
+         font-size: 76px; line-height: 1; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; display: block; white-space: nowrap; color: #FFF3D6;
+                  -webkit-text-stroke: 14px #0B1626; paint-order: stroke fill; }
+  .cap .word.key .a { color: #CFEFB8; }
+  .cap .word .y { position: absolute; left: 0; top: 0; white-space: nowrap; color: #FFB830; opacity: 0;
+                  -webkit-text-stroke: 14px #0B1626; paint-order: stroke fill;
+                  text-shadow: 0 0 26px rgba(255, 184, 48, 0.95); }
+  .cap .fly { position: absolute; left: 50%; top: -26px; width: 16px; height: 16px; margin-left: -8px;
+              border-radius: 50%; background: #FFF1B0; opacity: 0;
+              box-shadow: 0 0 10px 4px rgba(255, 214, 102, 0.95), 0 0 26px 10px rgba(255, 184, 48, 0.55); }
+
+  .firefly { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #FFF1B0; opacity: 0;
+             box-shadow: 0 0 8px 3px rgba(255, 214, 102, 0.95), 0 0 22px 9px rgba(255, 184, 48, 0.5); }
+
+  /* night curtain wipe */
+  .night { position: absolute; left: 0; top: 0; width: 1080px; height: 2400px; overflow: visible; }
+
+  /* progress: amber thread with a firefly at the tip */
+  #thread { position: absolute; height: 6px; border-radius: 3px; background: rgba(255, 243, 214, 0.35); }
+  #thread .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 3px;
+                  background: linear-gradient(90deg, #C9863A, #FFC861); transform-origin: 0 50%; }
+  #thread .tip { position: absolute; top: -5px; left: -8px; width: 16px; height: 16px; border-radius: 50%;
+                 background: #FFF1B0; box-shadow: 0 0 10px 4px rgba(255, 214, 102, 0.95); }
+  .tag { position: absolute; font-size: 40px; color: #FFF3D6; padding: 8px 22px 10px; border-radius: 12px;
+         background: linear-gradient(180deg, #8A5A2E, #6B4322); border: 4px solid #2E1C0E; opacity: 0;
+         -webkit-text-stroke: 7px #2E1C0E; paint-order: stroke fill; }
+
+  /* end card: three wooden tags hanging on twine from a leafy branch, under a crescent moon */
+  .board { position: absolute; left: 0; top: 0; opacity: 0; display: flex; flex-direction: column;
+           align-items: center; gap: 34px; padding-top: 110px; }
+  .board .branch { position: absolute; left: -40px; right: -40px; top: 0; height: 120px; overflow: visible; }
+  .board .row { position: relative; display: flex; align-items: center; gap: 14px; padding: 16px 36px 18px;
+                border-radius: 18px; font-size: 48px; line-height: 1; white-space: nowrap;
+                border: 5px solid #2E1C0E; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35); }
+  .board .row::before { content: ""; position: absolute; left: 50%; top: -40px; width: 3px; height: 40px;
+                        margin-left: -1.5px; background: #D9B98A; }
+  .board .row.wood { color: #FFF3D6; -webkit-text-stroke: 8px #2E1C0E; paint-order: stroke fill;
+                     background: repeating-linear-gradient(178deg, rgba(46, 28, 14, 0) 0 20px, rgba(46, 28, 14, 0.18) 20px 23px),
+                                 linear-gradient(180deg, #A06A38, #7A4E28); }
+  .board .row.glow { color: #0B1626; background: linear-gradient(180deg, #FFD27A, #F5B94A);
+                     box-shadow: 0 0 30px rgba(255, 184, 64, 0.7), 0 10px 20px rgba(0, 0, 0, 0.35); }
+  .board .row b { color: #FFC861; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="47.890" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="47.890" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 23;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the bag's bird face when it can and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const top = o.top || 0;                           // extra room needed above the box (cord, ring)
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24 + top, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y - top, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 70 && f[0] < x + w + 70 && f[1] > y - 70 && f[1] < y + h + 70) c += 2600;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // a dark leaf silhouette (svg path), used on cards, the night wipe and the end-card branch
+  function leafPath(cx, cy, len, ang, fill, stroke) {
+    const a = ang * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a), nx = -dy, ny = dx;
+    const tx = cx + dx * len, ty = cy + dy * len, w = len * 0.34;
+    const m1x = cx + dx * len * 0.5 + nx * w, m1y = cy + dy * len * 0.5 + ny * w;
+    const m2x = cx + dx * len * 0.5 - nx * w, m2y = cy + dy * len * 0.5 - ny * w;
+    return `<path d="M${cx},${cy} Q${m1x},${m1y} ${tx},${ty} Q${m2x},${m2y} ${cx},${cy} Z" fill="${fill}"` +
+           (stroke ? ` stroke="${stroke}" stroke-width="3"` : "") + `/>`;
+  }
+  function cornerLeaves(parent, left) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "leaf");
+    s.setAttribute("viewBox", "0 0 120 120");
+    s.innerHTML = leafPath(60, 100, 74, left ? -140 : -40, "#0E2A1B", "#2F5A3A") +
+                  leafPath(60, 100, 58, left ? -105 : -75, "#163A26", "#3C6E47");
+    s.style[left ? "left" : "right"] = "-46px";
+    s.style.bottom = "-40px";
+    parent.appendChild(s);
+    return s;
+  }
+
+  // fireflies drift and blink around a spot for a while; a firefly whose path would cross her head is dropped
+  function fireflies(x, y, w, h, t0, t1, n, heads) {
+    const hb = (heads || []).map(b => [b[0] - 30, b[1] - 30, b[2] + 30, b[3] + 30]);
+    const inHead = (px, py) => hb.some(b => px > b[0] && px < b[2] && py > b[1] && py < b[3]);
+    for (let i = 0; i < n; i++) {
+      let pick = null;
+      for (let k = 0; k < 14 && !pick; k++) {
+        const sx = x + rnd() * w, sy = y + rnd() * h, dx = (rnd() - 0.5) * 140, dy = -20 - rnd() * 60;
+        if (!inHead(sx, sy) && !inHead(sx + dx, sy + dy) && !inHead(sx + dx / 2, sy + dy / 2)) pick = { sx, sy, dx, dy };
+      }
+      if (!pick) continue;
+      const f = el("div", "firefly");
+      f.style.left = pick.sx + "px";
+      f.style.top = pick.sy + "px";
+      const d = Math.max(0.6, t1 - t0);
+      tl.fromTo(f, { opacity: 0, x: 0, y: 0, scale: 0.6 },
+        { opacity: 1, scale: 1, x: pick.dx, y: pick.dy, duration: d, ease: "sine.inOut" }, t0 + rnd() * 0.3);
+      tl.to(f, { opacity: 0.25, duration: 0.18, yoyo: true, repeat: Math.max(1, Math.floor(d / 0.36)),
+                 ease: "sine.inOut" }, t0 + 0.35 + rnd() * 0.2);
+      tl.set(f, { opacity: 0 }, t1);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      el("span", "fly", s);
+      return s;
+    });
+    let fs = 76;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    // captions stay low even over the bag's face (faces only steer the labels)
+    const p = place(cw, ch + 30, { t0: C.t0, t1: C.t1, heads: C.heads, faces: [], px: CX, py: C.y,
+                                   wy: 1.4, wx: 0.8, isCaption: true, top: 30 });
+    cap.style.left = p.x + "px";
+    cap.style.top = p.y + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 10, p.y - 36, p.x + cw + 10, p.y + ch + 26] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    // fade in/out never overlap, even for very short chunks (an unfinished fade-in would leave a ghost caption)
+    const dur = C.t1 - C.t0, din = Math.min(0.22, dur * 0.35), dout = Math.min(0.14, dur * 0.3);
+    tl.fromTo(cap, { opacity: 0, y: p.y + 14 }, { opacity: 1, y: p.y, duration: din, ease: "power2.out" }, C.t0);
+    cap.style.top = "0px";
+    C.words.forEach((w, i) => {
+      const s = spans[i];
+      const y = s.querySelector(".y"), a = s.querySelector(".a"), fl = s.querySelector(".fly");
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.set(y, { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(s, { y: 0, scale: 1 }, { y: -8, scale: 1.08, duration: 0.18, ease: "sine.out" }, w.s);
+      tl.fromTo(fl, { opacity: 0, y: 10, scale: 0.4 }, { opacity: 1, y: 0, scale: 1, duration: 0.2, ease: "sine.out" }, w.s);
+      tl.set(y, { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+      tl.to(s, { y: 0, scale: 1, duration: 0.14, ease: "sine.in" }, off);
+      tl.to(fl, { opacity: 0, duration: 0.12 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: dout }, C.t1 - dout);
+  }
+
+  // ------------------------------------------------------------ labels: hanging lantern cards / moon badges
+  let flip = 1;
+  function lantern(L) {
+    if (L.kind === "moon") return moonBadge(L);
+    const box = el("div", "lantern");
+    el("div", "cord", box);
+    el("div", "ring", box);
+    const card = el("div", "card", box);
+    const emo = el("span", "emo", card, L.emoji || "🌙");
+    const wordsBox = el("span", "words", card);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w t", wordsBox, w));
+    // biggest readable layout first: one line, then two lines at decreasing widths; the first one with a spot
+    // clear of her head (and of the captions on screen) wins, else the cheapest of them
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 98 : 80, min: B ? 76 : 64 },
+      { wrap: true, maxw: 660, fs: B ? 88 : 74 },
+      { wrap: true, maxw: 540, fs: B ? 78 : 66 },
+      { wrap: true, maxw: 440, fs: B ? 66 : 58 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      card.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      card.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (card.offsetWidth > MAXW && fs > c.min) { fs -= 2; card.style.fontSize = fs + "px"; }
+        if (card.offsetWidth > MAXW) continue;
+      } else {
+        while ((card.offsetWidth > c.maxw || card.offsetHeight > 300) && fs > 44) {
+          fs -= 2; card.style.fontSize = fs + "px";
+        }
+      }
+      const w = card.offsetWidth, h = card.offsetHeight;
+      const p = place(w, h, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                              wy: 1, wx: 0.5, top: 90 });
+      const cand = { c, fs, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    card.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    card.style.fontSize = pick.fs + "px";
+    const { w, h, p } = pick;
+    L.placed = { x: p.x, y: p.y, w, h, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    const lf = cornerLeaves(card, flip > 0);
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    const rot = 2 * flip; flip = -flip;
+    // drops in on its cord, swings and settles (calm), words fade up one by one, the emoji glows on
+    const din = Math.min(0.3, (L.t1 - L.t0) * 0.3);
+    tl.fromTo(box, { opacity: 0 }, { opacity: 1, duration: din, ease: "power1.out" }, L.t0);
+    tl.fromTo(box, { y: -70, rotation: rot * 5 },
+      { y: 0, rotation: rot, duration: 0.9, ease: "elastic.out(1, 0.6)" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.06, ease: "power2.out" },
+      L.t0 + 0.1);
+    tl.fromTo(emo, { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.2)" },
+      L.t0 + 0.12);
+    tl.to(box, { rotation: -rot, duration: 1.6, yoyo: true, repeat: Math.max(0, Math.floor((L.t1 - L.t0) / 1.6)),
+                 ease: "sine.inOut" }, L.t0 + 0.9);
+    tl.fromTo(lf, { rotation: -10, transformOrigin: "50% 100%" },
+      { rotation: 6, duration: 0.9, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.9)),
+        ease: "sine.inOut" }, L.t0);
+    fireflies(p.x - 30, p.y - 60, w + 60, h + 90, L.t0 + 0.1, L.t1, L.big ? 7 : 4, L.heads);
+    tl.to(box, { opacity: 0, duration: 0.2, ease: "power2.in" }, L.t1 - 0.2);
+  }
+
+  function moonBadge(L) {
+    const box = el("div", "moon");
+    const disc = el("div", "disc", box);
+    for (const [cx, cy, r] of [[70, 80, 26], [210, 70, 18], [225, 205, 30], [90, 215, 16]]) {
+      const c = el("span", "crater", disc);
+      c.style.cssText = `left:${cx - r}px;top:${cy - r}px;width:${2 * r}px;height:${2 * r}px`;
+    }
+    const num = el("div", "num", disc, `<span class="n">${L.html}</span><span class="u">${L.unit || "CM"}</span>`);
+    const emo = el("span", "emo", box, L.emoji);
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                 // shrink the badge before letting it touch anything
+      const q = place(300 * zz, 300 * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    box.style.zoom = z;
+    p = { x: p.x / z, y: p.y / z, c: p.c, clear: p.clear };   // zoom scales the left/top offsets too
+    L.placed = { x: p.x * z, y: p.y * z, w: 300 * z, h: 300 * z, clear: p.clear, zoom: z };
+    box.style.left = p.x + "px";
+    box.style.top = p.y + "px";
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(disc, { scale: 0.2, opacity: 0, y: 60 }, { scale: 1, opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+      L.t0);
+    tl.fromTo(num, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.4)" },
+      L.t0 + 0.25);
+    tl.fromTo(emo, { opacity: 0, rotation: -30 }, { opacity: 1, rotation: 0, duration: 0.4, ease: "back.out(2)" },
+      L.t0 + 0.35);
+    tl.to(disc, { y: -10, duration: 0.8, yoyo: true, repeat: Math.max(1, Math.floor((L.t1 - L.t0) / 0.8)),
+                  ease: "sine.inOut" }, L.t0 + 0.7);
+    fireflies(p.x * z - 40, p.y * z - 40, 380 * z, 380 * z, L.t0 + 0.1, L.t1, 6, L.heads);
+    tl.to(box, { opacity: 0, scale: 0.8, duration: 0.2, ease: "power2.in", transformOrigin: "50% 50%" }, L.t1 - 0.2);
+  }
+
+  // ------------------------------------------------------------ night curtain: dusk falls with a crescent moon
+  function nightWipe(W) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "night");
+    s.setAttribute("viewBox", "0 0 1080 2400");
+    let inner = `<defs><linearGradient id="ng${W.t}" x1="0" y1="0" x2="0" y2="1">` +
+                `<stop offset="0" stop-color="#0B1626" stop-opacity="0"/><stop offset="0.12" stop-color="#0B1626"/>` +
+                `<stop offset="0.8" stop-color="#12302A"/><stop offset="1" stop-color="#12302A" stop-opacity="0"/>` +
+                `</linearGradient></defs><rect x="0" y="0" width="1080" height="2400" fill="url(#ng${W.t})"/>`;
+    for (let i = 0; i < 40; i++) {
+      const x = rnd() * 1080, y = 300 + rnd() * 1800, r = 2 + rnd() * 4;
+      inner += `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF1B0" opacity="${0.5 + rnd() * 0.5}"/>`;
+    }
+    inner += `<circle cx="540" cy="1200" r="150" fill="#FFE7A3"/><circle cx="600" cy="1160" r="140" fill="#0F2433"/>`;
+    for (let i = 0; i < 10; i++) {
+      inner += leafPath(i < 5 ? -20 : 1100, 500 + rnd() * 1500, 150 + rnd() * 90, i < 5 ? -30 + rnd() * 60 : 150 + rnd() * 60,
+                        i % 2 ? "#0E2A1B" : "#163A26");
+    }
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    tl.fromTo(s, { y: -2400 }, { y: 1920, duration: 0.8, ease: "power2.inOut" }, W.t - 0.4);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    const p = place(200, 70, { t0: T.t0, t1: T.t1, heads: T.heads || [], px: S.l + 100, py: S.t + 70, wy: 1, wx: 1 });
+    g.style.left = p.x + "px";
+    g.style.top = p.y + "px";
+    tl.fromTo(g, { opacity: 0, rotation: -12 }, { opacity: 1, rotation: -3, duration: 0.2, ease: "back.out(3)" },
+      T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: wooden tags on a branch, face-aware
+  function endcard(N) {
+    const b = el("div", "board");
+    const br = document.createElementNS(NS, "svg");
+    br.setAttribute("class", "branch");
+    br.setAttribute("viewBox", "0 0 760 120");
+    br.setAttribute("preserveAspectRatio", "none");
+    let bi = `<path d="M0,52 C160,40 300,64 420,50 C540,36 640,58 760,46" stroke="#3B2614" stroke-width="16" fill="none" stroke-linecap="round"/>`;
+    for (let i = 0; i < 9; i++) bi += leafPath(40 + i * 85, 48, 46 + rnd() * 20, i % 2 ? -60 : 70 + rnd() * 30, i % 3 ? "#163A26" : "#2F5A3A");
+    bi += `<circle cx="690" cy="20" r="26" fill="#FFE7A3"/><circle cx="702" cy="12" r="22" fill="none"/>`;
+    br.innerHTML = bi;
+    b.appendChild(br);
+    const rows = [
+      { cls: "wood", html: N.title, big: true },
+      { cls: "wood", html: N.sizes },
+      { cls: "glow", html: N.cta },
+    ];
+    const els = rows.map(r => {
+      const d = el("div", "row " + r.cls, b, r.html);
+      if (r.big) { d.style.fontSize = "66px"; d.style.padding = "18px 44px 22px"; }
+      return d;
+    });
+    let k = 1;                                         // shrink the tags until the stack fits the safe width
+    while (b.offsetWidth > MAXW - 80 && k > 0.6) {
+      k -= 0.04;
+      els.forEach((d, i) => { d.style.fontSize = Math.round((rows[i].big ? 66 : 48) * k) + "px"; });
+    }
+    const w = Math.max(b.offsetWidth, 560), h = b.offsetHeight;
+    b.style.width = w + "px";
+    const p = place(w, h, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1150,
+                            wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    b.style.left = p.x + "px";
+    b.style.top = p.y + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(br, { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out" }, N.t0);
+    els.forEach((d, i) => {
+      tl.fromTo(d, { y: -90, opacity: 0, rotation: i % 2 ? 7 : -7 },
+        { y: 0, opacity: 1, rotation: i % 2 ? 1.2 : -1.2, duration: 0.9, ease: "elastic.out(1, 0.55)" },
+        N.t0 + 0.2 + i * 0.16);
+    });
+    fireflies(p.x - 20, p.y + 60, w + 40, h - 60, N.t0 + 0.2, N.t1, 8, N.heads);
+  }
+
+  function thread() {
+    const v = el("div", "", fx);
+    v.id = "thread";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 8) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const k = el("div", "tip", v);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+    tl.to(k, { opacity: 0.4, duration: 0.5, yoyo: true, repeat: Math.floor(E.total / 0.5), ease: "sine.inOut" }, 0);
+  }
+
+  function build() {
+    thread();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(lantern);
+    E.tags.forEach(tag);
+    E.wipes.forEach(nightWipe);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

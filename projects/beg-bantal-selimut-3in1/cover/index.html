@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for beg bantal selimut 3 in 1, "Hutan malam" look: night-navy frame with an amber glow line,
+     leaf silhouettes, fireflies, a glowing lantern title over the blanket, a moon badge and a wooden tag.
+     Everything sits on the blanket / below the bag, never over her face (top right).
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #0B1626; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 63.0s; the top 1536 rows are shown */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #dusk { position: absolute; inset: 0;
+          background: radial-gradient(120% 90% at 60% 45%, rgba(11, 22, 38, 0) 55%, rgba(11, 22, 38, 0.55) 100%),
+                      linear-gradient(180deg, rgba(11, 22, 38, 0.35) 0%, rgba(11, 22, 38, 0) 22%,
+                                      rgba(11, 22, 38, 0) 80%, rgba(11, 22, 38, 0.5) 100%); }
+  #frame { position: absolute; inset: 0; }
+  .lantern { position: absolute; color: #FFF3D6; line-height: 1.02; border-radius: 34px; border: 6px solid #F5B94A;
+             padding: 26px 40px 30px; font-size: 98px;
+             background: radial-gradient(120% 140% at 30% 0%, rgba(255, 200, 97, 0.22), rgba(255, 200, 97, 0) 55%),
+                         linear-gradient(170deg, #16352A 0%, #0F2433 60%, #0B1626 100%);
+             box-shadow: 0 0 0 4px rgba(11, 22, 38, 0.7), 0 0 44px rgba(255, 184, 64, 0.6), 0 20px 34px rgba(0, 0, 0, 0.4); }
+  .lantern .t { -webkit-text-stroke: 12px #0B1626; paint-order: stroke fill; }
+  .lantern b { color: #FFC861; text-shadow: 0 0 26px rgba(255, 184, 64, 0.9); }
+  .cord { position: absolute; width: 5px; background: linear-gradient(180deg, rgba(231, 182, 92, 0), #E7B65C); }
+  #title { left: 56px; top: 96px; }
+  #moon { position: absolute; left: 70px; top: 760px; width: 250px; height: 250px; border-radius: 50%;
+          background: radial-gradient(circle at 38% 34%, #FFF6D8 0%, #FFE7A3 45%, #F2C66C 100%);
+          box-shadow: 0 0 0 6px rgba(11, 22, 38, 0.6), 0 0 60px rgba(255, 220, 140, 0.9), 0 0 120px rgba(255, 200, 97, 0.5);
+          display: flex; flex-direction: column; align-items: center; justify-content: center; color: #0F2433;
+          line-height: 0.9; }
+  #moon .n { font-size: 112px; }
+  #moon .u { font-size: 46px; color: #16352A; }
+  #tag { position: absolute; left: 50%; top: 1372px; display: flex; align-items: center; gap: 14px; white-space: nowrap;
+         font-size: 50px; line-height: 1; padding: 16px 34px 18px; border-radius: 18px; border: 5px solid #2E1C0E;
+         color: #FFF3D6; -webkit-text-stroke: 8px #2E1C0E; paint-order: stroke fill;
+         background: repeating-linear-gradient(178deg, rgba(46, 28, 14, 0) 0 20px, rgba(46, 28, 14, 0.18) 20px 23px),
+                     linear-gradient(180deg, #A06A38, #7A4E28);
+         box-shadow: 0 0 30px rgba(255, 184, 64, 0.45), 0 12px 22px rgba(0, 0, 0, 0.4); }
+  #tag b { color: #FFC861; }
+  .fly { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #FFF1B0;
+         box-shadow: 0 0 9px 4px rgba(255, 214, 102, 0.95), 0 0 26px 10px rgba(255, 184, 48, 0.5); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <div id="dusk"></div>
+  <svg id="frame" viewBox="0 0 1080 1536"></svg>
+  <div id="title" class="lantern"><span class="t">🦉 BEG JADI<br><b>SELIMUT</b> &amp;<br><b>BANTAL!</b></span></div>
+  <div id="moon"><span class="n">3</span><span class="u">IN 1</span></div>
+  <div id="tag">🌙 SELIMUT <b>170CM</b> • POKET <b>TANGAN</b></div>
+</div>
+<script>
+  // night frame: navy border with an amber glow line, leaf silhouettes in the bottom corners, a few stars and
+  // fireflies kept off her face (head box roughly x 560-990, y 160-660 on this frame)
+  const leaf = (cx, cy, len, ang, fill) => {
+    const a = ang * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a), nx = -dy, ny = dx, w = len * 0.34;
+    const tx = cx + dx * len, ty = cy + dy * len;
+    const m1 = [cx + dx * len * 0.5 + nx * w, cy + dy * len * 0.5 + ny * w];
+    const m2 = [cx + dx * len * 0.5 - nx * w, cy + dy * len * 0.5 - ny * w];
+    return `<path d="M${cx},${cy} Q${m1[0]},${m1[1]} ${tx},${ty} Q${m2[0]},${m2[1]} ${cx},${cy} Z" fill="${fill}" stroke="#2F5A3A" stroke-width="4"/>`;
+  };
+  let s = `<path fill-rule="evenodd" fill="#0B1626" d="M0,0 H1080 V1536 H0 Z M28,28 V1508 H1052 V28 Z"/>` +
+          `<rect x="28" y="28" width="1024" height="1480" rx="10" fill="none" stroke="#F5B94A" stroke-width="5"/>` +
+          `<rect x="28" y="28" width="1024" height="1480" rx="10" fill="none" stroke="#FFC861" stroke-width="14" opacity="0.18"/>`;
+  const corner = (x, y, flip) => {
+    const f = flip ? -1 : 1;
+    s += leaf(x, y, 190, flip ? -160 : -20, "#0E2A1B");
+    s += leaf(x, y, 160, flip ? -125 : -55, "#163A26");
+    s += leaf(x, y, 130, flip ? -95 : -85, "#0E2A1B");
+  };
+  corner(-10, 1546, false); corner(1090, 1546, true);
+  for (const [x, y, r] of [[520, 70, 3], [610, 120, 2.5], [470, 140, 2], [1000, 80, 3], [380, 300, 2], [960, 720, 2.5]]) {
+    s += `<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF1B0" opacity="0.9"/>`;
+  }
+  document.getElementById("frame").innerHTML = s;
+  for (const [x, y] of [[430, 560], [350, 690], [500, 1290], [140, 1180], [960, 1250], [880, 1090], [300, 1100], [1000, 900]]) {
+    const f = document.createElement("div"); f.className = "fly"; f.style.left = x + "px"; f.style.top = y + "px";
+    document.getElementById("root").appendChild(f);
+  }
+  document.fonts.load('700 98px "Fredoka"').then(() => {
+    const t = document.getElementById("title");
+    while (t.offsetWidth > 480) t.style.fontSize = (parseFloat(getComputedStyle(t).fontSize) - 2) + "px";
+    const cord = document.createElement("div"); cord.className = "cord";
+    cord.style.left = (56 + t.offsetWidth / 2 - 2) + "px"; cord.style.top = "28px"; cord.style.height = "70px";
+    document.getElementById("root").insertBefore(cord, t);
+    const g = document.getElementById("tag");
+    while (g.offsetWidth > 960) g.style.fontSize = (parseFloat(getComputedStyle(g).fontSize) - 2) + "px";
+    g.style.marginLeft = -g.offsetWidth / 2 + "px";
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -1.5 }, 0).set("#moon", { rotation: -6 }, 0).set("#tag", { rotation: 1 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
