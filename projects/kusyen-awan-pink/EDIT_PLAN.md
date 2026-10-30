@@ -6,6 +6,7 @@ Source: 2 klip produk sama, iPhone, 1080×1920 portrait, HEVC HDR (HLG), 29.97fp
 
 Digabung A lepas tu B jadi satu master (138.1s; B mula pada **20.521s**), transkrip B dianjak +20.521s.
 Preview v1: **46.9s** (dipotong ~91s), 720×1280, 30fps, SDR, −11.3 LUFS
+Final: **46.9s**, 1080×1920, 30fps, H.264 SDR (HLG → bt709), −11.3 LUFS, sudah render (HyperFrames)
 Cover: `cover.jpg` (1080×1536) · Caption & hashtag: `CAPTION.md`
 Safe zone TikTok: kanan 165px, bawah 435px, atas 165px (1080×1920).
 
