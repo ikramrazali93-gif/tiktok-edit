@@ -1,0 +1,8 @@
+{
+  "name": "bantal-selimut-beruang-comp",
+  "private": true,
+  "description": "HyperFrames graphics layer for the bantal selimut beruang strawberry TikTok edit (rendered by ../edit.py)",
+  "devDependencies": {
+    "hyperframes": "0.8.181"
+  }
+}

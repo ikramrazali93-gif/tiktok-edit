@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for the bantal awan tapak kucing, "Marshmallow awan 3D" look: a soft cloud frame, a puffy
+     cloud title in the tree band above her hood, a round marshmallow "3 IN 1" puff on her sleeve (left of the
+     cushion, off the bunny face) and a marshmallow pill on the blanket. Her face stays clear.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #FFE9F4; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 135.0s of the joined master; rows 0-1536 are shown */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  /* soft cloud frame: puffs all round the edge */
+  .edge { position: absolute; border-radius: 50%;
+          background: radial-gradient(circle at 40% 30%, #FFFFFF 0%, #FFF0F7 45%, #FFD3E8 100%);
+          box-shadow: inset 0 -10px 16px rgba(214, 120, 176, 0.35), 0 8px 18px rgba(120, 60, 120, 0.25); }
+  .edge.l { background: radial-gradient(circle at 40% 30%, #FFFFFF 0%, #F4ECFF 45%, #DCCBFF 100%);
+            box-shadow: inset 0 -10px 16px rgba(140, 110, 210, 0.35), 0 8px 18px rgba(100, 70, 150, 0.22); }
+  .cloud { position: absolute; }
+  .cloud .bump { position: absolute; border-radius: 50%;
+                 background: radial-gradient(circle at 40% 30%, #FFFFFF 0%, #FFF0F7 38%, #FFD3E8 100%);
+                 box-shadow: inset 0 -10px 16px rgba(214, 120, 176, 0.35), 0 10px 22px rgba(120, 60, 120, 0.22); }
+  .cloud .body { position: relative; display: flex; align-items: center; gap: 18px; white-space: nowrap;
+                 line-height: 1; color: #6A3A78; border-radius: 80px;
+                 background: linear-gradient(180deg, #FFFFFF 0%, #FFF0F7 35%, #FFD3E8 100%);
+                 box-shadow: inset 0 16px 24px rgba(255, 255, 255, 0.95), inset 0 -18px 24px rgba(214, 120, 176, 0.4),
+                             0 18px 34px rgba(120, 60, 120, 0.32); }
+  .cloud .body b { color: #FF4F9A; }
+  .cloud .body span { text-shadow: 0 5px 0 rgba(255, 255, 255, 0.95); }
+  #title { left: 50%; top: 92px; }
+  #title .body { font-size: 100px; padding: 34px 54px 36px; }
+  #pill { position: absolute; left: 50%; top: 1290px; font-size: 48px; line-height: 1; white-space: nowrap;
+          padding: 18px 40px 20px; border-radius: 999px; color: #FFFFFF;
+          background: linear-gradient(180deg, #FFC9E3, #FF6FAE); -webkit-text-stroke: 9px #8A3E86; paint-order: stroke fill;
+          box-shadow: inset 0 8px 10px rgba(255, 255, 255, 0.8), inset 0 -10px 12px rgba(190, 70, 140, 0.45),
+                      0 12px 22px rgba(106, 58, 120, 0.4); }
+  #puff { position: absolute; left: 40px; top: 760px; width: 300px; height: 300px; }
+  #puff .ball { position: absolute; inset: 0; border-radius: 50%;
+                background: radial-gradient(circle at 36% 28%, #FFFFFF 0%, #FFD9EC 34%, #FF9CCB 78%, #F27BB8 100%);
+                box-shadow: inset 0 -22px 34px rgba(190, 70, 140, 0.45), inset 0 18px 30px rgba(255, 255, 255, 0.9),
+                            0 22px 40px rgba(120, 50, 110, 0.4); }
+  #puff .txt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+               justify-content: center; color: #FFFFFF; font-size: 88px; line-height: 0.92;
+               -webkit-text-stroke: 13px #8A3E86; paint-order: stroke fill; text-shadow: 0 7px 0 rgba(138, 62, 134, 0.45); }
+  #puff .txt small { font-size: 42px; -webkit-text-stroke: 9px #8A3E86; }
+  #puff .emo { position: absolute; right: -18px; top: -22px; font-size: 76px; }
+  .bub { position: absolute; border-radius: 50%;
+         background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 26%,
+                     rgba(255, 190, 225, 0.25) 60%, rgba(220, 200, 255, 0.55) 100%);
+         box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 170, 215, 0.45); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <div id="edges"></div>
+  <div id="title" class="cloud"><div class="body"><span>BANTAL <b>AWAN</b> 🐾</span></div></div>
+  <div id="puff"><div class="ball"></div><div class="txt"><span>3 IN 1</span><small>GEBU!</small></div><div class="emo">☁️</div></div>
+  <div id="pill">☁️ SELIMUT + HAND WARMER 🧤</div>
+</div>
+<script>
+  let seed = 11;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const root = document.getElementById("root");
+  const add = (cls, x, y, r) => {
+    const d = document.createElement("div");
+    d.className = cls;
+    d.style.cssText += `left:${x - r}px;top:${y - r}px;width:${2 * r}px;height:${2 * r}px`;
+    document.getElementById("edges").appendChild(d);
+  };
+  // puffy cloud frame round the edge (bigger puffs in the corners)
+  let i = 0;
+  for (let x = 0; x <= 1080; x += 90) {
+    add("edge" + (i++ % 3 === 1 ? " l" : ""), x, -6 + rnd() * 10, 46 + rnd() * 18);
+    add("edge" + (i++ % 3 === 1 ? " l" : ""), x, 1542 - rnd() * 10, 46 + rnd() * 18);
+  }
+  for (let y = 90; y <= 1450; y += 92) {
+    add("edge" + (i++ % 3 === 1 ? " l" : ""), -4 + rnd() * 8, y, 38 + rnd() * 14);
+    add("edge" + (i++ % 3 === 1 ? " l" : ""), 1084 - rnd() * 8, y, 38 + rnd() * 14);
+  }
+  // a few bubbles floating up the right side and over the blanket
+  for (const [x, y, s] of [[960, 520, 70], [1000, 700, 44], [900, 380, 36], [180, 1180, 52], [250, 1240, 30], [880, 1180, 40]]) {
+    const b = document.createElement("div");
+    b.className = "bub";
+    b.style.cssText = `left:${x}px;top:${y}px;width:${s}px;height:${s}px`;
+    root.appendChild(b);
+  }
+  document.fonts.load('700 100px "Fredoka"').then(() => {
+    const t = document.getElementById("title"), body = t.querySelector(".body");
+    const w = body.offsetWidth, h = body.offsetHeight;
+    t.style.marginLeft = -w / 2 + "px";
+    const n = Math.max(3, Math.round(w / 150));
+    for (let k = 0; k < n; k++) {                          // cloud bumps on top of the title
+      const fr = (k + 0.5) / n, r = Math.min(h * 0.62, 92) * (0.72 + 0.28 * Math.sin(Math.PI * fr));
+      const b = document.createElement("div");
+      b.className = "bump";
+      b.style.cssText = `width:${2 * r}px;height:${2 * r}px;left:${w * (0.08 + 0.84 * fr) - r}px;top:${-r * 0.95 + 18}px`;
+      t.insertBefore(b, body);
+    }
+    const p = document.getElementById("pill");
+    while (p.offsetWidth > 900) p.style.fontSize = (parseFloat(getComputedStyle(p).fontSize) - 2) + "px";
+    p.style.marginLeft = -p.offsetWidth / 2 + "px";
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 1 });
+    window.__timelines = window.__timelines || {};
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>

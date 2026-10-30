@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Bantal awan tapak kucing, "Marshmallow awan 3D" look: puffy cloud cards (a soft marshmallow body with round
+     cloud bumps on top, inner highlight + inner shade instead of hard outlines), round marshmallow puff badges,
+     the spoken caption word squished onto a marshmallow cube, bubbles that float up and pop, a cloud-wall wipe and
+     a big cloud end card. Squishy jelly easing everywhere. The cut video (base.mp4), timings and her head boxes
+     come from edit.py via data.js; this file draws, animates and places every graphic where it keeps clear of her
+     face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  /* cloud card: marshmallow body + cloud bumps on top, soft 3D shading, no hard outline */
+  .cloud { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 100%; }
+  .cloud .bump { position: absolute; border-radius: 50%;
+                 background: radial-gradient(circle at 40% 30%, #FFFFFF 0%, #FFF0F7 38%, #FFD3E8 100%);
+                 box-shadow: inset 0 -10px 16px rgba(214, 120, 176, 0.35), 0 10px 22px rgba(120, 60, 120, 0.22); }
+  .cloud .body { position: relative; display: flex; align-items: center; gap: 18px; white-space: nowrap;
+                 padding: 34px 50px 34px; color: #6A3A78; font-size: 80px; line-height: 1; letter-spacing: 1px;
+                 border-radius: 70px;
+                 background: linear-gradient(180deg, #FFFFFF 0%, #FFF0F7 35%, #FFD3E8 100%);
+                 box-shadow: inset 0 14px 22px rgba(255, 255, 255, 0.95), inset 0 -16px 22px rgba(214, 120, 176, 0.38),
+                             0 16px 30px rgba(120, 60, 120, 0.28); }
+  .cloud .body b { color: #FF4F9A; font-weight: 700; }
+  .cloud .w { display: inline-block; position: relative; z-index: 2; text-shadow: 0 4px 0 rgba(255, 255, 255, 0.95); }
+  .cloud .emo { display: inline-block; position: relative; z-index: 2; font-size: 0.95em; }
+  .cloud.wrapline .body { white-space: normal; flex-wrap: wrap; justify-content: center; text-align: center;
+                          row-gap: 8px; }
+  .cloud.lilac .body { background: linear-gradient(180deg, #FFFFFF 0%, #F4ECFF 38%, #DCCBFF 100%);
+                       box-shadow: inset 0 14px 22px rgba(255, 255, 255, 0.95), inset 0 -16px 22px rgba(140, 110, 210, 0.38),
+                                   0 16px 30px rgba(100, 70, 150, 0.28); }
+  .cloud.lilac .bump { background: radial-gradient(circle at 40% 30%, #FFFFFF 0%, #F4ECFF 40%, #DCCBFF 100%);
+                       box-shadow: inset 0 -10px 16px rgba(140, 110, 210, 0.35), 0 10px 22px rgba(100, 70, 150, 0.2); }
+
+  /* marshmallow puff badge (3 IN 1 / PAW!) */
+  .puff { position: absolute; left: 0; top: 0; opacity: 0; }
+  .puff .ball { position: absolute; border-radius: 50%;
+                background: radial-gradient(circle at 36% 28%, #FFFFFF 0%, #FFD9EC 34%, #FF9CCB 78%, #F27BB8 100%);
+                box-shadow: inset 0 -22px 34px rgba(190, 70, 140, 0.45), inset 0 18px 30px rgba(255, 255, 255, 0.9),
+                            0 22px 40px rgba(120, 50, 110, 0.35); }
+  .puff .ring { position: absolute; border-radius: 50%;
+                background: radial-gradient(circle at 40% 30%, #FFFFFF, #FFF0F7 45%, #FFD3E8);
+                box-shadow: inset 0 -8px 12px rgba(214, 120, 176, 0.35), 0 8px 16px rgba(120, 60, 120, 0.2); }
+  .puff .txt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+               justify-content: center; gap: 4px; color: #FFFFFF; font-size: 92px; line-height: 0.95;
+               -webkit-text-stroke: 13px #8A3E86; paint-order: stroke fill;
+               text-shadow: 0 8px 0 rgba(138, 62, 134, 0.5); z-index: 3; }
+  .puff .txt b { color: #FFFFFF; }
+  .puff .emo { position: absolute; z-index: 4; font-size: 78px; }
+
+  /* captions: cream letters with plum outline; the spoken word sits on a squishy marshmallow cube */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 28px; align-items: center; opacity: 0;
+         font-size: 76px; line-height: 1; letter-spacing: 1px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFF8FC;
+                  -webkit-text-stroke: 15px #6A3A78; paint-order: stroke fill; }
+  .cap .word.key .a { color: #FFC9E3; }
+  .cap .cube { position: absolute; z-index: 0; left: -20px; right: -20px; top: -14px; bottom: -16px;
+               border-radius: 30px; opacity: 0; transform-origin: 50% 100%;
+               background: linear-gradient(180deg, #FFE3F1 0%, #FF9CCB 100%);
+               box-shadow: inset 0 10px 14px rgba(255, 255, 255, 0.9), inset 0 -12px 14px rgba(190, 70, 140, 0.45),
+                           0 10px 18px rgba(106, 58, 120, 0.35); }
+
+  .bub { position: absolute; border-radius: 50%; opacity: 0;
+         background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 26%,
+                     rgba(255, 190, 225, 0.25) 60%, rgba(220, 200, 255, 0.55) 100%);
+         box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.8), 0 0 12px rgba(255, 170, 215, 0.45); }
+  .wall { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+
+  /* progress: a marshmallow track with a pink fill, a little cloud leads */
+  #track { position: absolute; height: 20px; border-radius: 10px; background: rgba(255, 240, 248, 0.55);
+           box-shadow: inset 0 3px 5px rgba(255, 255, 255, 0.8), 0 3px 8px rgba(106, 58, 120, 0.25); }
+  #track .fill { position: absolute; inset: 0; border-radius: 10px; transform-origin: 0 50%;
+                 background: linear-gradient(180deg, #FFC9E3, #FF7DB8);
+                 box-shadow: inset 0 4px 5px rgba(255, 255, 255, 0.7); }
+  #track .lead { position: absolute; top: -32px; left: -34px; font-size: 62px; }
+  .tag { position: absolute; font-size: 44px; color: #FFFFFF; padding: 10px 26px 12px; border-radius: 999px; opacity: 0;
+         background: linear-gradient(180deg, #FFC9E3, #FF7DB8); -webkit-text-stroke: 8px #8A3E86; paint-order: stroke fill;
+         box-shadow: inset 0 6px 8px rgba(255, 255, 255, 0.8), inset 0 -8px 10px rgba(190, 70, 140, 0.4),
+                     0 8px 14px rgba(106, 58, 120, 0.3); }
+
+  /* end card: a big cloud */
+  .endc { position: absolute; left: 0; top: 0; opacity: 0; }
+  .endc .body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 24px;
+                padding: 56px 56px 48px; border-radius: 90px;
+                background: linear-gradient(180deg, #FFFFFF 0%, #FFF0F7 40%, #FFD3E8 100%);
+                box-shadow: inset 0 18px 26px rgba(255, 255, 255, 0.95), inset 0 -20px 28px rgba(214, 120, 176, 0.4),
+                            0 22px 40px rgba(120, 60, 120, 0.32); }
+  .endc .bump { position: absolute; border-radius: 50%;
+                background: radial-gradient(circle at 40% 30%, #FFFFFF 0%, #FFF0F7 40%, #FFD3E8 100%);
+                box-shadow: inset 0 -12px 18px rgba(214, 120, 176, 0.35), 0 12px 24px rgba(120, 60, 120, 0.2); }
+  .endc .row { position: relative; z-index: 2; display: flex; align-items: center; gap: 14px; line-height: 1;
+               white-space: nowrap; }
+  .endc .title { font-size: 76px; color: #6A3A78; text-shadow: 0 5px 0 rgba(255, 255, 255, 0.95); }
+  .endc .title b { color: #FF4F9A; }
+  .endc .sub { font-size: 40px; color: #6A3A78; padding: 14px 30px 16px; border-radius: 999px;
+               background: linear-gradient(180deg, #FFFFFF, #E9DDFF);
+               box-shadow: inset 0 6px 8px rgba(255, 255, 255, 0.9), inset 0 -8px 10px rgba(140, 110, 210, 0.35); }
+  .endc .cta { font-size: 52px; color: #FFFFFF; padding: 18px 44px 20px; border-radius: 999px;
+               background: linear-gradient(180deg, #FFC9E3, #FF6FAE); -webkit-text-stroke: 9px #8A3E86;
+               paint-order: stroke fill;
+               box-shadow: inset 0 8px 10px rgba(255, 255, 255, 0.8), inset 0 -10px 12px rgba(190, 70, 140, 0.45),
+                           0 10px 18px rgba(106, 58, 120, 0.35); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="46.846" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="46.846" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 31;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head,
+  // stays off the cushion's bunny face when it can and never collides with a caption on screen at the time.
+  const MARGIN = 44;
+  const placed = [];
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 8) {
+      for (let x = x0; x <= x1; x += 8) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        for (const f of (o.faces || [])) {
+          if (f[0] > x - 120 && f[0] < x + w + 120 && f[1] > y - 120 && f[1] < y + h + 120) c += 9000;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+
+  // cloud bumps along the top edge of a w x h body (absolute, behind the body)
+  function bumps(parent, w, h, cls) {
+    const out = [];
+    const n = Math.max(3, Math.round(w / 150));
+    const r0 = Math.min(h * 0.62, 92);
+    for (let i = 0; i < n; i++) {
+      const fr = (i + 0.5) / n;
+      const r = r0 * (0.72 + 0.28 * Math.sin(Math.PI * fr)) * (0.9 + rnd() * 0.2);
+      const b = el("div", cls || "bump", parent);
+      b.style.width = b.style.height = (2 * r) + "px";
+      b.style.left = (w * (0.08 + 0.84 * fr) - r) + "px";
+      b.style.top = (-r * 0.95 + 18) + "px";
+      out.push(b);
+    }
+    return out;
+  }
+
+  // bubbles float up out of a spot and pop
+  function bubbles(x, y, t, n) {
+    for (let i = 0; i < (n || 9); i++) {
+      const b = el("div", "bub", fx);
+      const s = 26 + rnd() * 44;
+      b.style.width = b.style.height = s + "px";
+      b.style.left = (x - s / 2 + (rnd() - 0.5) * 220) + "px";
+      b.style.top = (y - s / 2 + (rnd() - 0.5) * 60) + "px";
+      const dy = 160 + rnd() * 200, dx = (rnd() - 0.5) * 120, t0 = t + rnd() * 0.25;
+      tl.fromTo(b, { opacity: 0, scale: 0.2, x: 0, y: 0 },
+        { opacity: 1, scale: 1, x: dx * 0.6, y: -dy * 0.6, duration: 0.45, ease: "power1.out" }, t0);
+      tl.to(b, { x: dx, y: -dy, scale: 1.35, opacity: 0, duration: 0.18, ease: "power2.in" }, t0 + 0.55 + rnd() * 0.25);
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "cube", s);
+      el("span", "a", s, w.w);
+      return s;
+    });
+    let fs = 76;
+    while (cap.offsetWidth > MAXW && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw + 40, ch + 40, { t0: C.t0, t1: C.t1, heads: C.heads, faces: C.faces, px: CX, py: C.y,
+                                        wy: 1.4, wx: 0.8, isCaption: true });
+    const px = p.x + 20, py = p.y + 18;
+    cap.style.left = px + "px";
+    cap.style.top = py + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x, p.y, p.x + cw + 40, p.y + ch + 40] });
+    C.placed = { x: px, y: py, w: cw, h: ch, clear: p.clear };
+    // fade in/out never overlap (a short one-word chunk would otherwise leave a ghost caption on screen)
+    const fin = Math.min(0.18, (C.t1 - C.t0) * 0.4), tout = Math.max(C.t1 - 0.1, C.t0 + fin);
+    tl.fromTo(cap, { opacity: 0, scaleY: 0.7, y: 16 }, { opacity: 1, scaleY: 1, y: 0, duration: fin,
+                                                       ease: "back.out(2.4)", immediateRender: true }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], cube = s.querySelector(".cube");
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      const bin = Math.min(0.16, Math.max(0.04, off - w.s - 0.1));
+      tl.fromTo(cube, { opacity: 0, scaleX: 1.25, scaleY: 0.4 },
+        { opacity: 1, scaleX: 1, scaleY: 1, duration: bin, ease: "elastic.out(1, 0.45)" }, w.s);
+      tl.fromTo(s, { scaleX: 1, scaleY: 1 }, { scaleX: 1.08, scaleY: 0.92, duration: 0.08, yoyo: true, repeat: 1,
+                                             ease: "sine.inOut", transformOrigin: "50% 100%" }, w.s);
+      tl.fromTo(cube, { opacity: 1 }, { opacity: 0, duration: 0.06, immediateRender: false },
+        Math.max(w.s + bin, off - 0.06));
+    });
+    tl.fromTo(cap, { opacity: 1 }, { opacity: 0, duration: 0.1, immediateRender: false }, tout);
+  }
+
+  // ------------------------------------------------------------ labels: cloud cards / puff badges
+  let flip = 1, tint = 0;
+  function card(L) {
+    if (L.kind === "puff") return puffBadge(L);
+    const box = el("div", "cloud" + ((tint++ % 3 === 2) ? " lilac" : ""));
+    const body = el("div", "body", box);
+    const words = L.html.split(/\s+/).filter(Boolean);      // <b> never spans a space
+    const ws = words.map(w => el("span", "w", body, w));
+    const emo = el("span", "emo", body, L.emoji);
+    const B = L.big;
+    const configs = [
+      { wrap: false, fs: B ? 96 : 80, min: B ? 76 : 62 },
+      { wrap: true, maxw: 680, fs: B ? 88 : 74 },
+      { wrap: true, maxw: 560, fs: B ? 76 : 66 },
+      { wrap: true, maxw: 460, fs: B ? 64 : 56 },
+    ];
+    let pick = null;
+    for (const c of configs) {
+      box.classList.toggle("wrapline", c.wrap);
+      body.style.maxWidth = c.wrap ? c.maxw + "px" : "none";
+      let fs = c.fs;
+      body.style.fontSize = fs + "px";
+      if (!c.wrap) {
+        while (body.offsetWidth > MAXW && fs > c.min) { fs -= 2; body.style.fontSize = fs + "px"; }
+        if (body.offsetWidth > MAXW) continue;
+      } else {
+        while ((body.offsetWidth > c.maxw || body.offsetHeight > 320) && fs > 44) {
+          fs -= 2; body.style.fontSize = fs + "px";
+        }
+      }
+      const w = body.offsetWidth, h = body.offsetHeight;
+      const bh = Math.min(h * 0.62, 92) * 0.95 - 18;        // height the bumps add above the body
+      const p = place(w, h + bh + 8, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: CX, py: E.lab_y,
+                                       wy: 1, wx: 0.5 });
+      const cand = { c, fs, w, h, bh, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    box.classList.toggle("wrapline", pick.c.wrap);
+    body.style.maxWidth = pick.c.wrap ? pick.c.maxw + "px" : "none";
+    body.style.fontSize = pick.fs + "px";
+    const { w, h, bh, p } = pick;
+    L.placed = { x: p.x, y: p.y, w, h: h + bh + 8, clear: p.clear, fs: pick.fs, wrap: pick.c.wrap };
+    const bs = bumps(box, w, h, "bump");
+    box.insertBefore(body, null);                            // body above the bumps
+    box.style.left = p.x + "px";
+    box.style.top = (p.y + bh + 8) + "px";
+    const rot = 1.5 * flip; flip = -flip;
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scaleX: 0.4, scaleY: 0.2, y: 70, rotation: 0 },
+      { scaleX: 1, scaleY: 1, y: 0, rotation: rot, duration: 0.75, ease: "elastic.out(1.05, 0.42)" }, L.t0);
+    tl.fromTo(bs, { scale: 0, transformOrigin: "50% 100%" },
+      { scale: 1, duration: 0.45, stagger: 0.04, ease: "back.out(2.6)" }, L.t0 + 0.08);
+    tl.fromTo(ws, { opacity: 0, y: 18, scaleY: 0.6 },
+      { opacity: 1, y: 0, scaleY: 1, duration: 0.28, stagger: 0.05, ease: "back.out(2.6)" }, L.t0 + 0.12);
+    tl.fromTo(emo, { scale: 0 }, { scale: 1, duration: 0.45, ease: "elastic.out(1.1, 0.4)" }, L.t0 + 0.2);
+    // gentle marshmallow breathing while it is on screen
+    const breathe = Math.max(1, Math.floor((L.t1 - L.t0 - 0.8) / 0.6));
+    tl.to(box, { scaleX: 1.03, scaleY: 0.97, duration: 0.3, yoyo: true, repeat: breathe * 2 - 1, ease: "sine.inOut" },
+      L.t0 + 0.8);
+    if (L.big) bubbles(p.x + w / 2, p.y + bh + h / 2, L.t0 + 0.1, 12);
+    tl.fromTo(box, { opacity: 1 }, { opacity: 0, scaleY: 0.3, scaleX: 1.2, y: 30, duration: 0.16, ease: "power2.in",
+                                    immediateRender: false }, Math.max(L.t0 + 0.4, L.t1 - 0.16));
+  }
+
+  function puffBadge(L) {
+    const box = el("div", "puff");
+    const D = 330;
+    const ring = [];
+    for (let i = 0; i < 9; i++) {                            // little cloud ring around the ball
+      const a = (i / 9) * Math.PI * 2 + 0.3, r = 54 + rnd() * 14;
+      const c = el("div", "ring", box);
+      c.style.width = c.style.height = 2 * r + "px";
+      c.style.left = (D / 2 + Math.cos(a) * D * 0.44 - r) + "px";
+      c.style.top = (D / 2 + Math.sin(a) * D * 0.44 - r) + "px";
+      ring.push(c);
+    }
+    const ball = el("div", "ball", box);
+    ball.style.width = ball.style.height = D + "px";
+    const txt = el("div", "txt", box, L.html);
+    txt.style.width = txt.style.height = D + "px";
+    const emo = el("span", "emo", box, L.emoji);
+    emo.style.left = (D - 40) + "px";
+    emo.style.top = "-30px";
+    const full = D + 130;                                   // ring sticks out ~65px all round
+    let p = null, z = 1;
+    for (const zz of [1, 0.85, 0.7]) {                       // shrink the badge before letting it touch anything
+      const q = place(full * zz, full * zz, { t0: L.t0, t1: L.t1, heads: L.heads, faces: L.faces, px: L.px || CX,
+                                            py: L.py || E.lab_y, wy: 0.7, wx: 0.7 });
+      if (!p || q.c < p.c) { p = q; z = zz; }
+      if (q.clear) break;
+    }
+    L.placed = { x: p.x, y: p.y, w: full * z, h: full * z, clear: p.clear, zoom: z };
+    box.style.left = (p.x + 65 * z) + "px";
+    box.style.top = (p.y + 65 * z) + "px";
+    box.style.transform = `scale(${z})`;
+    box.style.transformOrigin = "0 0";
+    const inner = [ball, txt, emo, ...ring];
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(ball, { scaleX: 0.2, scaleY: 0.1, transformOrigin: "50% 100%" },
+      { scaleX: 1, scaleY: 1, duration: 0.8, ease: "elastic.out(1.1, 0.38)" }, L.t0);
+    tl.fromTo(ring, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.4, stagger: 0.03,
+                                                              ease: "back.out(2.8)" }, L.t0 + 0.1);
+    tl.fromTo(txt, { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "elastic.out(1.2, 0.4)" },
+      L.t0 + 0.15);
+    tl.fromTo(emo, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(3)" },
+      L.t0 + 0.28);
+    tl.to(ball, { scaleX: 1.05, scaleY: 0.95, duration: 0.28, yoyo: true,
+                  repeat: Math.max(1, Math.floor((L.t1 - L.t0 - 0.8) / 0.28)), ease: "sine.inOut" }, L.t0 + 0.8);
+    bubbles((p.x + full * z / 2), (p.y + full * z / 2), L.t0 + 0.12, 12);
+    tl.fromTo(inner, { opacity: 1 }, { opacity: 0, duration: 0.15, immediateRender: false },
+      Math.max(L.t0 + 0.4, L.t1 - 0.15));
+  }
+
+  // ------------------------------------------------------------ cloud-wall wipe
+  let wallN = 0;
+  function wall(W) {
+    const id = wallN++;
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("class", "wall");
+    s.setAttribute("viewBox", "0 0 1080 1920");
+    let inner = `<defs><radialGradient id="cg${id}" cx="40%" cy="30%" r="70%">` +
+                `<stop offset="0" stop-color="#FFFFFF"/><stop offset="0.45" stop-color="#FFF0F7"/>` +
+                `<stop offset="1" stop-color="#FFC4DF"/></radialGradient>` +
+                `<radialGradient id="cl${id}" cx="40%" cy="30%" r="70%">` +
+                `<stop offset="0" stop-color="#FFFFFF"/><stop offset="0.45" stop-color="#F4ECFF"/>` +
+                `<stop offset="1" stop-color="#D6C4FF"/></radialGradient></defs>`;
+    inner += `<rect x="-20" y="300" width="1120" height="1700" fill="url(#cg${id})"/>`;
+    for (let i = 0; i < 26; i++) {                           // puffy top edge + scattered puffs
+      const x = -60 + (i % 9) * 150 + rnd() * 60, y = 330 - (i < 9 ? 0 : (i < 18 ? -500 : -1050)) + rnd() * 80;
+      const r = 150 + rnd() * 90;
+      inner += `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#${i % 3 === 1 ? 'cl' : 'cg'}${id})"/>`;
+    }
+    s.innerHTML = inner;
+    fx.appendChild(s);
+    tl.fromTo(s, { y: 2300 }, { y: 0, duration: 0.34, ease: "power2.out" }, W.t - 0.34);
+    tl.to(s, { y: -2400, duration: 0.38, ease: "power2.in" }, W.t + 0.02);
+  }
+
+  function tag(T) {
+    const g = el("div", "tag", fx, T.text);
+    g.style.left = (S.l + 10) + "px";
+    g.style.top = (S.t + 48) + "px";
+    tl.fromTo(g, { opacity: 0, scaleY: 0.4 }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "elastic.out(1, 0.45)" },
+      T.t0);
+    tl.to(g, { opacity: 0, duration: 0.1 }, T.t1 - 0.1);
+  }
+
+  // ------------------------------------------------------------ end card: a big cloud, face-aware
+  function endcard(N) {
+    const b = el("div", "endc");
+    const body = el("div", "body", b);
+    const rows = [
+      el("div", "row title", body, N.title),
+      el("div", "row sub", body, N.sizes),
+      el("div", "row cta", body, N.cta),
+    ];
+    const w = body.offsetWidth, h = body.offsetHeight;
+    const bs = bumps(b, w, h, "bump");
+    b.appendChild(body);
+    const bh = 75;
+    const p = place(w, h + bh, { t0: N.t0, t1: N.t1, heads: N.heads, faces: N.faces, px: CX, py: N.py || 1120,
+                                 wy: 0.8, wx: 0.6 });
+    N.placed = { x: p.x, y: p.y, w, h: h + bh, clear: p.clear };
+    b.style.left = p.x + "px";
+    b.style.top = (p.y + bh) + "px";
+    tl.set(b, { opacity: 1 }, N.t0);
+    tl.fromTo(b, { scaleX: 0.3, scaleY: 0.15, y: 120, transformOrigin: "50% 100%" },
+      { scaleX: 1, scaleY: 1, y: 0, duration: 0.85, ease: "elastic.out(1.05, 0.4)" }, N.t0);
+    tl.fromTo(bs, { scale: 0, transformOrigin: "50% 100%" }, { scale: 1, duration: 0.4, stagger: 0.05,
+                                                              ease: "back.out(2.6)" }, N.t0 + 0.12);
+    rows.forEach((d, i) => {
+      tl.fromTo(d, { y: 30, opacity: 0, scaleY: 0.6 }, { y: 0, opacity: 1, scaleY: 1, duration: 0.4,
+                                                        ease: "back.out(2.6)" }, N.t0 + 0.25 + i * 0.14);
+    });
+    tl.to(rows[2], { scaleX: 1.06, scaleY: 0.94, duration: 0.4, yoyo: true, repeat: 5, ease: "sine.inOut" },
+      N.t0 + 0.9);
+    bubbles(p.x + w / 2, p.y + bh, N.t0 + 0.2, 14);
+  }
+
+  function progress() {
+    const v = el("div", "", fx);
+    v.id = "track";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 4) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const k = el("div", "lead", v, "☁️");
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    tl.fromTo(k, { x: 0 }, { x: S.r - S.l, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    progress();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(card);
+    E.tags.forEach(tag);
+    E.wipes.forEach(wall);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>
