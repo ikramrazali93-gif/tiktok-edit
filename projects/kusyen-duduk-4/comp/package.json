@@ -1,0 +1,8 @@
+{
+  "name": "kusyen-duduk-1-comp",
+  "private": true,
+  "description": "HyperFrames graphics layer for the kusyen duduk TikTok edit (rendered by ../edit.py)",
+  "devDependencies": {
+    "hyperframes": "0.8.181"
+  }
+}

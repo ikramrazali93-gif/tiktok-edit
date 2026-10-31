@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Kusyen duduk #4, "Y2K chrome pop" look: glossy chrome lettering for the two big lines, holographic pills with a
+     chrome rim for the small ones, pixel stars, a holo chip under the spoken word and a chrome glint along the
+     frame edges between sections. The cut video (base.mp4), timings and her head boxes come from edit.py via
+     data.js; this file draws, animates and places every graphic outside the centre keep-out box (product + her
+     body) and clear of her face. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+
+  :root {
+    --ink: #1B1035;
+    --pink: #FF2E9A;
+    --lime: #C6FF4A;
+    --holo: linear-gradient(100deg, #FF8AD8 0%, #C9A2FF 22%, #8FF3FF 45%, #D8FF8A 66%, #FFB3E6 84%, #FF8AD8 100%);
+    --chrome: linear-gradient(180deg, #FFFFFF 0%, #EEF2F7 30%, #9AA6B4 49%, #5E6876 51%, #DCE3EA 70%, #FFFFFF 100%);
+  }
+
+  /* holo pill: holographic body, white rim + ink outline, glossy top half, ink text with hot-pink keywords */
+  .pill { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 50%; }
+  .pill .body { position: relative; display: flex; align-items: center; gap: 14px; white-space: nowrap;
+                padding: 12px 30px 14px 16px; border-radius: 60px; color: var(--ink); font-size: 44px; line-height: 1;
+                background: var(--holo); background-size: 260% 100%;
+                border: 5px solid #FFFFFF;
+                box-shadow: 0 0 0 4px var(--ink), 6px 8px 0 4px var(--pink), 0 14px 22px rgba(27, 16, 53, 0.35); }
+  .pill .body::before { content: ""; position: absolute; left: 14px; right: 14px; top: 5px; height: 42%;
+                        border-radius: 40px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+                        pointer-events: none; }
+  .pill b { color: var(--pink); font-weight: 700; }
+  .pill .w { position: relative; display: inline-block; }
+  .pill .emo { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none;
+               width: 1.35em; height: 1.35em; border-radius: 50%; font-size: 1.0em;
+               background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FFF1FA 45%, #E7D6FF 80%, #FFFFFF 100%);
+               border: 3px solid var(--ink); }
+
+  /* chrome headline: an ink-outlined back layer with a hot-pink drop, and a chrome gradient face on top that a
+     bright shine sweeps across */
+  .chrome { position: absolute; left: 0; top: 0; opacity: 0; transform-origin: 50% 60%; }
+  .chrome .row { position: relative; display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+  .chrome .txt { position: relative; font-size: 78px; line-height: 1.02; letter-spacing: 1px; }
+  .chrome .back { position: absolute; left: 0; top: 0; color: var(--ink); -webkit-text-stroke: 16px var(--ink);
+                  paint-order: stroke fill; text-shadow: 7px 9px 0 var(--pink); white-space: nowrap; }
+  .chrome .face { position: relative; white-space: nowrap; color: transparent;
+                  background: var(--chrome); -webkit-background-clip: text; background-clip: text; }
+  .chrome .face b { background: linear-gradient(180deg, #F6FFD9 0%, #D8FF8A 40%, #7FC21A 52%, #E7FFB0 70%, #FFFFFF 100%);
+                    -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+  .chrome .back b { font-weight: 700; }
+  .chrome .shine { position: absolute; left: 0; top: 0; white-space: nowrap; color: transparent; pointer-events: none;
+                   background: linear-gradient(105deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.95) 50%,
+                                               rgba(255, 255, 255, 0) 60%);
+                   background-size: 300% 100%; background-position: 120% 0;
+                   -webkit-background-clip: text; background-clip: text; }
+  .chrome .emo { position: relative; flex: none; display: inline-flex; align-items: center; justify-content: center;
+                 width: 92px; height: 92px; border-radius: 50%; font-size: 52px;
+                 background: var(--holo); background-size: 200% 100%; border: 5px solid #FFFFFF;
+                 box-shadow: 0 0 0 4px var(--ink), 5px 7px 0 4px var(--pink); }
+
+  /* captions: white words with an ink outline (lime keywords); the spoken word sits on a holo chip in ink */
+  .cap { position: absolute; left: 0; top: 0; display: flex; gap: 20px; align-items: center; opacity: 0;
+         font-size: 58px; line-height: 1; letter-spacing: 0.5px; }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word .a { position: relative; z-index: 1; display: block; white-space: nowrap; color: #FFFFFF;
+                  -webkit-text-stroke: 12px var(--ink); paint-order: stroke fill; }
+  .cap .word.key .a { color: var(--lime); }
+  .cap .chip { position: absolute; z-index: 0; left: -14px; right: -14px; top: -10px; bottom: -12px;
+               border-radius: 40px; background: var(--holo); background-size: 220% 100%; border: 4px solid #FFFFFF;
+               box-shadow: 0 0 0 3px var(--ink); opacity: 0; }
+  .cap .word .y { position: absolute; z-index: 1; left: 0; top: 0; white-space: nowrap; color: var(--ink);
+                  opacity: 0; }
+
+  /* chrome glint between sections: thin chrome bars sweep along the top and bottom edges, a soft white edge
+     glow, pixel stars in the corners; nothing crosses the middle */
+  .edge { position: absolute; inset: 0; opacity: 0;
+          background: radial-gradient(ellipse 72% 64% at 50% 50%, rgba(255, 255, 255, 0) 58%, rgba(255, 238, 252, 0.7) 100%); }
+  .bar { position: absolute; height: 10px; width: 420px; border-radius: 6px; opacity: 0;
+         background: linear-gradient(90deg, rgba(255, 255, 255, 0), #FFFFFF 30%, #C9A2FF 55%, #8FF3FF 75%, rgba(255, 255, 255, 0));
+         box-shadow: 0 0 18px rgba(255, 255, 255, 0.9); }
+
+  /* progress: a chrome pill track along the top with a holo fill and a pixel star riding it */
+  #track { position: absolute; height: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.35);
+           box-shadow: 0 0 0 3px rgba(27, 16, 53, 0.55); overflow: visible; }
+  #track .fill { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 8px;
+                 background: var(--holo); background-size: 200% 100%; transform-origin: 0 50%; }
+  #track .star { position: absolute; top: -17px; left: -23px; width: 46px; height: 46px; }
+
+  /* end card: compact holo card with a chrome title */
+  .card { position: absolute; left: 0; top: 0; opacity: 0; padding: 22px 38px 26px; border-radius: 36px;
+          background: var(--holo); background-size: 240% 100%; border: 6px solid #FFFFFF;
+          box-shadow: 0 0 0 5px var(--ink), 9px 11px 0 5px var(--pink), 0 18px 28px rgba(0, 0, 0, 0.3);
+          display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .card .title { position: relative; font-size: 64px; line-height: 1; white-space: nowrap; }
+  .card .title .back { position: absolute; left: 0; top: 0; color: var(--ink); -webkit-text-stroke: 14px var(--ink);
+                       paint-order: stroke fill; white-space: nowrap; }
+  .card .title .face { position: relative; white-space: nowrap; color: transparent; background: var(--chrome);
+                       -webkit-background-clip: text; background-clip: text; }
+  .card .title b { font-weight: 700; }
+  .card .sub { font-size: 32px; color: var(--ink); white-space: nowrap; padding: 6px 18px; border-radius: 30px;
+               background: rgba(255, 255, 255, 0.72); }
+  .card .cta { font-size: 40px; color: var(--ink); background: #F6E84A; white-space: nowrap;
+               padding: 12px 30px 14px; border-radius: 40px; border: 4px solid var(--ink); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="28.430" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="28.430" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40, K = E.keepout;
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  let seed = 41;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);   // deterministic
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+
+  // ------------------------------------------------------------ face- and centre-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the safe
+  // area for the spot closest to the preferred position that keeps MARGIN px clear of her head, stays out of the
+  // centre keep-out box (product + body) and never collides with a caption that is on screen at the time.
+  const MARGIN = 44;
+  const placed = [];                                  // {t0, t1, r} of captions already placed
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const kw = o.keepW === undefined ? 1 : o.keepW;
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 24, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 4) {
+      for (let x = x0; x <= x1; x += 6) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        const ka = ovl(r, K);
+        if (ka > 0) c += kw >= 1 ? 3e6 + ka * 4 : ka * kw;
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+  const inKeep = (x, y, pad) => x > K[0] - pad && x < K[2] + pad && y > K[1] - pad && y < K[3] + pad;
+
+  // ------------------------------------------------------------ pixel star (blocky 4-point sparkle)
+  function pixStar(size, col) {
+    const s = document.createElementNS(NS, "svg");
+    s.setAttribute("viewBox", "0 0 9 9");
+    s.setAttribute("shape-rendering", "crispEdges");
+    s.style.cssText = `position:absolute;width:${size}px;height:${size}px;opacity:0;overflow:visible;` +
+                      `filter:drop-shadow(0 0 6px ${col})`;
+    s.innerHTML = `<g fill="#FFFFFF"><rect x="4" y="0" width="1" height="9"/><rect x="0" y="4" width="9" height="1"/>` +
+                  `<rect x="3" y="3" width="3" height="3"/></g>` +
+                  `<g fill="${col}"><rect x="4" y="1" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/>` +
+                  `<rect x="1" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/></g>`;
+    fx.appendChild(s);
+    return s;
+  }
+  const STAR_COLS = ["#FF2E9A", "#C6FF4A", "#8FF3FF", "#C9A2FF"];
+  // a few pixel stars twinkle around a graphic (outside the centre box, her head and the TikTok UI only)
+  function starBurst(r, t, heads, n0) {
+    const spots = [[r[0] - 34, r[1] - 26], [r[2] + 6, r[1] - 30], [r[2] + 10, r[3] - 20], [r[0] - 40, r[3] - 12],
+                   [(r[0] + r[2]) / 2, r[1] - 40]];
+    let n = 0;
+    for (const [x, y] of spots) {
+      if (n >= (n0 || 3)) break;
+      if (inKeep(x + 20, y + 20, 10) || x < S.l - 30 || x > S.r - 40 || y < S.t || y > S.b - 40) continue;
+      if (heads.some(b => x + 40 > b[0] - 20 && x < b[2] + 20 && y + 40 > b[1] - 20 && y < b[3] + 20)) continue;
+      const st = pixStar(40 + rnd() * 14, STAR_COLS[(n + Math.floor(rnd() * 4)) % 4]);
+      st.style.left = x + "px"; st.style.top = y + "px";
+      tl.fromTo(st, { opacity: 0, scale: 0.1, rotation: -45 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.22,
+        ease: "back.out(3)" }, t + 0.12 + n * 0.07);
+      tl.to(st, { scale: 0.6, duration: 0.18, yoyo: true, repeat: 3, ease: "steps(2)" }, t + 0.4 + n * 0.07);
+      tl.to(st, { opacity: 0, scale: 0.2, duration: 0.18 }, t + 1.3 + n * 0.05);
+      n++;
+    }
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap);
+      el("span", "chip", s);
+      el("span", "a", s, w.w);
+      el("span", "y", s, w.w);
+      return s;
+    });
+    let fs = 58;
+    while (cap.offsetWidth > MAXW - 40 && fs > 40) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw + 40, ch + 30, { t0: C.t0, t1: C.t1, heads: C.heads, px: CX, py: C.y, wy: 1.4, wx: 0.8,
+                                        isCaption: true, keepW: 0 });
+    const cx = p.x + 20, cy = p.y + 14;
+    cap.style.left = cx + "px";
+    cap.style.top = cy + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [cx - 20, cy - 16, cx + cw + 20, cy + ch + 18] });
+    C.placed = { x: cx, y: cy, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.12, ease: "back.out(2.5)" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i], chip = s.querySelector(".chip"), y = s.querySelector(".y"), a = s.querySelector(".a");
+      tl.set([chip, y], { opacity: 1 }, w.s);
+      tl.set(a, { opacity: 0 }, w.s);
+      tl.fromTo(chip, { scaleX: 0.5, scaleY: 0.7, backgroundPosition: "0% 0" },
+        { scaleX: 1, scaleY: 1, backgroundPosition: "100% 0", duration: 0.12, ease: "back.out(3)" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.set([chip, y], { opacity: 0 }, off);
+      tl.set(a, { opacity: 1 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.08 }, C.t1 - 0.08);
+  }
+
+  // ------------------------------------------------------------ labels
+  // big lines: chrome lettering (wraps to two rows when there is no room); small lines: holo pills
+  function chromeLabel(L) {
+    const box = el("div", "chrome");
+    const row = el("div", "row", box);
+    const emo = el("span", "emo", row, L.emoji);
+    const txt = el("div", "txt", row);
+    const back = el("span", "back", txt, L.html);
+    const face = el("span", "face", txt, L.html);
+    const shine = el("span", "shine", txt, L.html.replace(/<\/?b>/g, ""));
+    // line -> two rows -> one word per row (narrow column beside her head, emoji dropped); if nothing fits clear of
+    // her head and the centre box, the line falls back to a compact holo pill in the low band
+    const configs = [{ fs: 78, mode: "line" }, { fs: 68, mode: "line" }, { fs: 70, mode: "wrap" }, { fs: 60, mode: "wrap" },
+                     { fs: 58, mode: "line", pad: 12 }, { fs: 52, mode: "line", pad: 12 },
+                     { fs: 56, mode: "stack" }, { fs: 50, mode: "stack" }, { fs: 46, mode: "stack" }];
+    const fmt = (m) => m === "wrap" ? L.html.replace(/ (?=<b>)| (?=[^<]*<\/b>$)/, "<br>")
+                     : m === "stack" ? L.html.replace(/ /g, "<br>") : L.html;
+    const apply = (c) => {
+      const html = fmt(c.mode);
+      txt.style.fontSize = c.fs + "px";
+      back.innerHTML = html; face.innerHTML = html; shine.innerHTML = html.replace(/<\/?b>/g, "");
+      [back, face, shine].forEach(n => { n.style.whiteSpace = c.mode === "line" ? "nowrap" : "normal"; });
+      emo.style.display = c.mode === "stack" ? "none" : "inline-flex";
+      emo.style.width = emo.style.height = Math.round(c.fs * 1.15) + "px";
+      emo.style.fontSize = Math.round(c.fs * 0.66) + "px";
+      return html;
+    };
+    let pick = null;
+    for (const c of configs) {
+      apply(c);
+      const w = box.offsetWidth, h = box.offsetHeight;
+      if (w > S.r - S.l) continue;
+      const pad = c.pad || (c.mode === "stack" ? 12 : 40);
+      const p = place(w + pad, h + pad, { t0: L.t0, t1: L.t1, heads: L.heads, px: CX, py: L.py, wy: 1, wx: 0.4 });
+      const cand = { c, w, h, p, pad };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    if (!pick.p.clear) {                       // no clean spot for big chrome text: compact pill instead
+      box.remove();
+      return pillLabel(Object.assign({}, L, { py: E.low_y }));
+    }
+    const { c, w, h, p, pad } = pick;
+    apply(c);
+    const x = p.x + pad / 2, y = p.y + pad / 2;
+    box.style.left = x + "px"; box.style.top = y + "px";
+    L.placed = { x, y, w, h, clear: p.clear, fs: c.fs, mode: c.mode };
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scale: 0.3, skewX: -18, rotation: -4 }, { scale: 1, skewX: 0, rotation: -2, duration: 0.32,
+      ease: "back.out(3)" }, L.t0);
+    tl.fromTo(emo, { scale: 0, rotation: -120 }, { scale: 1, rotation: 0, duration: 0.3, ease: "back.out(3)" }, L.t0 + 0.08);
+    tl.fromTo(shine, { backgroundPosition: "120% 0" }, { backgroundPosition: "-20% 0", duration: 0.55, ease: "power2.inOut" },
+      L.t0 + 0.3);
+    tl.fromTo(emo, { backgroundPosition: "0% 0" }, { backgroundPosition: "100% 0", duration: L.t1 - L.t0, ease: "none" }, L.t0);
+    tl.to(box, { y: -6, duration: 0.5, yoyo: true, repeat: Math.max(0, Math.floor((L.t1 - L.t0 - 0.6) / 0.5)),
+      ease: "sine.inOut" }, L.t0 + 0.35);
+    starBurst([x, y, x + w, y + h], L.t0, L.heads || [], 4);
+    tl.to(box, { scale: 0.6, opacity: 0, duration: 0.14, ease: "power2.in" }, L.t1 - 0.14);
+  }
+
+  let flip = 1;
+  function pillLabel(L) {
+    const box = el("div", "pill");
+    const body = el("div", "body", box);
+    const emo = el("span", "emo", body, L.emoji);
+    const words = L.html.split(/\s+/).filter(Boolean);   // <b> never spans a space
+    const ws = words.map(w => el("span", "w", body, w));
+    let fs = 44;
+    body.style.fontSize = fs + "px";
+    let pick = null;
+    for (const f of [42, 38, 34, 30]) {
+      body.style.fontSize = f + "px";
+      if (body.offsetWidth > S.r - S.l - 20) continue;
+      const w = body.offsetWidth, h = body.offsetHeight;
+      const p = place(w + 24, h + 26, { t0: L.t0, t1: L.t1, heads: L.heads, px: CX, py: L.py, wy: 1, wx: 0.5 });
+      const cand = { f, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    body.style.fontSize = pick.f + "px";
+    const { w, h, p } = pick;
+    const x = p.x + 8, y = p.y + 10;
+    box.style.left = x + "px"; box.style.top = y + "px";
+    L.placed = { x, y, w, h, clear: p.clear, fs: pick.f };
+    const rot = 1.5 * flip; flip = -flip;
+    tl.set(box, { opacity: 1 }, L.t0);
+    tl.fromTo(box, { scale: 0.2, rotation: rot * 6 }, { scale: 1, rotation: rot, duration: 0.28, ease: "back.out(3.2)" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.14, stagger: 0.04, ease: "power2.out" }, L.t0 + 0.06);
+    tl.fromTo(emo, { scale: 0, rotation: 90 }, { scale: 1, rotation: 0, duration: 0.26, ease: "back.out(3)" }, L.t0 + 0.12);
+    tl.fromTo(body, { backgroundPosition: "0% 0" }, { backgroundPosition: "100% 0", duration: L.t1 - L.t0, ease: "none" }, L.t0);
+    starBurst([x, y, x + w, y + h], L.t0, L.heads || [], 2);
+    tl.to(box, { scale: 0.5, opacity: 0, duration: 0.12, ease: "power2.in" }, L.t1 - 0.12);
+  }
+
+  // ------------------------------------------------------------ chrome glint along the edges
+  function glint(F) {
+    const g = el("div", "edge");
+    tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.08 }, F.t - 0.1);
+    tl.to(g, { opacity: 0, duration: 0.28, ease: "power1.in" }, F.t + 0.02);
+    const ys = [S.t + 34, S.b - 8];
+    ys.forEach((y, i) => {
+      const b = el("div", "bar");
+      b.style.top = y + "px";
+      const from = i ? 1080 : -420, to = i ? -420 : 1080;
+      tl.fromTo(b, { x: from, opacity: 1 }, { x: to, duration: 0.38, ease: "power2.inOut" }, F.t - 0.14);
+      tl.set(b, { opacity: 0 }, F.t + 0.26);
+    });
+    const corners = [[S.l + 6, S.t + 60], [S.r - 60, S.t + 60], [S.l + 6, K[3] + 6], [S.r - 60, K[3] + 6]];
+    corners.forEach(([x, y], i) => {
+      const st = pixStar(48, STAR_COLS[i]);
+      st.style.left = x + "px"; st.style.top = y + "px";
+      tl.fromTo(st, { opacity: 0, scale: 0.1 }, { opacity: 1, scale: 1, duration: 0.14, ease: "back.out(3)" }, F.t - 0.06 + i * 0.03);
+      tl.to(st, { opacity: 0, scale: 0.2, duration: 0.2 }, F.t + 0.32 + i * 0.03);
+    });
+  }
+
+  // ------------------------------------------------------------ end card: compact holo card
+  function endcard(N) {
+    const c = el("div", "card");
+    const title = el("div", "title", c);
+    el("span", "back", title, N.title);
+    el("span", "face", title, N.title);
+    const s = el("div", "sub", c, N.sizes);
+    const cta = el("div", "cta", c, N.cta);
+    const w = c.offsetWidth, h = c.offsetHeight;
+    const p = place(w, h, { t0: N.t0, t1: N.t1, heads: N.heads, px: CX, py: N.py || 1300, wy: 0.6, wx: 0.6, keepW: 0.5 });
+    N.placed = { x: p.x, y: p.y, w, h, clear: p.clear };
+    c.style.left = p.x + "px"; c.style.top = p.y + "px";
+    tl.fromTo(c, { opacity: 0, scale: 0.4, rotation: -6 }, { opacity: 1, scale: 1, rotation: -1.5, duration: 0.34,
+      ease: "back.out(2.6)" }, N.t0);
+    tl.fromTo([title, s, cta], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.18, stagger: 0.1, ease: "power2.out" },
+      N.t0 + 0.12);
+    tl.fromTo(c, { backgroundPosition: "0% 0" }, { backgroundPosition: "100% 0", duration: N.t1 - N.t0, ease: "none" }, N.t0);
+    tl.fromTo(cta, { scale: 1 }, { scale: 1.07, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, N.t0 + 0.5);
+    starBurst([p.x, p.y, p.x + w, p.y + h], N.t0, N.heads || [], 3);
+  }
+
+  function track() {
+    const v = el("div", "", fx);
+    v.id = "track";
+    v.style.left = S.l + "px";
+    v.style.top = (S.t + 8) + "px";
+    v.style.width = (S.r - S.l) + "px";
+    const f = el("div", "fill", v);
+    const star = pixStar(46, "#FF2E9A");
+    v.appendChild(star);
+    star.setAttribute("class", "star");
+    star.style.opacity = 1;
+    tl.fromTo(f, { scaleX: 0, backgroundPosition: "0% 0" }, { scaleX: 1, backgroundPosition: "100% 0", duration: E.total,
+      ease: "none" }, 0);
+    tl.fromTo(star, { x: 0, rotation: 0 }, { x: S.r - S.l, rotation: 720, duration: E.total, ease: "none" }, 0);
+  }
+
+  function build() {
+    track();
+    E.captions.forEach(caption);                // captions first: labels then steer around them
+    E.labels.forEach(L => (L.big ? chromeLabel : pillLabel)(L));
+    E.flashes.forEach(glint);
+    endcard(E.end);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  document.fonts.load('700 66px "Fredoka"').then(build);
+})();
+</script>
+</body>
+</html>

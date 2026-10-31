@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for kusyen duduk #4, "Y2K chrome pop" look: holographic bezel with pixel stars, a two-line chrome
+     title in the sky above her hood, a holo "NAK RAYA!" badge in the gap left of her head and a holo pill low on her
+     coat. Nothing sits on her face or on the two cushions; key text stays inside the 3:4 crop (y 48-1488).
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #1B1035; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  :root {
+    --ink: #1B1035; --pink: #FF2E9A;
+    --holo: linear-gradient(100deg, #FF8AD8 0%, #C9A2FF 22%, #8FF3FF 45%, #D8FF8A 66%, #FFB3E6 84%, #FF8AD8 100%);
+    --chrome: linear-gradient(180deg, #FFFFFF 0%, #EEF2F7 30%, #9AA6B4 49%, #5E6876 51%, #DCE3EA 70%, #FFFFFF 100%);
+  }
+  /* frame.jpg is the 1080x1920 frame at 2.6s; the top 1536 rows are shown (sky above her hood) */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #bezel { position: absolute; inset: 0; }
+  #title { position: absolute; left: 50%; top: 64px; text-align: center; line-height: 1.0; font-size: 104px;
+           letter-spacing: 1px; white-space: nowrap; }
+  #title .back { position: absolute; left: 0; top: 0; width: 100%; color: var(--ink); -webkit-text-stroke: 20px var(--ink);
+                 paint-order: stroke fill; text-shadow: 9px 12px 0 var(--pink); }
+  #title .face { position: relative; color: transparent; background: var(--chrome); -webkit-background-clip: text;
+                 background-clip: text; }
+  #title .face b { background: linear-gradient(180deg, #F6FFD9 0%, #D8FF8A 40%, #7FC21A 52%, #E7FFB0 70%, #FFFFFF 100%);
+                   -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #title b { font-weight: 700; }
+  #badge { position: absolute; left: 52px; top: 392px; width: 236px; height: 236px; border-radius: 50%;
+           background: var(--holo); border: 7px solid #FFFFFF;
+           box-shadow: 0 0 0 6px var(--ink), 9px 12px 0 6px var(--pink);
+           display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ink);
+           font-size: 50px; line-height: 0.98; text-align: center; }
+  #badge .e { font-size: 58px; margin-bottom: 4px; }
+  #pill { position: absolute; left: 50%; top: 1388px; display: flex; align-items: center; gap: 14px; white-space: nowrap;
+          padding: 14px 34px 16px 18px; border-radius: 60px; color: var(--ink); font-size: 50px; line-height: 1;
+          background: var(--holo); border: 6px solid #FFFFFF;
+          box-shadow: 0 0 0 5px var(--ink), 8px 10px 0 5px var(--pink), 0 16px 24px rgba(0, 0, 0, 0.3); }
+  #pill b { color: var(--pink); }
+  #pill .emo { display: inline-flex; align-items: center; justify-content: center; width: 66px; height: 66px;
+               border-radius: 50%; font-size: 44px; border: 4px solid var(--ink);
+               background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FFF1FA 45%, #E7D6FF 80%, #FFFFFF 100%); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="bezel" viewBox="0 0 1080 1536"></svg>
+  <div id="title"><span class="back">KERUSI MAKAN<br><b>NAMPAK KOSONG?</b></span><span class="face">KERUSI MAKAN<br><b>NAMPAK KOSONG?</b></span></div>
+  <div id="badge"><span class="e">✨</span>NAK<br>RAYA!</div>
+  <div id="pill"><span class="emo">🪑</span>KUSYEN DUDUK <b>40×40</b> • MERAH • BROWN</div>
+</div>
+<script>
+  // holographic bezel with a chrome inner line and pixel stars in the corners (static cover)
+  const star = (x, y, s, c) => `<g transform="translate(${x - 4.5 * s},${y - 4.5 * s}) scale(${s})" shape-rendering="crispEdges">` +
+    `<g fill="#FFFFFF"><rect x="4" y="0" width="1" height="9"/><rect x="0" y="4" width="9" height="1"/>` +
+    `<rect x="3" y="3" width="3" height="3"/></g><g fill="${c}"><rect x="4" y="1" width="1" height="1"/>` +
+    `<rect x="4" y="7" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/></g></g>`;
+  let s = `<defs><linearGradient id="holo" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0" stop-color="#FF8AD8"/><stop offset="0.25" stop-color="#C9A2FF"/><stop offset="0.5" stop-color="#8FF3FF"/>` +
+          `<stop offset="0.75" stop-color="#D8FF8A"/><stop offset="1" stop-color="#FF8AD8"/></linearGradient></defs>` +
+          `<path fill-rule="evenodd" fill="url(#holo)" d="M0,0 H1080 V1536 H0 Z M26,26 V1510 H1054 V26 Z"/>` +
+          `<rect x="26" y="26" width="1028" height="1484" rx="34" fill="none" stroke="#1B1035" stroke-width="8"/>` +
+          `<rect x="34" y="34" width="1012" height="1468" rx="28" fill="none" stroke="#FFFFFF" stroke-width="4" opacity="0.9"/>`;
+  s += star(70, 70, 6, "#FF2E9A") + star(1010, 70, 6, "#C6FF4A") + star(70, 1466, 6, "#8FF3FF") + star(1010, 1466, 6, "#C9A2FF") +
+       star(330, 380, 4, "#C6FF4A") + star(1000, 1260, 4, "#FF2E9A");
+  document.getElementById("bezel").innerHTML = s;
+  document.fonts.load('700 104px "Fredoka"').then(() => {
+    for (const id of ["title", "pill"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 960) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+    }
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -2 }, 0).set("#badge", { rotation: -10 }, 0).set("#pill", { rotation: 1.5 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
