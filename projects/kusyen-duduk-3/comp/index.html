@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Kusyen duduk, video 3 (IMG_3068), "Senarai semak / notepad" look: lined notepad paper with a red margin line,
+     blue-ink handwriting (Caveat, Patrick Hand), checkbox ticks drawing in, a small checklist of places that builds
+     up as she names them (with a paperclip), coloured sticky notes for the two colours, a yellow highlighter swipe
+     under the spoken caption word, an edge-only pen stroke + light flash between sections, a pen-line progress bar
+     and a compact notepad end card.
+     User rule for this series: nothing in the centre KEEP_OUT box (x 160-920, y 480-1340), few compact labels.
+     The cut video (base.mp4), timings and her head boxes come from edit.py via data.js; this file draws, animates
+     and places every graphic where it keeps clear of her face and of the centre. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-SemiBold.otf") format("opentype"); font-weight: 600; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-Bold.otf") format("opentype"); font-weight: 700; }
+  @font-face { font-family: "Caveat"; src: url("caveat-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+  @font-face { font-family: "Caveat"; src: url("caveat-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+  @font-face { font-family: "Patrick Hand"; src: url("patrick-hand-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+  :root { --paper: #FFFDF4; --rule: rgba(84, 140, 214, 0.42); --margin: #E5636B; --ink: #1D3E9E; --ink2: #122B73;
+          --red: #C8102E; --hl: #FFE14D; --sticky: #FFE680; --stickyR: #FF7B7B; --stickyB: #EAD2AE; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden;
+          font-family: "Patrick Hand", "Noto Color Emoji", sans-serif; color: var(--ink); }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+  .emo { font-family: "Noto Color Emoji", sans-serif; }
+
+  /* sticky note (hook): yellow square-ish note, translucent tape strip, Caveat handwriting, scribble underline */
+  .note { position: absolute; left: 0; top: 0; opacity: 0; }
+  .note .pad { position: relative; background: var(--sticky); padding: 22px 30px 26px 28px;
+               box-shadow: 0 16px 30px rgba(30, 24, 10, 0.30), inset 0 -18px 24px rgba(160, 120, 0, 0.10); }
+  .note .tape { position: absolute; left: 50%; top: -16px; width: 120px; height: 34px; margin-left: -60px;
+                background: rgba(255, 255, 255, 0.62); transform: rotate(-3deg); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); }
+  .note .tx { font-family: "Caveat", cursive; font-weight: 700; font-size: 66px; line-height: 0.98; color: var(--ink2);
+              white-space: nowrap; }
+  .note .tx u { text-decoration: none; position: relative; color: var(--red); }
+  .note .tx .w { display: inline-block; }
+  .note svg { position: absolute; overflow: visible; pointer-events: none; }
+
+  /* checklist line (size, CTA): small notepad strip, checkbox + tick, Patrick Hand */
+  .ln { position: absolute; left: 0; top: 0; opacity: 0; display: flex; align-items: center; gap: 14px;
+        padding: 8px 22px 8px 14px; background: var(--paper); white-space: nowrap;
+        background-image: linear-gradient(90deg, transparent 52px, var(--margin) 52px, var(--margin) 54px, transparent 54px);
+        box-shadow: 0 10px 24px rgba(20, 20, 40, 0.24); border-radius: 3px; }
+  .ln .tx { font-size: 40px; line-height: 1.05; color: var(--ink2); padding-left: 10px; }
+
+  .box { position: relative; width: 34px; height: 34px; flex: none; border: 3px solid var(--ink); border-radius: 5px;
+         background: rgba(255, 255, 255, 0.6); }
+  .box svg { position: absolute; left: -6px; top: -14px; width: 52px; height: 52px; overflow: visible; }
+  .box svg path { fill: none; stroke: var(--red); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* checklist card: lined paper, red margin, header in Caveat, rows with boxes, a paperclip on top */
+  .chk { position: absolute; left: 0; top: 0; opacity: 0; }
+  .chk .pg { position: relative; background-color: var(--paper); padding: 10px 26px 14px 66px; border-radius: 4px;
+             background-image:
+               linear-gradient(90deg, transparent 50px, var(--margin) 50px, var(--margin) 52px, transparent 52px),
+               repeating-linear-gradient(transparent 0, transparent 47px, var(--rule) 47px, var(--rule) 49px);
+             background-position: 0 0, 0 6px;
+             box-shadow: 0 16px 30px rgba(20, 20, 40, 0.28); }
+  .chk .hd { font-family: "Caveat", cursive; font-weight: 700; font-size: 44px; line-height: 1.0; color: var(--red);
+             white-space: nowrap; height: 49px; }
+  .chk .row { display: flex; align-items: center; gap: 14px; height: 49px; white-space: nowrap; }
+  .chk .row .tx { font-size: 38px; line-height: 1; color: var(--ink2); }
+  .chk .row .box { width: 30px; height: 30px; }
+  .chk .row .box svg { left: -6px; top: -13px; width: 46px; height: 46px; }
+  .chk .clip { position: absolute; right: 18px; top: -26px; width: 30px; height: 74px; overflow: visible; }
+  .chk .clip path { fill: none; stroke: #8E98A8; stroke-width: 5; stroke-linecap: round; }
+
+  /* coloured sticky notes (merah / lembut) */
+  .stk { position: absolute; left: 0; top: 0; opacity: 0; }
+  .stk .pad { position: relative; padding: 16px 26px 20px; box-shadow: 0 14px 26px rgba(30, 20, 10, 0.30);
+              white-space: nowrap; }
+  .stk.red .pad { background: var(--stickyR); }
+  .stk.beige .pad { background: var(--stickyB); }
+  .stk .pad::after { content: ""; position: absolute; right: 0; bottom: 0; width: 26px; height: 26px;
+                     background: linear-gradient(135deg, rgba(0, 0, 0, 0.16) 50%, rgba(255, 255, 255, 0.5) 50%); }
+  .stk .tx { font-family: "Caveat", cursive; font-weight: 700; font-size: 56px; line-height: 1.0; }
+  .stk.red .tx { color: #FFFDF4; }
+  .stk.beige .tx { color: #5A3B22; }
+  .stk .pin { position: absolute; left: 50%; top: -10px; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%;
+              background: radial-gradient(circle at 35% 35%, #fff 0, #5A82E6 28%, #1D3E9E 100%);
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); }
+
+  /* captions: lined-paper strip, blue ink handwriting, keywords in red ink, yellow highlighter under the spoken word */
+  .cap { position: absolute; left: 0; top: 0; opacity: 0; display: flex; gap: 14px; align-items: baseline;
+         padding: 6px 26px 10px 40px; background-color: rgba(255, 253, 244, 0.95); white-space: nowrap;
+         background-image:
+           linear-gradient(90deg, transparent 22px, var(--margin) 22px, var(--margin) 24px, transparent 24px),
+           linear-gradient(transparent calc(100% - 12px), var(--rule) calc(100% - 12px), var(--rule) calc(100% - 10px), transparent calc(100% - 10px));
+         font-size: 50px; line-height: 1.12; color: var(--ink2); border-radius: 3px;
+         box-shadow: 0 10px 22px rgba(20, 20, 40, 0.22); }
+  .cap .word { position: relative; display: inline-block; z-index: 0; }
+  .cap .word.key { color: var(--red); }
+  .cap .word .hlb { position: absolute; left: -5px; right: -5px; top: 30%; bottom: 6%; background: var(--hl);
+                    z-index: -1; transform-origin: 0 50%; transform: scaleX(0) skewX(-8deg); border-radius: 3px; opacity: 0.9; }
+
+  /* pen-line progress bar on the top edge + pencil */
+  #prog { position: absolute; height: 4px; }
+  #prog .fill { position: absolute; inset: 0; background: var(--ink); border-radius: 2px; transform-origin: 0 50%; }
+  #pencil { position: absolute; font-size: 30px; line-height: 1; }
+
+  /* section turn (edge only): blue-ink pen scribble along the top edge + light flash */
+  .scrib { position: absolute; overflow: visible; }
+  .scrib path { fill: none; stroke: var(--ink); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .flash { position: absolute; inset: 0; background: #FFFDF4; opacity: 0; }
+
+  /* end card: compact notepad page (top band) + red marker CTA (lower band) */
+  .endpg { position: absolute; left: 0; top: 0; opacity: 0; }
+  .endpg .pg { position: relative; background-color: var(--paper); padding: 8px 30px 16px 70px; border-radius: 4px;
+               background-image:
+                 linear-gradient(90deg, transparent 52px, var(--margin) 52px, var(--margin) 54px, transparent 54px),
+                 repeating-linear-gradient(transparent 0, transparent 50px, var(--rule) 50px, var(--rule) 52px);
+               box-shadow: 0 18px 34px rgba(20, 20, 40, 0.30); }
+  .endpg .t { font-family: "Caveat", cursive; font-weight: 700; font-size: 74px; line-height: 1.0; color: var(--red);
+              white-space: nowrap; height: 72px; }
+  .endpg .row { display: flex; align-items: center; gap: 14px; height: 52px; white-space: nowrap; }
+  .endpg .row .tx { font-size: 38px; color: var(--ink2); }
+  .endpg .row .box { width: 30px; height: 30px; }
+  .endpg .row .box svg { left: -6px; top: -13px; width: 46px; height: 46px; }
+  .ecta { position: absolute; left: 0; top: 0; opacity: 0; background: var(--red); color: #FFFDF4; padding: 8px 26px 12px;
+          font-family: "Caveat", cursive; font-weight: 700; font-size: 54px; line-height: 1; white-space: nowrap;
+          border-radius: 6px; box-shadow: 0 14px 28px rgba(20, 14, 10, 0.3); transform: rotate(-2deg); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="29.406" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="29.406" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const KO = E.keep_out;                                  // centre keep-out box [x0, y0, x1, y1]
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+  const svgEl = (tag, attrs, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+  const emo = s => (s ? ` <span class="emo">${s}</span>` : "");
+
+  // ------------------------------------------------------------ face- and centre-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head, stays
+  // out of the centre keep-out box (labels) and never collides with a caption on screen at the time.
+  const MARGIN = 44;
+  const placed = [];
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 14, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 4) {
+      for (let x = x0; x <= x1; x += 6) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        if (!o.isCaption && !o.allowCentre) { const a = ovl(r, KO); if (a > 0) c += 1e7 + a * 10; }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+  // try a list of size variants (each a function that restyles the node) and keep the first that fits clear
+  function fit(node, variants, o) {
+    let pick = null;
+    for (const v of variants) {
+      v();
+      const w = node.offsetWidth, h = node.offsetHeight;
+      const p = place(w + 8, h + 8, o);
+      const cand = { v, w, h, p };
+      if (p.clear) { pick = cand; break; }
+      if (!pick || p.c < pick.p.c) pick = cand;
+    }
+    pick.v();
+    return pick;
+  }
+
+  // ------------------------------------------------------------ checkbox with a tick that draws itself in
+  function checkbox(parent, cls) {
+    const b = el("div", "box" + (cls ? " " + cls : ""), parent);
+    const s = svgEl("svg", { viewBox: "0 0 52 52" }, b);
+    const p = svgEl("path", { d: "M8 30 L20 42 L46 6" }, s);
+    const L = 62;
+    p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+    return { box: b, path: p, L };
+  }
+  function tick(cb, t) {
+    tl.to(cb.path, { strokeDashoffset: 0, duration: 0.28, ease: "power2.out" }, t);
+    tl.fromTo(cb.box, { scale: 1 }, { scale: 1.14, duration: 0.1, yoyo: true, repeat: 1, ease: "power1.out" }, t + 0.18);
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap, w.w);
+      s.hl = el("span", "hlb", s);
+      return s;
+    });
+    let fs = 50;
+    while (cap.offsetWidth > MAXW && fs > 34) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw, ch, { t0: C.t0, t1: C.t1, heads: C.heads, px: CX, py: C.y, wy: 1.4, wx: 0.8, isCaption: true });
+    cap.style.left = p.x + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 6, p.y - 6, p.x + cw + 6, p.y + ch + 6] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, y: p.y + 10 }, { opacity: 1, y: p.y, duration: 0.22, ease: "power3.out" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i];
+      tl.to(s.hl, { scaleX: 1, duration: 0.18, ease: "power2.out" }, w.s);
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.to(s.hl, { opacity: 0.38, duration: 0.12 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.14 }, C.t1 - 0.14);
+  }
+
+  // ------------------------------------------------------------ sticky note (hook)
+  function note(L) {
+    const n = el("div", "note");
+    const pad = el("div", "pad", n);
+    el("div", "tape", pad);
+    const tx = el("div", "tx", pad);
+    const parts = L.html.split(/(<u>.*?<\/u>)/).filter(Boolean);
+    const ws = [];
+    for (const part of parts) {
+      if (part.startsWith("<u>")) ws.push(el("span", "w", tx, part + "&nbsp;"));
+      else part.trim().split(/\s+/).forEach(w => ws.push(el("span", "w", tx, w + "&nbsp;")));
+    }
+    if (L.emoji) ws.push(el("span", "w emo", tx, L.emoji));
+    const o = { t0: L.t0, t1: L.t1, heads: L.heads, px: CX, py: L.py, wy: 1, wx: 0.5 };
+    // one line first; if the top band is short, a smaller size; then two lines (break after the <u> word)
+    const br = el("br", "", null);
+    const brAt = ws.findIndex(w => w.innerHTML.includes("<u>")) + 1;
+    const one = f => () => { tx.style.fontSize = f + "px"; if (br.parentNode) br.remove(); };
+    const two = f => () => { tx.style.fontSize = f + "px"; if (brAt > 0 && brAt < ws.length) tx.insertBefore(br, ws[brAt]); };
+    const pick = fit(n, [one(64), one(56), one(50), two(56), two(48)], o);
+    const { w, h, p } = pick;
+    const x = p.x + 4, y = p.y + 4;
+    placed.push({ t0: L.t0, t1: L.t1, r: [x, y, x + w, y + h] });
+    L.placed = { x, y, w, h, clear: p.clear };
+    n.style.left = x + "px"; n.style.top = y + "px";
+    // red scribble underline under the <u> word
+    const u = tx.querySelector("u");
+    let up = null;
+    if (u) {
+      const sv = svgEl("svg", { width: u.offsetWidth + 20, height: 26 }, pad);
+      sv.style.left = (u.offsetLeft + tx.offsetLeft - 10) + "px";
+      sv.style.top = (u.offsetTop + tx.offsetTop + u.offsetHeight - 10) + "px";
+      const uw = u.offsetWidth + 10;
+      up = svgEl("path", { d: `M5 12 C ${uw * 0.3} 4, ${uw * 0.6} 20, ${uw} 8 C ${uw * 0.7} 16, ${uw * 0.35} 14, 12 20`,
+                           fill: "none", stroke: "#C8102E", "stroke-width": 5, "stroke-linecap": "round" }, sv);
+      const len = uw * 2.4;
+      up.style.strokeDasharray = len; up.style.strokeDashoffset = len;
+    }
+    tl.set(n, { opacity: 1 }, L.t0);
+    tl.fromTo(pad, { y: -40, rotation: -8, scale: 0.9, opacity: 0 },
+              { y: 0, rotation: -2, scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, L.t0);
+    tl.fromTo(ws, { opacity: 0, clipPath: "inset(0 100% 0 0)" },
+              { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.22, stagger: 0.11, ease: "none" }, L.t0 + 0.25);
+    if (up) tl.to(up, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut" }, L.t0 + 0.3 + ws.length * 0.11);
+    tl.to(n, { opacity: 0, y: "-=10", duration: 0.24, ease: "power2.in" }, L.t1 - 0.24);
+  }
+
+  // ------------------------------------------------------------ one checklist line (size / CTA)
+  function line(L) {
+    const b = el("div", "ln");
+    const cb = checkbox(b);
+    const tx = el("div", "tx", b, L.html + emo(L.emoji));
+    const o = { t0: L.t0, t1: L.t1, heads: L.heads, px: S.l + 220, py: L.py, wy: 1, wx: 0.3 };
+    const pick = fit(b, [40, 36, 32].map(f => () => { tx.style.fontSize = f + "px"; }), o);
+    const { w, h, p } = pick;
+    const x = p.x + 4, y = p.y + 4;
+    placed.push({ t0: L.t0, t1: L.t1, r: [x, y, x + w, y + h] });
+    L.placed = { x, y, w, h, clear: p.clear };
+    b.style.left = x + "px"; b.style.top = y + "px";
+    tl.set(b, { opacity: 1 }, L.t0);
+    tl.fromTo(b, { clipPath: "inset(0% 100% 0% 0%)", x: -14 }, { clipPath: "inset(0% 0% 0% 0%)", x: 0, duration: 0.4, ease: "power3.out" }, L.t0);
+    tl.set(b, { clipPath: "none" }, L.t0 + 0.41);
+    tick(cb, Math.max(L.t0 + 0.35, L.tick || L.t0 + 0.4));
+    tl.to(b, { opacity: 0, duration: 0.2 }, L.t1 - 0.2);
+  }
+
+  // ------------------------------------------------------------ checklist card (places), ticks as she names them
+  function checklist(L) {
+    const c = el("div", "chk");
+    const pg = el("div", "pg", c);
+    const clip = svgEl("svg", { viewBox: "0 0 30 74", class: "clip" }, c);
+    svgEl("path", { d: "M8 60 L8 12 C8 2, 24 2, 24 12 L24 66 C24 74, 4 74, 4 66 L4 22" }, clip);
+    const hd = el("div", "hd", pg, L.head);
+    const rows = L.items.map(it => {
+      const r = el("div", "row", pg);
+      const cb = checkbox(r);
+      const tx = el("div", "tx", r, it.text);
+      return { r, cb, tx, t: it.t };
+    });
+    const o = { t0: L.t0, t1: L.t1, heads: L.heads, px: S.l + 200, py: L.py, wy: 1, wx: 0.5 };
+    const pick = fit(c, [
+      () => { pg.style.zoom = 1; }, () => { pg.style.zoom = 0.88; }, () => { pg.style.zoom = 0.78; },
+    ], o);
+    const { w, h, p } = pick;
+    const x = p.x + 4, y = p.y + 4;
+    placed.push({ t0: L.t0, t1: L.t1, r: [x, y, x + w, y + h] });
+    L.placed = { x, y, w, h, clear: p.clear };
+    c.style.left = x + "px"; c.style.top = y + "px";
+    tl.set(c, { opacity: 1 }, L.t0);
+    tl.fromTo(pg, { clipPath: "inset(0% 0% 100% 0%)", rotation: -1 }, { clipPath: "inset(0% 0% 0% 0%)", rotation: 0, duration: 0.45, ease: "power3.out" }, L.t0);
+    tl.fromTo(clip, { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "back.out(2)" }, L.t0 + 0.2);
+    tl.fromTo(hd, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.4, ease: "none" }, L.t0 + 0.15);
+    rows.forEach((r, i) => {
+      const ta = Math.max(L.t0 + 0.3 + i * 0.08, r.t - 0.35);
+      tl.fromTo(r.r, { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out" }, ta);
+      tick(r.cb, r.t);
+    });
+    tl.to(c, { opacity: 0, y: "-=10", duration: 0.25, ease: "power2.in" }, L.t1 - 0.25);
+  }
+
+  // ------------------------------------------------------------ coloured sticky note (merah / lembut)
+  function sticky(L) {
+    const s = el("div", "stk " + L.tone);
+    const pad = el("div", "pad", s);
+    el("div", "pin", pad);
+    const tx = el("div", "tx", pad, L.html + emo(L.emoji));
+    const ws = L.html.split(" "), half = Math.ceil(ws.length / 2);
+    const oneLine = L.html + emo(L.emoji), twoLine = ws.slice(0, half).join(" ") + "<br>" + ws.slice(half).join(" ") + emo(L.emoji);
+    const o = { t0: L.t0, t1: L.t1, heads: L.heads, px: S.l + 180, py: L.py, wy: 1, wx: 0.4 };
+    const v = (f, html) => () => { tx.style.fontSize = f + "px"; tx.innerHTML = html; };
+    const pick = fit(s, [v(56, oneLine), v(50, oneLine), v(54, twoLine), v(46, twoLine), v(44, oneLine)], o);
+    const { w, h, p } = pick;
+    const x = p.x + 4, y = p.y + 4;
+    placed.push({ t0: L.t0, t1: L.t1, r: [x, y, x + w, y + h] });
+    L.placed = { x, y, w, h, clear: p.clear };
+    s.style.left = x + "px"; s.style.top = y + "px";
+    const rot = L.tone === "red" ? -3 : 3;
+    tl.set(s, { opacity: 1 }, L.t0);
+    tl.fromTo(pad, { y: -30, rotation: rot * 3, scale: 0.85, opacity: 0 },
+              { y: 0, rotation: rot, scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.8)" }, L.t0);
+    tl.to(s, { opacity: 0, y: "-=10", duration: 0.22, ease: "power2.in" }, L.t1 - 0.22);
+  }
+
+  // ------------------------------------------------------------ section turn (edge only): pen scribble + light flash
+  function turn(T) {
+    const fl = el("div", "flash");
+    tl.fromTo(fl, { opacity: 0 }, { opacity: 0.3, duration: 0.06, ease: "none" }, T.t - 0.03);
+    tl.to(fl, { opacity: 0, duration: 0.2, ease: "power2.out" }, T.t + 0.03);
+    const W = S.r - S.l;
+    const sv = svgEl("svg", { width: W, height: 40, class: "scrib" }, fx);
+    sv.style.left = S.l + "px"; sv.style.top = (S.t + 14) + "px";
+    let d = "M4 22";
+    for (let x = 30; x <= W - 10; x += 52) d += ` Q ${x - 16} ${x % 104 ? 6 : 34} ${x} 20`;
+    const p = svgEl("path", { d }, sv);
+    const len = W * 1.25;
+    p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+    tl.to(p, { strokeDashoffset: 0, duration: 0.42, ease: "power2.inOut" }, T.t - 0.12);
+    tl.to(sv, { opacity: 0, duration: 0.3 }, T.t + 0.5);
+  }
+
+  // ------------------------------------------------------------ pen-line progress bar + pencil
+  function chrome() {
+    const v = el("div", "", fx);
+    v.id = "prog";
+    v.style.left = S.l + "px"; v.style.top = (S.t + 4) + "px"; v.style.width = (S.r - S.l - 40) + "px";
+    const f = el("div", "fill", v);
+    tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: E.total, ease: "none" }, 0);
+    const pen = el("div", "", fx, "✏️");
+    pen.id = "pencil"; pen.className = "emo";
+    pen.style.top = (S.t - 14) + "px";
+    tl.fromTo(pen, { x: S.l - 6 }, { x: S.r - 46, duration: E.total, ease: "none" }, 0);
+  }
+
+  // ------------------------------------------------------------ end card: compact notepad page + red marker CTA
+  function endcard(N) {
+    const c = el("div", "endpg");
+    const pg = el("div", "pg", c);
+    const t = el("div", "t", pg, N.title);
+    const rows = N.rows.map(txt => {
+      const r = el("div", "row", pg);
+      const cb = checkbox(r);
+      el("div", "tx", r, txt);
+      return { r, cb };
+    });
+    const o = { t0: N.t0, t1: N.t1, heads: N.heads, px: CX, py: S.t + 150, wy: 1, wx: 0.5 };
+    const pick = fit(c, [() => { pg.style.zoom = 1; }, () => { pg.style.zoom = 0.86; }, () => { pg.style.zoom = 0.74; }], o);
+    const x = pick.p.x + 4, y = pick.p.y + 4;
+    c.style.left = x + "px"; c.style.top = y + "px";
+    placed.push({ t0: N.t0, t1: N.t1, r: [x, y, x + pick.w, y + pick.h] });
+    const cta = el("div", "ecta", fx, N.cta);
+    const pc = place(cta.offsetWidth + 10, cta.offsetHeight + 10,
+                     { t0: N.t0, t1: N.t1, heads: N.heads, px: CX, py: S.b - 60, wy: 1, wx: 0.5 });
+    cta.style.left = (pc.x + 5) + "px"; cta.style.top = (pc.y + 5) + "px";
+    N.placed = { page: { x, y, w: pick.w, h: pick.h, clear: pick.p.clear },
+                 cta: { x: pc.x, y: pc.y, w: cta.offsetWidth, h: cta.offsetHeight, clear: pc.clear } };
+    tl.set(c, { opacity: 1 }, N.t0 + 0.05);
+    tl.fromTo(pg, { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: "power3.out" }, N.t0 + 0.05);
+    tl.fromTo(t, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.45, ease: "none" }, N.t0 + 0.15);
+    rows.forEach((r, i) => {
+      tl.fromTo(r.r, { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out" }, N.t0 + 0.45 + i * 0.22);
+      tick(r.cb, N.t0 + 0.55 + i * 0.22);
+    });
+    tl.fromTo(cta, { opacity: 0, scale: 0.85, rotation: -6 }, { opacity: 1, scale: 1, rotation: -2, duration: 0.4, ease: "back.out(2)" }, N.t0 + 0.6);
+    tl.to(cta, { scale: 1.05, duration: 0.45, yoyo: true, repeat: 1, ease: "sine.inOut" }, N.t0 + 1.3);
+  }
+
+  function build() {
+    chrome();
+    E.captions.forEach(caption);                 // captions first: labels then steer around them
+    const draw = { note, line, check: checklist, sticky };
+    E.labels.forEach(L => draw[L.style](L));
+    endcard(E.end);
+    E.turns.forEach(turn);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  Promise.all([document.fonts.load('600 30px "Inter Display"'), document.fonts.load('700 60px "Caveat"'),
+               document.fonts.load('600 60px "Caveat"'), document.fonts.load('400 40px "Patrick Hand"')]).then(build);
+})();
+</script>
+</body>
+</html>

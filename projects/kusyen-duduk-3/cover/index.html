@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for kusyen duduk, video 3, "Senarai semak / notepad" look. A yellow sticky note with the hook
+     in the sky above her hood, a small lined checklist (places) in the trees left of her head, two colour sticky
+     notes and a size tag stacked in the trees right of her head. Her face (x 380-690, y 360-840 in this
+     layout) and both cushions are left clear; key text sits inside the 3:4 crop (y 48-1488).
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Caveat"; src: url("caveat-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+  @font-face { font-family: "Patrick Hand"; src: url("patrick-hand-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+  :root { --paper: #FFFDF4; --rule: rgba(84, 140, 214, 0.42); --margin: #E5636B; --ink: #1D3E9E; --ink2: #122B73;
+          --red: #C8102E; --sticky: #FFE680; --stickyR: #FF7B7B; --stickyB: #EAD2AE; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: var(--paper); }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden;
+          font-family: "Patrick Hand", "Noto Color Emoji", sans-serif; color: var(--ink2); }
+  .emo { font-family: "Noto Color Emoji", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 2.0s (red cushion left, beige right, her face upper middle), shifted up 110px */
+  #photo { position: absolute; left: 0; top: -110px; width: 1080px; height: 1920px; }
+  /* notebook binding: spiral holes along the top edge */
+  #spiral { position: absolute; left: 0; right: 0; top: 0; height: 46px; background: rgba(255, 253, 244, 0.92);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); }
+  #spiral i { position: absolute; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: #3B3B44;
+              box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.6); }
+  /* hook sticky note */
+  #note { position: absolute; left: 50%; top: 92px; transform: translateX(-50%) rotate(-2deg); background: var(--sticky);
+          padding: 20px 40px 24px; box-shadow: 0 18px 34px rgba(30, 24, 10, 0.32); white-space: nowrap; text-align: center; }
+  #note .tape { position: absolute; left: 50%; top: -16px; width: 140px; height: 34px; margin-left: -70px;
+                background: rgba(255, 255, 255, 0.65); transform: rotate(3deg); }
+  #note .t1 { font-family: "Caveat", cursive; font-weight: 700; font-size: 80px; line-height: 0.95; }
+  #note .t1 u { text-decoration: none; color: var(--red); position: relative; }
+  #note .t1 u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: 2px; height: 7px; border-radius: 4px;
+                       background: var(--red); transform: rotate(-1.5deg); }
+  #note .t2 { font-family: "Caveat", cursive; font-weight: 700; font-size: 58px; line-height: 1; margin-top: 4px; color: var(--ink); }
+  /* checklist card (places) in the trees, left of her head */
+  #chk { position: absolute; left: 34px; top: 380px; transform: rotate(-2.5deg); background-color: var(--paper);
+         padding: 8px 22px 12px 58px; border-radius: 4px;
+         background-image:
+           linear-gradient(90deg, transparent 44px, var(--margin) 44px, var(--margin) 46px, transparent 46px),
+           repeating-linear-gradient(transparent 0, transparent 43px, var(--rule) 43px, var(--rule) 45px);
+         box-shadow: 0 16px 30px rgba(20, 20, 40, 0.3); }
+  #chk .hd { font-family: "Caveat", cursive; font-weight: 700; font-size: 40px; color: var(--red); height: 45px; line-height: 1; }
+  #chk .row { display: flex; align-items: center; gap: 12px; height: 45px; font-size: 33px; white-space: nowrap; }
+  .box { position: relative; width: 28px; height: 28px; border: 3px solid var(--ink); border-radius: 5px; flex: none;
+         background: rgba(255, 255, 255, 0.6); }
+  .box svg { position: absolute; left: -6px; top: -12px; width: 42px; height: 42px; overflow: visible; }
+  .box svg path { fill: none; stroke: var(--red); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  #clip { position: absolute; right: -10px; top: -24px; width: 26px; height: 64px; }
+  #clip path { fill: none; stroke: #8E98A8; stroke-width: 5; stroke-linecap: round; }
+  /* right of her head (trees): size tag + colour sticky notes, stacked */
+  #tag { position: absolute; left: 760px; top: 300px; background: var(--paper); padding: 10px 24px 12px; border-radius: 4px;
+         transform: rotate(-2deg); box-shadow: 0 14px 28px rgba(20, 20, 40, 0.3); display: flex; align-items: center; gap: 14px; }
+  #tag .tx { font-size: 46px; line-height: 1; white-space: nowrap; }
+  .stk { position: absolute; padding: 14px 24px 18px; box-shadow: 0 14px 26px rgba(30, 20, 10, 0.3);
+         font-family: "Caveat", cursive; font-weight: 700; font-size: 52px; line-height: 1; white-space: nowrap; }
+  #s1 { left: 748px; top: 418px; background: var(--stickyR); color: #FFFDF4; transform: rotate(-4deg); }
+  #s2 { left: 760px; top: 528px; background: var(--stickyB); color: #5A3B22; transform: rotate(3deg); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <div id="spiral"></div>
+  <div id="note"><div class="tape"></div>
+    <div class="t1">Duduk <u>lama-lama</u>? <span class="emo">😩</span></div>
+    <div class="t2">Cuba kusyen ni satu ✓</div>
+  </div>
+  <div id="chk">
+    <svg id="clip" viewBox="0 0 30 74"><path d="M8 60 L8 12 C8 2, 24 2, 24 12 L24 66 C24 74, 4 74, 4 66 L4 22" /></svg>
+    <div class="hd">Ngam untuk:</div>
+    <div class="row"><div class="box"><svg viewBox="0 0 52 52"><path d="M8 30 L20 42 L46 6" /></svg></div>Kerusi ofis</div>
+    <div class="row"><div class="box"><svg viewBox="0 0 52 52"><path d="M8 30 L20 42 L46 6" /></svg></div>Meja makan</div>
+    <div class="row"><div class="box"><svg viewBox="0 0 52 52"><path d="M8 30 L20 42 L46 6" /></svg></div>Kereta</div>
+    <div class="row"><div class="box"><svg viewBox="0 0 52 52"><path d="M8 30 L20 42 L46 6" /></svg></div>Sofa</div>
+  </div>
+  <div id="tag"><div class="box"><svg viewBox="0 0 52 52"><path d="M8 30 L20 42 L46 6" /></svg></div><div class="tx">40 × 40 cm</div></div>
+  <div class="stk" id="s1">Merah terang</div>
+  <div class="stk" id="s2">Beige lembut</div>
+</div>
+<script>
+  const sp = document.getElementById("spiral");
+  for (let x = 40; x < 1060; x += 60) { const i = document.createElement("i"); i.style.left = x + "px"; sp.appendChild(i); }
+  Promise.all([document.fonts.load('700 60px "Caveat"'), document.fonts.load('400 40px "Patrick Hand"')]).then(() => {
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
