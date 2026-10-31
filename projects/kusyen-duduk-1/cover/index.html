@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for kusyen duduk #1, "Kafe kopi & kraft" look: kraft-paper menu frame with stitching, a
+     chalkboard title in the tree band above her hood, a kraft tag and a cup-sleeve badge low on her coat. Nothing
+     sits on her face or on the two cushions.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("Fredoka-Bold.ttf") format("truetype"); font-weight: 700; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: #C9A074; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fredoka", sans-serif; }
+  /* frame.jpg is the 1080x1920 frame at 3.0s; the top 1536 rows are shown (trees above her hood) */
+  #photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  #frame { position: absolute; inset: 0; }
+  #title { position: absolute; left: 50%; top: 66px; padding: 20px 48px 24px; border-radius: 22px; white-space: nowrap;
+           background: radial-gradient(circle at 30% 20%, #3A4740 0%, #26302B 70%);
+           border: 12px solid #8B5E3C; box-shadow: 0 0 0 4px #3B2416, 0 14px 26px rgba(0, 0, 0, 0.4);
+           color: #FFF6E6; font-size: 84px; line-height: 1; text-align: center; }
+  #title b { color: #F2C38B; }
+  #title small { display: block; margin-top: 10px; font-size: 40px; color: #E9E2D4; }
+  .kraft { position: absolute; display: flex; align-items: center; gap: 16px; white-space: nowrap; color: #3B2416;
+           font-size: 54px; line-height: 1; padding: 18px 34px 20px 64px;
+           clip-path: polygon(28px 0, 100% 0, 100% 100%, 28px 100%, 0 50%);
+           background:
+             repeating-linear-gradient(97deg, rgba(90, 60, 30, 0.0) 0 9px, rgba(90, 60, 30, 0.07) 9px 11px),
+             linear-gradient(180deg, #D8B48A 0%, #C9A074 100%);
+           filter: drop-shadow(0 8px 0 rgba(59, 36, 22, 0.6)) drop-shadow(0 14px 18px rgba(0, 0, 0, 0.3)); }
+  .kraft::after { content: ""; position: absolute; inset: 9px 9px 9px 36px; border: 3px dashed rgba(255, 246, 228, 0.9);
+                  border-radius: 6px; }
+  .kraft .hole { position: absolute; left: 28px; top: 50%; width: 22px; height: 22px; margin-top: -11px;
+                 border-radius: 50%; background: #5A3A22; }
+  .kraft b { color: #C8102E; }
+  #tag { left: 50%; top: 1352px; }
+  #sleeve { position: absolute; left: 44px; top: 1168px; width: 178px; height: 178px; border-radius: 50%;
+            background: #F6D84A; border: 8px solid #3B2416; box-shadow: 0 10px 0 #3B2416, 0 18px 24px rgba(0, 0, 0, 0.3);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #3B2416;
+            font-size: 34px; line-height: 1.02; text-align: center; }
+  #sleeve .e { font-size: 48px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <svg id="frame" viewBox="0 0 1080 1536"></svg>
+  <div id="title">LENGUH <b>DUDUK</b> LAMA?<small>☕ geng ofis, ni untuk korang</small></div>
+  <div id="sleeve"><span class="e">🫧</span>BOLEH<br>BASUH</div>
+  <div id="tag" class="kraft"><span class="hole"></span>BANTAL ALAS DUDUK <b>40×40</b> 🪑</div>
+</div>
+<script>
+  // kraft menu-card frame with cream stitching and coffee beans in the corners (static cover)
+  const bean = (x, y, r) => `<g transform="translate(${x},${y}) rotate(${r})">` +
+    `<ellipse cx="0" cy="0" rx="20" ry="28" fill="#5A3A22" stroke="#2A170C" stroke-width="4"/>` +
+    `<path d="M0,-25 C-10,-8 10,8 0,25" fill="none" stroke="#2A170C" stroke-width="5" stroke-linecap="round"/></g>`;
+  let s = `<defs><pattern id="kraft" width="22" height="22" patternUnits="userSpaceOnUse">` +
+          `<rect width="22" height="22" fill="#C9A074"/><path d="M0,18 L22,14" stroke="#B88C60" stroke-width="2"/>` +
+          `<path d="M4,0 L8,22" stroke="#D8B48A" stroke-width="1.5"/></pattern></defs>` +
+          `<path fill-rule="evenodd" fill="url(#kraft)" stroke="#3B2416" stroke-width="6" ` +
+          `d="M0,0 H1080 V1536 H0 Z M28,28 V1508 H1052 V28 Z"/>` +
+          `<rect x="14" y="14" width="1052" height="1508" fill="none" stroke="#FFF6E6" stroke-width="4" ` +
+          `stroke-dasharray="16 12" opacity="0.9"/>`;
+  s += bean(30, 30, 30) + bean(1050, 30, -30) + bean(30, 1506, -30) + bean(1050, 1506, 30);
+  document.getElementById("frame").innerHTML = s;
+  document.fonts.load('700 84px "Fredoka"').then(() => {
+    for (const id of ["title", "tag"]) {
+      const n = document.getElementById(id);
+      while (n.offsetWidth > 960) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) - 2) + "px";
+      n.style.marginLeft = -n.offsetWidth / 2 + "px";
+    }
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#title", { rotation: -1.2 }, 0).set("#tag", { rotation: 1.2 }, 0).set("#sleeve", { rotation: -8 }, 0)
+      .to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
