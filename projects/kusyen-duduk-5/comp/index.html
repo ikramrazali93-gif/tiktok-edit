@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<!-- Kusyen duduk, video 5 (IMG_3070), "Hygge kait hangat" look: small cream tags with a cable-knit cuff and a wool
+     pompom (Fraunces, a soft warm serif, cocoa ink, rust keywords), a candle glow behind the hook tag, a stitched
+     underline drawing in under the spoken caption word with a warm glow on it, an edge-only warm vignette glow
+     between sections (the centre stays untouched), a yarn progress line with a rolling yarn ball and a compact knit
+     end card. Slow, warm easing.
+     User rule for this series: nothing in the centre KEEP_OUT box (x 160-920, y 480-1340), few compact labels.
+     The cut video (base.mp4), timings and her head boxes come from edit.py via data.js; this file draws, animates
+     and places every graphic where it keeps clear of her face and of the centre. -->
+<script src="gsap.min.js"></script>
+<script src="data.js"></script>
+<style>
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-600-italic.woff2") format("woff2"); font-weight: 600; font-style: italic; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-700-italic.woff2") format("woff2"); font-weight: 700; font-style: italic; }
+  @font-face { font-family: "Inter Display"; src: url("InterDisplay-SemiBold.otf") format("opentype"); font-weight: 600; }
+  :root { --cream: #FBF5EA; --oat: #EADCC4; --oatD: #D6C09C; --cocoa: #4A2E22; --rust: #B5502E; --red: #C8102E;
+          --amber: #FFB45A; --beige: #D9B48C; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden;
+          font-family: "Fraunces", "Noto Color Emoji", serif; color: var(--cocoa); }
+  #bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #fx { position: absolute; inset: 0; pointer-events: none; }
+  .emo { font-family: "Noto Color Emoji", sans-serif; font-style: normal; }
+
+  /* cable-knit texture (rows of little V stitches) used on tag cuffs and the end card band */
+  .knit { background:
+            linear-gradient(60deg, transparent 38%, var(--oatD) 38% 62%, transparent 62%) 0 0 / 16px 14px,
+            linear-gradient(-60deg, transparent 38%, var(--oatD) 38% 62%, transparent 62%) 8px 0 / 16px 14px,
+            var(--oat); }
+
+  /* knit tag: cream card, knit cuff on the left, wool pompom on the top-right corner */
+  .tag { position: absolute; left: 0; top: 0; opacity: 0; }
+  .tag .card { position: relative; display: flex; align-items: center; gap: 12px; white-space: nowrap;
+               background: var(--cream); border-radius: 18px; padding: 12px 30px 14px 50px;
+               box-shadow: 0 14px 28px rgba(60, 35, 20, 0.30), inset 0 -6px 12px rgba(120, 80, 40, 0.08); }
+  .tag .cuff { position: absolute; left: 0; top: 0; bottom: 0; width: 30px; border-radius: 18px 0 0 18px; }
+  .tag .tx { font-weight: 700; font-size: 52px; line-height: 1.05; }
+  .tag .tx u { text-decoration: none; font-style: italic; color: var(--rust); }
+  .pom { position: absolute; right: -16px; top: -18px; width: 40px; height: 40px; border-radius: 50%;
+         background: radial-gradient(circle at 35% 32%, #FFF9F0 0, #EBD8BC 42%, #C7A47C 100%);
+         box-shadow: 0 4px 9px rgba(60, 35, 20, 0.28), 0 0 0 2px rgba(255, 248, 236, 0.5); }
+  .pom::before, .pom::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255, 249, 240, 0.7); }
+  .pom::before { width: 10px; height: 10px; left: 6px; top: 4px; }
+  .pom::after { width: 7px; height: 7px; right: 6px; bottom: 7px; background: rgba(160, 120, 80, 0.35); }
+
+  /* candle glow behind the hook tag */
+  .glow { position: absolute; left: -60px; right: -60px; top: -50px; bottom: -50px; border-radius: 50%;
+          background: radial-gradient(ellipse at 50% 55%, rgba(255, 180, 90, 0.55) 0, rgba(255, 150, 60, 0.18) 45%, transparent 70%);
+          z-index: -1; }
+
+  /* captions: oatmeal pill, cocoa serif, rust keywords; the spoken word glows warm with a stitched underline */
+  .cap { position: absolute; left: 0; top: 0; opacity: 0; display: flex; gap: 14px; align-items: baseline;
+         padding: 8px 32px 14px; background: rgba(251, 245, 234, 0.95); white-space: nowrap; border-radius: 40px;
+         font-weight: 600; font-size: 50px; line-height: 1.12; color: var(--cocoa);
+         box-shadow: 0 10px 22px rgba(60, 35, 20, 0.24); }
+  .cap .word { position: relative; display: inline-block; }
+  .cap .word.key { color: var(--rust); font-style: italic; }
+  .cap .word .st { position: absolute; left: 0; right: 0; bottom: -2px; height: 0; border-bottom: 4px dashed var(--rust);
+                   transform-origin: 0 50%; transform: scaleX(0); }
+
+  /* yarn progress line + yarn ball */
+  #yarn { position: absolute; overflow: visible; }
+  #yarn path { fill: none; stroke: #C77A4E; stroke-width: 5; stroke-linecap: round; }
+  #ball { position: absolute; font-size: 34px; line-height: 1; }
+
+  /* section turn (edge only): warm vignette glow, centre transparent */
+  .vig { position: absolute; inset: 0; opacity: 0;
+         background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 62%, rgba(255, 160, 70, 0.22) 82%, rgba(255, 130, 50, 0.45) 100%); }
+
+  /* end card: compact knit card in the top band + rust CTA pill in the lower band */
+  .endc { position: absolute; left: 0; top: 0; opacity: 0; }
+  .endc .card { position: relative; background: var(--cream); border-radius: 22px; padding: 40px 40px 22px;
+                box-shadow: 0 18px 34px rgba(60, 35, 20, 0.32); text-align: left; }
+  .endc .band { position: absolute; left: 0; right: 0; top: 0; height: 24px; border-radius: 22px 22px 0 0; }
+  .endc .t { font-weight: 800; font-size: 72px; line-height: 1.0; white-space: nowrap; }
+  .endc .s { font-weight: 600; font-style: italic; font-size: 36px; color: var(--rust); margin-top: 6px; white-space: nowrap; }
+  .endc .sw { display: flex; gap: 22px; margin-top: 14px; font-family: "Inter Display", sans-serif; font-weight: 600;
+              font-size: 30px; color: var(--cocoa); }
+  .endc .sw span { display: inline-flex; align-items: center; gap: 10px; }
+  .endc .sw i { width: 28px; height: 28px; border-radius: 50%; box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.2); }
+  .ecta { position: absolute; left: 0; top: 0; opacity: 0; background: var(--rust); color: var(--cream);
+          padding: 12px 34px 16px; font-weight: 700; font-size: 50px; line-height: 1; white-space: nowrap;
+          border-radius: 40px; box-shadow: 0 14px 28px rgba(60, 35, 20, 0.32); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="28.123" data-width="1080" data-height="1920">
+  <video id="bg" class="clip" src="base.mp4" data-start="0" data-duration="28.123" muted playsinline></video>
+  <div id="fx"></div>
+</div>
+<script>
+(function () {
+  const E = window.EDIT, S = E.safe, CX = (S.l + S.r) / 2, MAXW = S.r - S.l - 40;
+  const KO = E.keep_out;                                  // centre keep-out box [x0, y0, x1, y1]
+  const fx = document.getElementById("fx");
+  const tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, cls, parent, html) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined) n.innerHTML = html;
+    (parent || fx).appendChild(n);
+    return n;
+  };
+  const svgEl = (tag, attrs, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+  const emo = s => (s ? ` <span class="emo">${s}</span>` : "");
+
+  // ------------------------------------------------------------ face- and centre-aware placement
+  // Every graphic gets the union of her head boxes over its time window (px, from edit.py). place() scans the
+  // safe area for the spot closest to the preferred position whose box keeps MARGIN px clear of her head, stays
+  // out of the centre keep-out box (labels) and never collides with a caption on screen at the time.
+  const MARGIN = 44;
+  const placed = [];
+  const ovl = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) *
+                        Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+  function place(w, h, o) {
+    const heads = (o.heads || []).map(b => [b[0] - MARGIN, b[1] - MARGIN, b[2] + MARGIN, b[3] + MARGIN]);
+    const avoid = o.isCaption ? [] : placed.filter(p => p.t0 < o.t1 && o.t0 < p.t1).map(p => p.r);
+    const x0 = S.l, x1 = Math.max(S.l, S.r - w), y0 = S.t + 20, y1 = Math.max(y0, S.b - h);
+    let best = null;
+    for (let y = y0; y <= y1; y += 4) {
+      for (let x = x0; x <= x1; x += 6) {
+        const r = [x, y, x + w, y + h];
+        let c = Math.abs(y + h / 2 - o.py) * (o.wy || 1) + Math.abs(x + w / 2 - o.px) * (o.wx || 0.6);
+        for (const hb of heads) { const a = ovl(r, hb); if (a > 0) c += 1e7 + a * 10; }
+        if (!o.isCaption && !o.allowCentre) {
+          const ko = [KO[0], KO[1], KO[2], KO[3] - (o.koPad || 0)];
+          const a = ovl(r, ko); if (a > 0) c += 1e7 + a * 10;
+        }
+        for (const ar of avoid) { const a = ovl(r, ar); if (a > 0) c += 1e6 + a * 5; }
+        if (!best || c < best.c) best = { x, y, c };
+      }
+    }
+    best.clear = best.c < 1e6;
+    return best;
+  }
+  // try a list of size variants (each a function that restyles the node) and keep the first that fits clear
+  // every variant is placed; the winner is the clear one with the lowest cost, where each step down the list
+  // (smaller / wrapped) costs a little, so a big tag near its preferred band beats a tiny one far away
+  function fit(node, variants, o) {
+    let pick = null;
+    variants.forEach((v, i) => {
+      v();
+      const w = node.offsetWidth, h = node.offsetHeight;
+      const p = place(w + 24, h + 24, o);           // room for the pompom / glow overhang
+      const score = p.c + i * 60;
+      const cand = { v, w, h, p, score };
+      if (!pick || (cand.p.clear && !pick.p.clear) || (cand.p.clear === pick.p.clear && score < pick.score)) pick = cand;
+    });
+    pick.v();
+    return pick;
+  }
+
+  // ------------------------------------------------------------ captions
+  function caption(C) {
+    const cap = el("div", "cap");
+    const spans = C.words.map(w => {
+      const s = el("span", "word" + (w.key ? " key" : ""), cap, w.w);
+      s.st = el("span", "st", s);
+      return s;
+    });
+    let fs = 50;
+    while (cap.offsetWidth > MAXW && fs > 34) { fs -= 2; cap.style.fontSize = fs + "px"; }
+    const cw = cap.offsetWidth, ch = cap.offsetHeight;
+    const p = place(cw, ch, { t0: C.t0, t1: C.t1, heads: C.heads, px: CX, py: C.y, wy: 1.4, wx: 0.8, isCaption: true });
+    cap.style.left = p.x + "px";
+    placed.push({ t0: C.t0 - 0.05, t1: C.t1 + 0.05, r: [p.x - 6, p.y - 6, p.x + cw + 6, p.y + ch + 6] });
+    C.placed = { x: p.x, y: p.y, w: cw, h: ch, clear: p.clear };
+    tl.fromTo(cap, { opacity: 0, y: p.y + 12 }, { opacity: 1, y: p.y, duration: 0.3, ease: "sine.out" }, C.t0);
+    C.words.forEach((w, i) => {
+      const s = spans[i];
+      const off = i + 1 < C.words.length ? C.words[i + 1].s : C.t1;
+      tl.to(s.st, { scaleX: 1, duration: 0.24, ease: "sine.out" }, w.s);
+      tl.fromTo(s, { textShadow: "0 0 0px rgba(255,170,80,0)" },
+                { textShadow: "0 0 16px rgba(255,170,80,0.95)", color: "#8E2A12", duration: 0.2, ease: "sine.out" }, w.s);
+      tl.to(s, { textShadow: "0 0 0px rgba(255,170,80,0)", color: w.key ? "#B5502E" : "#4A2E22", duration: 0.25 }, off);
+      tl.to(s.st, { opacity: 0.35, duration: 0.2 }, off);
+    });
+    tl.to(cap, { opacity: 0, duration: 0.18 }, C.t1 - 0.18);
+  }
+
+  // ------------------------------------------------------------ knit tag (and the candle-glow hook tag)
+  function tag(L) {
+    const n = el("div", "tag");
+    let glow = null;
+    if (L.style === "candle") glow = el("div", "glow", n);
+    const card = el("div", "card", n);
+    el("div", "cuff knit", card);
+    const tx = el("div", "tx", card, L.html + emo(L.emoji));
+    const pom = el("div", "pom", card);
+    const o = { t0: L.t0, t1: L.t1, heads: L.heads, px: S.l + 230, py: L.py, wy: 1, wx: 0.35, koPad: L.koPad || 40 };   // 40px of give at the box's bottom edge
+    // two-line version: break before the keyword (or after it when the tag starts with the keyword)
+    const html2 = L.html.startsWith("<u>") ? L.html.replace("</u>", "</u><br>") : L.html.replace(" <u>", "<br><u>");
+    const one = f => () => { tx.style.fontSize = f + "px"; tx.innerHTML = L.html + emo(L.emoji); };
+    const two = f => () => { tx.style.fontSize = f + "px"; tx.innerHTML = html2 + emo(L.emoji); };
+    const pick = fit(n, [one(54), two(54), one(48), two(48), one(42), two(42), one(36)], o);
+    const { w, h, p } = pick;
+    const x = p.x + 12, y = p.y + 16;
+    placed.push({ t0: L.t0, t1: L.t1, r: [x - 10, y - 18, x + w + 18, y + h + 8] });
+    L.placed = { x, y, w, h, clear: p.clear };
+    n.style.left = x + "px"; n.style.top = y + "px";
+    tl.set(n, { opacity: 1 }, L.t0);
+    tl.fromTo(card, { y: 18, opacity: 0, scale: 0.96, filter: "blur(6px)" },
+              { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "sine.out" }, L.t0);
+    tl.fromTo(pom, { y: -26, scale: 0.6, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.55, ease: "back.out(1.6)" }, L.t0 + 0.25);
+    // gentle idle sway while on screen
+    const dur = Math.max(0.6, L.t1 - L.t0 - 0.9);
+    tl.fromTo(card, { rotation: -1.2 }, { rotation: 1.2, duration: dur, ease: "sine.inOut" }, L.t0 + 0.5);
+    if (glow) {
+      tl.fromTo(glow, { opacity: 0, scale: 0.8 }, { opacity: 0.85, scale: 1, duration: 0.8, ease: "sine.out" }, L.t0);
+      // deterministic candle flicker
+      const fl = [0.62, 0.9, 0.7, 0.95, 0.66, 0.88, 0.74, 0.92];
+      let t = L.t0 + 0.8, k = 0;
+      while (t < L.t1 - 0.4) { tl.to(glow, { opacity: fl[k % fl.length], duration: 0.28, ease: "sine.inOut" }, t); t += 0.28; k++; }
+    }
+    tl.to(n, { opacity: 0, y: "-=8", duration: 0.35, ease: "sine.in" }, L.t1 - 0.35);
+  }
+
+  // ------------------------------------------------------------ section turn (edge only): warm vignette glow
+  function turn(T) {
+    const v = el("div", "vig");
+    tl.fromTo(v, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "sine.out" }, T.t - 0.2);
+    tl.to(v, { opacity: 0, duration: 0.5, ease: "sine.in" }, T.t + 0.15);
+  }
+
+  // ------------------------------------------------------------ yarn progress line + rolling yarn ball
+  function chrome() {
+    const W = S.r - S.l - 50;
+    const sv = svgEl("svg", { width: W, height: 24, id: "yarn" }, fx);
+    sv.style.left = S.l + "px"; sv.style.top = (S.t - 4) + "px";
+    let d = "M2 12";
+    for (let x = 24; x <= W; x += 24) d += ` Q ${x - 12} ${(x / 24) % 2 ? 4 : 20} ${x} 12`;
+    const p = svgEl("path", { d }, sv);
+    const len = p.getTotalLength();
+    p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+    tl.to(p, { strokeDashoffset: 0, duration: E.total, ease: "none" }, 0);
+    const ball = el("div", "emo", fx, "🧶");
+    ball.id = "ball";
+    ball.style.top = (S.t - 16) + "px";
+    tl.fromTo(ball, { x: S.l - 14, rotation: 0 }, { x: S.l + W - 18, rotation: 720, duration: E.total, ease: "none" }, 0);
+  }
+
+  // ------------------------------------------------------------ end card: compact knit card + rust CTA pill
+  function endcard(N) {
+    const c = el("div", "endc");
+    const card = el("div", "card", c);
+    el("div", "band knit", card);
+    const t = el("div", "t", card, N.title + ' <span class="emo">🤎</span>');
+    const narrow = N.title.replace(" ", "<br>") + ' <span class="emo">🤎</span>';
+    const s = el("div", "s", card, N.sub);
+    const sw = el("div", "sw", card);
+    const cols = { Merah: "#C8102E", Beige: "#D9B48C" };
+    const sws = N.rows.map(r => { const sp = el("span", "", sw, `<i style="background:${cols[r] || "#ccc"}"></i>${r}`); return sp; });
+    const pom = el("div", "pom", card);
+    const o = { t0: N.t0, t1: N.t1, heads: N.heads, px: S.l + 280, py: S.t + 170, wy: 1, wx: 0.5 };
+    const sz = (z, nar) => () => { card.style.zoom = z; t.innerHTML = nar ? narrow : N.title + ' <span class="emo">🤎</span>'; };
+    const pick = fit(c, [sz(1, false), sz(1, true), sz(0.86, false), sz(0.86, true), sz(0.74, true)], o);
+    const x = pick.p.x + 12, y = pick.p.y + 16;
+    c.style.left = x + "px"; c.style.top = y + "px";
+    placed.push({ t0: N.t0, t1: N.t1, r: [x, y, x + pick.w, y + pick.h] });
+    const cta = el("div", "ecta", fx, N.cta.replace("🛒", '<span class="emo">🛒</span>'));
+    const pc = place(cta.offsetWidth + 10, cta.offsetHeight + 10,
+                     { t0: N.t0, t1: N.t1, heads: N.heads, px: CX, py: S.b - 60, wy: 1, wx: 0.5 });
+    cta.style.left = (pc.x + 5) + "px"; cta.style.top = (pc.y + 5) + "px";
+    N.placed = { card: { x, y, w: pick.w, h: pick.h, clear: pick.p.clear },
+                 cta: { x: pc.x, y: pc.y, w: cta.offsetWidth, h: cta.offsetHeight, clear: pc.clear } };
+    tl.set(c, { opacity: 1 }, N.t0 + 0.05);
+    tl.fromTo(card, { y: 20, opacity: 0, filter: "blur(8px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "sine.out" }, N.t0 + 0.05);
+    tl.fromTo(pom, { y: -30, scale: 0.6, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.6)" }, N.t0 + 0.4);
+    tl.fromTo([t, s], { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.15, ease: "sine.out" }, N.t0 + 0.3);
+    tl.fromTo(sws, { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.18, ease: "sine.out" }, N.t0 + 0.7);
+    tl.fromTo(cta, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "sine.out" }, N.t0 + 0.7);
+    tl.to(cta, { scale: 1.04, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, N.t0 + 1.4);
+  }
+
+  function build() {
+    chrome();
+    E.captions.forEach(caption);                 // captions first: labels then steer around them
+    E.labels.forEach(tag);
+    endcard(E.end);
+    E.turns.forEach(turn);
+    window.__placement = { captions: E.captions.map(c => c.placed), labels: E.labels.map(l => l.placed),
+                           end: E.end.placed };
+    tl.to({}, { duration: 0 }, E.total);
+    window.__timelines["main"] = tl;
+  }
+  Promise.all([document.fonts.load('700 52px "Fraunces"'), document.fonts.load('600 50px "Fraunces"'),
+               document.fonts.load('800 72px "Fraunces"'), document.fonts.load('italic 700 52px "Fraunces"'),
+               document.fonts.load('italic 600 36px "Fraunces"'), document.fonts.load('600 30px "Inter Display"')]).then(build);
+})();
+</script>
+</body>
+</html>

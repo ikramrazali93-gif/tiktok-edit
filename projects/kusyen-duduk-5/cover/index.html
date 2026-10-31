@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1536" />
+<!-- Cover 1080x1536 for kusyen duduk, video 5, "Hygge kait hangat" look. A cream knit card with a candle glow and a
+     wool pompom holds the hook ("Sofa nampak kosong?") in the sky top-left, beside her head; two small knit tags sit
+     on her blouse below the cushions. Her head (x 540-860, y 180-620 in this layout) and both cushions are left
+     clear; key text sits inside the 3:4 crop (y 48-1488). Thin cable-knit strips run along the top and bottom edges.
+     Render: npx --prefix ../comp hyperframes snapshot . --at 0.5 --no-end -o snap   (see ../EDIT_PLAN.md) -->
+<script src="gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-latin-700-italic.woff2") format("woff2"); font-weight: 700; font-style: italic; }
+  :root { --cream: #FBF5EA; --oat: #EADCC4; --oatD: #D6C09C; --cocoa: #4A2E22; --rust: #B5502E; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1536px; overflow: hidden; background: var(--cream); }
+  #root { width: 100%; height: 100%; position: relative; overflow: hidden; font-family: "Fraunces", serif; color: var(--cocoa); }
+  .emo { font-family: "Noto Color Emoji", sans-serif; font-style: normal; }
+  /* frame.jpg is the 1080x1920 frame at 31.6s (red cushion left, beige right, her head right of centre), shifted up */
+  #photo { position: absolute; left: 0; top: -110px; width: 1080px; height: 1920px; }
+  /* warm candle-light grade at the edges only */
+  #warm { position: absolute; inset: 0;
+          background: radial-gradient(ellipse 75% 65% at 50% 50%, transparent 55%, rgba(255, 150, 60, 0.20) 82%, rgba(140, 60, 20, 0.40) 100%); }
+  .knit { background:
+            linear-gradient(60deg, transparent 38%, var(--oatD) 38% 62%, transparent 62%) 0 0 / 18px 16px,
+            linear-gradient(-60deg, transparent 38%, var(--oatD) 38% 62%, transparent 62%) 9px 0 / 18px 16px,
+            var(--oat); }
+  .strip { position: absolute; left: 0; right: 0; height: 30px; box-shadow: 0 0 12px rgba(60, 35, 20, 0.25); }
+  #top { top: 0; } #bot { bottom: 0; }
+  /* hook card */
+  #hook { position: absolute; left: 44px; top: 84px; transform: rotate(-2deg); }
+  #hook .glow { position: absolute; left: -80px; right: -80px; top: -70px; bottom: -70px; border-radius: 50%;
+                background: radial-gradient(ellipse at 50% 55%, rgba(255, 180, 90, 0.75) 0, rgba(255, 150, 60, 0.25) 45%, transparent 70%); }
+  #hook .card { position: relative; background: var(--cream); border-radius: 26px; padding: 26px 40px 30px 66px;
+                box-shadow: 0 20px 40px rgba(60, 35, 20, 0.38); }
+  #hook .cuff { position: absolute; left: 0; top: 0; bottom: 0; width: 38px; border-radius: 26px 0 0 26px; }
+  #hook .t1 { font-weight: 800; font-size: 78px; line-height: 0.98; white-space: nowrap; }
+  #hook .t1 u { text-decoration: none; font-style: italic; color: var(--rust); }
+  #hook .t2 { font-weight: 700; font-style: italic; font-size: 42px; line-height: 1.1; color: var(--rust); margin-top: 12px; white-space: nowrap; }
+  .pom { position: absolute; right: -20px; top: -22px; width: 54px; height: 54px; border-radius: 50%;
+         background: radial-gradient(circle at 35% 32%, #FFF9F0 0, #EBD8BC 42%, #C7A47C 100%);
+         box-shadow: 0 5px 12px rgba(60, 35, 20, 0.3), 0 0 0 3px rgba(255, 248, 236, 0.5); }
+  /* small tags on her blouse */
+  .tag { position: absolute; display: flex; align-items: center; gap: 12px; background: var(--cream); border-radius: 18px;
+         padding: 12px 28px 14px 48px; box-shadow: 0 14px 28px rgba(60, 35, 20, 0.34); white-space: nowrap; }
+  .tag .cuff { position: absolute; left: 0; top: 0; bottom: 0; width: 28px; border-radius: 18px 0 0 18px; }
+  .tag .tx { font-weight: 700; font-size: 46px; line-height: 1; }
+  .tag .tx i { color: var(--rust); }
+  .tag .pom { width: 36px; height: 36px; right: -14px; top: -16px; }
+  #tg1 { left: 40px; top: 1404px; transform: rotate(-1.5deg); }
+  #tg2 { right: 40px; top: 1404px; transform: rotate(1.5deg); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="cover" data-start="0" data-duration="1" data-width="1080" data-height="1536">
+  <img id="photo" src="frame.jpg" alt="" />
+  <div id="warm"></div>
+  <div class="strip knit" id="top"></div>
+  <div class="strip knit" id="bot"></div>
+  <div id="hook"><div class="glow"></div>
+    <div class="card"><div class="cuff knit"></div>
+      <div class="t1">Sofa <span class="emo">🛋️</span><br>nampak<br><u>kosong</u>?</div>
+      <div class="t2">ambil peneman<br>sofa ni <span class="emo">🤎</span></div>
+      <div class="pom"></div>
+    </div>
+  </div>
+  <div class="tag" id="tg1"><div class="cuff knit"></div><div class="tx"><i>40 × 40</i> cm · waffle</div><div class="pom"></div></div>
+  <div class="tag" id="tg2"><div class="cuff knit"></div><div class="tx">Boleh <i>basuh</i> <span class="emo">🫧</span></div><div class="pom"></div></div>
+</div>
+<script>
+  Promise.all([document.fonts.load('800 84px "Fraunces"'), document.fonts.load('italic 700 42px "Fraunces"'),
+               document.fonts.load('700 46px "Fraunces"')]).then(() => {
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 1 }, 0);
+    window.__timelines["cover"] = tl;
+  });
+</script>
+</body>
+</html>
