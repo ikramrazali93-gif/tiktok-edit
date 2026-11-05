@@ -1,7 +1,8 @@
 # Jumpa Totoro — vlog pendek (suntingan)
 
 Lawatan ke kafe bertema Totoro (MoriKissa). Suntingan padat ~38 saat, format 9:16, untuk suara
-latar yang akan dirakam kemudian. Status: **pratonton, menunggu kelulusan** (belum render akhir).
+latar yang akan dirakam kemudian. Status: **render akhir siap** (`output/jumpa-totoro.mp4`, tanpa suara latar). Selepas suara latar
+dirakam, jalankan semula dengan `--vo`.
 
 Media asal (klip & foto) tidak disimpan dalam repo; ia dimuat turun daripada folder Google Drive
 pengguna dan dihantar ke skrip sebagai argumen.
