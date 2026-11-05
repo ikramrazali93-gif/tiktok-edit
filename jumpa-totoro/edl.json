@@ -1,0 +1,204 @@
+{
+ "tajuk": "Jumpa Totoro",
+ "nota": "Senarai suntingan. dari/hingga = saat dalam klip asal; laju = kelajuan main; tempoh = saat foto dipapar.",
+ "segmen": [
+  {
+   "label": "Hook: sampai depan maskot",
+   "jenis": "video",
+   "fail": "20261001_203524.mp4",
+   "dari": 6.6,
+   "hingga": 9.2,
+   "laju": 1.0
+  },
+  {
+   "label": "Welcome to MoriKissa",
+   "jenis": "foto",
+   "fail": "20261001_203428.jpg",
+   "tempoh": 1.6,
+   "gerak": "zoom-in",
+   "fokus": [
+    0.5,
+    0.32
+   ]
+  },
+  {
+   "label": "Jalan ke patung Totoro",
+   "jenis": "video",
+   "fail": "20261001_203029.mp4",
+   "dari": 0.0,
+   "hingga": 4.2,
+   "laju": 1.6,
+   "stabil": true
+  },
+  {
+   "label": "Bercakap ke kamera",
+   "jenis": "video",
+   "fail": "20261001_203029.mp4",
+   "dari": 5.0,
+   "hingga": 6.9,
+   "laju": 1.0,
+   "stabil": true
+  },
+  {
+   "label": "Foto patung 1",
+   "jenis": "foto",
+   "fail": "20261001_203102.jpg",
+   "tempoh": 0.8,
+   "gerak": "punch",
+   "fokus": [
+    0.45,
+    0.6
+   ]
+  },
+  {
+   "label": "Foto patung 2",
+   "jenis": "foto",
+   "fail": "20261001_203107.jpg",
+   "tempoh": 0.8,
+   "gerak": "punch",
+   "fokus": [
+    0.5,
+    0.65
+   ]
+  },
+  {
+   "label": "Foto patung 3 (mendongak)",
+   "jenis": "foto",
+   "fail": "20261001_203112.jpg",
+   "tempoh": 1.0,
+   "gerak": "zoom-in",
+   "fokus": [
+    0.5,
+    0.62
+   ]
+  },
+  {
+   "label": "Duduk depan patung",
+   "jenis": "video",
+   "fail": "20261001_203029.mp4",
+   "dari": 13.4,
+   "hingga": 16.0,
+   "laju": 1.0,
+   "stabil": true
+  },
+  {
+   "label": "Kedai: bas kucing",
+   "jenis": "video",
+   "fail": "20261001_203214.mp4",
+   "dari": 0.0,
+   "hingga": 0.8,
+   "laju": 1.0
+  },
+  {
+   "label": "Kedai: bas kucing (pan)",
+   "jenis": "video",
+   "fail": "20261001_203233.mp4",
+   "dari": 7.4,
+   "hingga": 9.6,
+   "laju": 1.4,
+   "stabil": true
+  },
+  {
+   "label": "Kedai: rak cenderamata",
+   "jenis": "video",
+   "fail": "20261001_203233.mp4",
+   "dari": 11.0,
+   "hingga": 14.2,
+   "laju": 1.6,
+   "stabil": true
+  },
+  {
+   "label": "Kedai: budak membelek",
+   "jenis": "video",
+   "fail": "20261001_203233.mp4",
+   "dari": 19.8,
+   "hingga": 21.4,
+   "laju": 1.0,
+   "stabil": true
+  },
+  {
+   "label": "Kedai: dinding patung",
+   "jenis": "video",
+   "fail": "20261001_203233.mp4",
+   "dari": 22.0,
+   "hingga": 26.0,
+   "laju": 2.0,
+   "stabil": true
+  },
+  {
+   "label": "Menu TEPPAN",
+   "jenis": "foto",
+   "fail": "20261001_203420.jpg",
+   "tempoh": 1.6,
+   "gerak": "pan-down",
+   "fokus": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "label": "Depa tangan 1",
+   "jenis": "foto",
+   "fail": "20261001_203149.jpg",
+   "tempoh": 0.6,
+   "gerak": "punch",
+   "fokus": [
+    0.5,
+    0.6
+   ],
+   "isi": "kabur"
+  },
+  {
+   "label": "Depa tangan 2",
+   "jenis": "foto",
+   "fail": "20261001_203132.jpg",
+   "tempoh": 0.6,
+   "gerak": "punch",
+   "isi": "kabur",
+   "fokus": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "label": "Depa tangan 3",
+   "jenis": "foto",
+   "fail": "20261001_203153.jpg",
+   "tempoh": 0.6,
+   "gerak": "punch",
+   "isi": "kabur",
+   "fokus": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "label": "Berjalan ke arah maskot",
+   "jenis": "video",
+   "fail": "20261001_203524.mp4",
+   "dari": 0.0,
+   "hingga": 6.6,
+   "laju": 1.5
+  },
+  {
+   "label": "Jumpa maskot Totoro",
+   "jenis": "video",
+   "fail": "20261001_203524.mp4",
+   "dari": 6.6,
+   "hingga": 13.2,
+   "laju": 1.0
+  },
+  {
+   "label": "Penutup (ruang teks)",
+   "jenis": "foto",
+   "fail": "20261001_203150.jpg",
+   "tempoh": 2.2,
+   "gerak": "zoom-out",
+   "fokus": [
+    0.5,
+    0.55
+   ],
+   "isi": "kabur"
+  }
+ ]
+}
